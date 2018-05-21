@@ -2,7 +2,7 @@ galaxy_info:
   author: Olaolu Akinsete
   description: Provision kubectl and kubernetes kops
 
-  issue_tracker_url: http://mantis.l:8012/view_all_bug_page.php
+  issue_tracker_url: mantis.l:8012/view_all_bug_page.php
 
   license: license (GPLv2, CC-BY, etc)
 
