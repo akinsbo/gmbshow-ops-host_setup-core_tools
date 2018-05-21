@@ -13,7 +13,7 @@
     force: yes
     # TODO Add hash check
   with_items:
-    # - {package: kubectl, url: "{{ kubectl_darwin_download_path }}/kubectl"}
+    - {package: kubectl, url: "{{ kubectl_darwin_download_path }}/kubectl"}
     - {package: kops, url: "{{ kops_darwin_download_path }}"}
   when: ansible_os_family == 'Darwin'
 
