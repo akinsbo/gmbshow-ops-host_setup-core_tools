@@ -2,7 +2,7 @@
 # Author: Olaolu Akinsete<akinsbo@gmail.com>
 # Date: May 16, 2018<3:46am>
 ###########################
-## Install kubectl
+## Install kubectl and kops
 ###########################
 
 - hosts: "{{controller | default('localhost')}}"

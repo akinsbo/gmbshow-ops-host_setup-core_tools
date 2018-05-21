@@ -1,0 +1,11 @@
+---
+# Author: Olaolu Akinsete<akinsbo@gmail.com>
+# Date: May 16, 2018<3:46am>
+###########################
+## Setup remote controller
+###########################
+
+- hosts: "{{controller | default('localhost')}}"
+  connection: local
+  roles:
+    - setup-remote-controller

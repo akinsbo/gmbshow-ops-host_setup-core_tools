@@ -1,0 +1,24 @@
+---
+# tasks file for setup-remote-controller
+- name: Ensure virgin linux system is prepared
+  block:
+  - name: Ensure groups admin and developer are added
+    become: yes
+    group:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - admin
+      - developer
+
+  - name: Ensure another user is created
+    become: yes
+    user:
+      name: olaolu
+      comment: Name- Olaolu Akinsete
+      uid: 000100
+      groups: admin, developer
+      create_home: yes
+      generate_ssh_key: yes
+      ssh_key_file: .ssh/id_rsa
+      state: present
