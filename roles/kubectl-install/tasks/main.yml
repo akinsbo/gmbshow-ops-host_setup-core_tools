@@ -16,6 +16,9 @@
     - kubectl
   when: ansible_os_family == 'Darwin'
   
+- name: Debug local_ansible_group
+  debug: 
+    var: local_ansible_group
 
 - name: Download and install kubectl for linux and others
   become: true

@@ -5,7 +5,7 @@
 ## Install kubectl
 ###########################
 
-- hosts: "{{ controller }}"
+- hosts: "{{controller | default('localhost')}}"
   connection: local
   roles:
     - kubectl-install

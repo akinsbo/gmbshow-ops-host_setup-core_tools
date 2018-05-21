@@ -1,0 +1,4 @@
+---
+local_ansible_user: vagrant
+local_ansible_group: vagrant
+controller: vagrant

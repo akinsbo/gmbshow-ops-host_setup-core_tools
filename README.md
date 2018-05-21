@@ -5,7 +5,7 @@
 Install the latest version of kubectl on Linux or MacOS:
 
 ```sh
-ansible-playbook install-kubectl.yaml
+ansible-playbook -i hosts.ini install-kubectl.yaml
 
 ```
 
