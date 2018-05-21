@@ -8,4 +8,4 @@
 - hosts: "{{controller | default('localhost')}}"
   connection: local
   roles:
-    - kubectl-install
+    - kubectl-kops-install

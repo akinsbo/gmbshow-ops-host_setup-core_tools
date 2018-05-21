@@ -86,7 +86,9 @@ nbdist/
 
 # Vagrant
 .vagrant
+*.swap
 network_closure.sh
+
 
 # Version file for dockerized build
 .dockerized-kube-version-defs
