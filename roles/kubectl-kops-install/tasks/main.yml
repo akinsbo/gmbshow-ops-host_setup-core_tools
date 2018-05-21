@@ -6,33 +6,29 @@
   become: true
   get_url:
     url: "{{ item.url }}"
-    dest: /usr/local/bin/"{{item.package}}"
+    dest: "/usr/local/bin/{{item.package}}"
     owner: "{{local_ansible_user}}"
     group: "{{local_ansible_group}}"
     mode: 0755
     force: yes
     # TODO Add hash check
   with_items:
-    - {package: kubectl, url: "{{ kubectl_download_path }}/kubectl"}
-    - {package: kops, url: "{{ kops_download_path }}"}
+    # - {package: kubectl, url: "{{ kubectl_darwin_download_path }}/kubectl"}
+    - {package: kops, url: "{{ kops_darwin_download_path }}"}
   when: ansible_os_family == 'Darwin'
-  
-- name: Debug local_ansible_group
-  debug: 
-    var: local_ansible_group
 
 - name: Download and install kubectl for linux and others
   become: true
   get_url:
     url: "{{ item.url }}"
-    dest: /usr/local/bin/"{{item.package}}"
+    dest: "/usr/local/bin/{{item.package}}"
     owner: "{{local_ansible_user}}"
     group: "{{local_ansible_group}}"
     mode: 0755
     force: yes
     # TODO Add hash check
   with_items:
-    - {package: kubectl, url: "{{ kubectl_download_path }}/kubectl"}
+    - {package: kubectl, url: "{{ kubectl_download_path }}"}
     - {package: kops, url: "{{ kops_download_path }}"}
   when: ansible_os_family != 'Darwin'
   
