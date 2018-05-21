@@ -115,5 +115,6 @@ Session.vim
 [Ii]nclude
 [Ll]ib
 [Ss]cripts
+*.pyc
 
 
