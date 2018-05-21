@@ -9,4 +9,4 @@ ansible-playbook install-kubectl.yaml
 
 ```
 
-You may need either --ask-sudo-pass or ansible_become_pass# gmbshow-ops-host_setup-core_tools
+You may need either --ask-become-pass or ansible_become_pass

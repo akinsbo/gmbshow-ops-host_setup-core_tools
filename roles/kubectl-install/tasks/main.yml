@@ -1,0 +1,33 @@
+---
+##############
+# Install Kubectl
+##############
+- name: Download and install kubectl for darwin os
+  become: true
+  get_url:
+    url: "{{ kubectl_darwin_download_path }}/{{ item }}"
+    dest: /usr/local/bin
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
+    mode: 0755
+    force: yes
+    # TODO Add hash check
+  with_items:
+    - kubectl
+  when: ansible_os_family == 'Darwin'
+  
+
+- name: Download and install kubectl for linux and others
+  become: true
+  get_url:
+    url: "{{ kubectl_download_path }}/{{ item }}"
+    dest: /usr/local/bin
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
+    mode: 0755
+    force: yes
+    # TODO Add hash check
+  with_items:
+    - kubectl
+  when: ansible_os_family != 'Darwin'
+  
