@@ -7,5 +7,6 @@
 
 - hosts: "{{controller | default('localhost')}}"
   connection: local
+  gather_facts: false
   roles:
     - setup-remote-controller
