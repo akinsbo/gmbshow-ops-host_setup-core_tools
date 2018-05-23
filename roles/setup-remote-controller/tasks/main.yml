@@ -41,6 +41,7 @@
       - python-pip
     tags:
       - version
+
   - name: Ensure python version is obtained
     command: "{{ item }} --version"
     with_items:
@@ -49,32 +50,64 @@
     register: pyversion
     tags:
       - version
+      - debug
+      - regex
 
   - name: Debug pyversion
     debug:
       msg: "{{ item }}"
     with_items:
+      # - "{{ pyversion.results[0].stdout}}"
+      # - "{{ pyversion.results[1].stderr }}" #strangely, python2 prints version in stderr
       - "{{ pyversion.results[0].stdout}}"
-      - "{{ pyversion.results[1].stderr }}" #strangely, python2 prints version in stderr
+      - "{{ pyversion.results[1].stderr }}"
+    verbosity: 3
     tags:
       - version
-      - verbosity = 3
+      - debug
+
+  - name: test regex
+    debug:
+      msg: "{{item}}"
+    with_items:
+      - "{{ pyversion.results[0].stdout | regex_replace('Python\\s(\\d+)\\.(\\d+)\\.(\\d+)', 'python\\1\\2') }}"
+      - "{{ pyversion.results[1].stderr | regex_replace('Python\\s(\\d+)\\.(\\d+)\\.(\\d+)', 'python\\1\\2') }}"
+    verbosity: 3
+    tags:
+      - regex
 
   - name: Install virtualenv via pip
     become: yes
     pip:
       name: virtualenv
 
-  - name: Ensure virtualenv and ansible are installed
+  - name: Ensure virtualenv is setup with ansible, boto and awscli installed therein
+    become: yes
     pip:
-      name: ansible
-      virtualenv: "/usr/local/bin/{{app_name}}/{{item.package}}/venv"
-      virtualenv_python: "/usr/lib/{{ item.version }}"
+      name: "{{item. package}}"
+      virtualenv: "{{controller_python_virtenv}}"
+      virtualenv_python: "/usr/bin/{{ item.python_bin_and_virtenv_to_Use }}"
     with_items:
-      - {package: python3, version: "{{ pyversion.results[0].stdout }}"}
-      - {package: python, version: "{{ pyversion.results[1].stderr }}"} #strangely, python2 prints version in stderr
+      - { python_bin_and_virtenv_to_Use: python, package: ansible}
+      - { python_bin_and_virtenv_to_Use: python, package: boto}
+      - { python_bin_and_virtenv_to_Use: python, package: boto}
     tags:
       - version
+  
+        # No python3 virtenv for Debian8 because Debian8 installs python3.4 not 3.5
+  - name: Ensure virtualenv is setup with ansible, boto3 and awscli installed in a python3 virtenv 
+    become: yes
+    pip:
+      name: "{{item. package}}"
+      virtualenv: "{{controller_python3_virtenv}}"
+      virtualenv_python: "/usr/bin/{{ item.python_bin_and_virtenv_to_Use }}"
+    with_items:
+      - { python_bin_and_virtenv_to_Use: python3, package: ansible}
+      - { python_bin_and_virtenv_to_Use: python3, package: boto3}
+      - { python_bin_and_virtenv_to_Use: python3, package: awscli}
+    when: 
+      - "{{  pyversion.results[0].stdout | regex_replace('Python\\s(\\d+)\\.(\\d+)\\.(\\d+)', '\\1.\\2') | float >= 3.5}}"
+
 # # tasks file for setup-remote-controller
 # - name: Ensure virgin linux system is prepared
 #   block:

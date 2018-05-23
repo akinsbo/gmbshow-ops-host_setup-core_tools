@@ -16,3 +16,8 @@ kops_darwin_download_path: "https://github.com/kubernetes/kops/releases/download
 # controller-user
 remote_controller_user: olaolu
 remote_controller_group: olaolu
+
+
+# virtenv
+controller_python_virtenv: "/usr/local/bin/{{app_name}}/python/venv"
+controller_python3_virtenv: "/usr/local/bin/{{app_name}}/python3/venv"

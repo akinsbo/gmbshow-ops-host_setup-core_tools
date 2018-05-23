@@ -117,4 +117,5 @@ Session.vim
 [Ss]cripts
 *.pyc
 
-
+# personal dustbin
+[Dd]ustbin
