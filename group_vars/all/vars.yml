@@ -21,3 +21,20 @@ remote_controller_group: olaolu
 # virtenv
 controller_python_virtenv: "/usr/local/bin/{{app_name}}/python/venv"
 controller_python3_virtenv: "/usr/local/bin/{{app_name}}/python3/venv"
+
+# ssh users
+my_ssh_users:
+  - name: vivek
+    # key: "{{ (lookup'file', 'vivek.pub') }}"
+    comment: Name- Vivek Geti
+  - name: tom
+    # key: "{{ lookup('file', 'tom.pub') }}"
+    comment: Name- Tom Valvedi
+  - name: wendy
+    # key: "{{ lookup('file', 'wendy.pub') }}"
+    comment: Name- Wendy Smith
+  - name: jerry
+    # key: "{{ lookup('file', 'jerry.pub') }}"
+    comment: Name- Jerry Cappelo
+# ...
+
