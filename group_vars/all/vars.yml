@@ -24,17 +24,20 @@ controller_python3_virtenv: "/usr/local/bin/{{app_name}}/python3/venv"
 
 # ssh users
 my_ssh_users:
-  - name: vivek
+  - name: kilo
     # key: "{{ (lookup'file', 'vivek.pub') }}"
-    comment: Name- Vivek Geti
-  - name: tom
+    uid: 000101
+    comment: Name- Kilo Geti
+  - name: bran
     # key: "{{ lookup('file', 'tom.pub') }}"
-    comment: Name- Tom Valvedi
-  - name: wendy
+    uid: 000102    
+    comment: Name- Bran Valvedi
+  - name: sydney
     # key: "{{ lookup('file', 'wendy.pub') }}"
-    comment: Name- Wendy Smith
-  - name: jerry
+    uid: 000103
+    comment: Name- Sydney Smith
+  - name: tyler
     # key: "{{ lookup('file', 'jerry.pub') }}"
-    comment: Name- Jerry Cappelo
+    uid: 000104
+    comment: Name- Tyler Cappelo
 # ...
-
