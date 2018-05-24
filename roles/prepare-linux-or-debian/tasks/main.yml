@@ -31,18 +31,11 @@
       state: present
     when: ansible_os_family == 'Debian'
 
-  - name: Debug ssh_users list
-    debug:
-      msg: "Here is a user: {{item.comment}}"
-    with_items: "{{my_ssh_users}}"
-    tags: 
-      - debug
-    
   - name: Ensure mkpasswd (through whois) is installed to create password for new users
     become: yes
     apt:
       name: whois
-      update_cache: yes
+      # update_cache: yes
       state: present
   
   - name: Ensure mkpasswd is installed
@@ -56,17 +49,14 @@
   - name: Ensure another user is created and added to sudo group
     become: yes
     user:
-      name: "{{item.name}}"
-      comment: "{{item.comment}}"
-      uid: "{{item.uid}}"
+      name: "{{my_ssh_user.name}}"
+      comment: "{{my_ssh_user.comment}}"
+      # uid: "{{item.uid}}"
       groups: admin, developer, sudo
       create_home: yes
       ## run command 'mkpasswd --method=sha-512' to create your own encrypted password ##
       password: "{{userpass.stdout}}"
-      generate_ssh_key: yes
-      ssh_key_file: "{{lookup('env','HOME')}}/.ssh/{{item.name}}.pub"
       state: present
-    with_items: "{{my_ssh_users}}"
     tags:
       - debug
 
@@ -76,28 +66,37 @@
 
   - name: Debug pub key location of ssh_users list
     debug:
-      msg: "Here is where user pub is: {{lookup('env','HOME')}}/.ssh/{{item.name}}.pub"
-    with_items: "{{my_ssh_users}}"
+      msg: "Here is where user pub is: {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
     tags: 
       - debug
     verbosity: 3
  
-  # - name: Debug inventory_hostname
-  #   debug:
-  #     msg: ~/.ssh/{{inventory_hostname}}
+  - name: Debug command
+    debug:
+      msg: "ssh-keygen -t rsa -f {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
+    verbosity: 3
 
-  # - name: Ensure new ssh key is generated
-  #   command: ssh-keygen -t rsa -f ~/.ssh/inventory_hostname
-  #   args: 
-  #     creates:~/.ssh/{{inventory_hostname}}
-  #   register: local_ssh_location
+  - name: Check if ssh_key already exists
+    become: yes
+    stat:
+      path: "{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
+    register: local_ssh_key_location
 
-  # - name: Set authorized key for new user copying from current user
-  #   authorized_key:
-  #     user: "{{remote_controller_user}}"
-  #     state: present
-  #     manage_dir: yes
-  #     key: ~/.ssh/{{inventory_hostname}} 
+  - name: Ensure new ssh RSA host key is generated locally
+    become: yes
+    command: "ssh-keygen -t rsa -f {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub -C '' -N ''"
+    args: 
+      creates:"{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
+    when: local_ssh_key_location.stat.exists == false
+
+  - name: Set authorized key for new user copying from current user
+    authorized_key:
+      user: "{{my_ssh_user.name}}"
+      state: present
+      manage_dir: true
+      key: "{{lookup('file', lookup('env','HOME') ~ '/.ssh/' ~ my_ssh_user.name ~ '.pub')}}"
+    tags:
+      - key 
 
   # - name: Install UFW
   #   become: "{{remote_controller_user}}"

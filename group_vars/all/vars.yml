@@ -41,3 +41,8 @@ my_ssh_users:
     uid: 000104
     comment: Name- Tyler Cappelo
 # ...
+my_ssh_user:
+  name: bob
+  # key: "{{ (lookup'file', 'bob.pub') }}"
+  uid: 000107
+  comment: Name- Bob Truchel
