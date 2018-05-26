@@ -43,7 +43,7 @@
     register: result
 
   - name: Ensure password is created
-    command: mkpasswd --method=sha-512 password_user_101
+    command: mkpasswd --method=sha-512 password_user_101 #mkpasswd --method=sha512 --salt=vb1tLY1qiY PASSWORD
     register: userpass
 
   - name: Ensure another user is created and added to sudo group
@@ -122,7 +122,31 @@
       manage_dir: true
       key: "{{ lookup('file','/home/olaolu/.ssh/' ~ my_ssh_user.name ~'.pub')}}"
     tags:
-      - key 
+      - key
+
+  - name: Ensure os-based config variables are loaded
+    become: yes
+    include_vars: "{{ item }}"
+    with_first_found:
+      - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
+      - "{{ansible_distribution}}.yml"
+      - "default_linux.yml"
+    tags: 
+      - vars
+      - test
+  # Deliberately overambitious effort to show support for Ubuntu-16.04 and Debian-8
+  - name: Ensure remote host is ssh configured
+    become: yes
+    template:
+      src: "{{item}}"
+      dest: "{{SSH_CONFIG}}"
+      backup: yes
+    with_first_found:
+      - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.sshd_config.j2"
+      - "{{ansible_distribution}}.sshd_config.j2"
+      - "default_linux.sshd_config.j2"
+    tags:
+      - test
 
   # - name: Install UFW
   #   become: "{{remote_controller_user}}"
