@@ -35,4 +35,22 @@ BSD
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+Olaolu Akinsete
+
+Important information
+---------------------
+
+In disabling password authentication for the newly created user, the following are most important:
+
+sshd_config — Disable password authentication:
+
+```ini
+PasswordAuthentication no
+```
+
+sshd_config — Important defaults:
+
+```ini
+PubkeyAuthentication yes
+ChallengeResponseAuthentication no
+```

@@ -1,32 +1,32 @@
 #{{ ansible_managed }}
-AcceptEnv LANG LC_*
-ChallengeResponseAuthentication {{ sshd_challenge_response_authentication }}
-HostbasedAuthentication no
+Port 22
+ListenAddress {{ ansible_host }}
+Protocol 2
+HostKey /etc/ssh/ssh_host_rsa_key
 HostKey /etc/ssh/ssh_host_dsa_key
 HostKey /etc/ssh/ssh_host_ecdsa_key
 HostKey /etc/ssh/ssh_host_ed25519_key
-HostKey /etc/ssh/ssh_host_rsa_key
-IgnoreRhosts yes
-KeyRegenerationInterval 3600
-ListenAddress {{ ansible_host }}
-LoginGraceTime 120
-LogLevel INFO
-PasswordAuthentication {{ sshd_password_authentication }}
-PermitEmptyPasswords no
-PermitRootLogin {{ sshd_permitroot_login }}
-Port 22
-PrintLastLog yes
-PrintMotd no
-Protocol 2
-PubkeyAuthentication yes
-RhostsRSAAuthentication no
-RSAAuthentication yes
-ServerKeyBits 1024
-StrictModes yes
-Subsystem sftp /usr/lib/openssh/sftp-server
-SyslogFacility AUTH
-TCPKeepAlive yes
-UsePAM {{ sshd_use_pam }}
 UsePrivilegeSeparation yes
-X11DisplayOffset 10
+KeyRegenerationInterval 3600
+ServerKeyBits 1024
+SyslogFacility AUTH
+LogLevel INFO
+LoginGraceTime 120
+PermitRootLogin {{ sshd_permitroot_login }}
+StrictModes yes
+RSAAuthentication yes
+PubkeyAuthentication yes
+IgnoreRhosts yes
+RhostsRSAAuthentication no
+HostbasedAuthentication no
+PermitEmptyPasswords no
+ChallengeResponseAuthentication {{ sshd_challenge_response_authentication }}
+PasswordAuthentication {{ sshd_password_authentication }}
 X11Forwarding yes
+X11DisplayOffset 10
+PrintMotd no
+PrintLastLog yes
+TCPKeepAlive yes
+AcceptEnv LANG LC_*
+Subsystem sftp /usr/lib/openssh/sftp-server
+UsePAM yes
