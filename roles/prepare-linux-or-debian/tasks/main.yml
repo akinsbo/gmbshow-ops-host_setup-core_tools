@@ -76,7 +76,7 @@
       msg: "ssh-keygen -t rsa -b 4096 -f {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
     verbosity: 3
 
-  - name: Check if ssh_key already exists
+  - name: Check if public ssh key already exists
     local_action:
       module: stat
       path: "{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
@@ -87,38 +87,40 @@
       msg: "local_ssh_key_location.stat.exists = {{local_ssh_key_location.stat.exists}}"
     verbosity: 4
 
-  - name: Ensure new ssh RSA host key is generated locally
-    command: "ssh-keygen -t rsa -f {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub -C '' -N ''"
+  - name: Ensure one new ssh RSA host key is generated locally for new user
+    command: "ssh-keygen -t rsa -f {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}} -C '' -N ''"
     # args: 
       # creates:"{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
     when: local_ssh_key_location.stat.exists == false
     delegate_to: 127.0.0.1
- 
-  - name: Ensure generation of .ssh folder and hand permissions to remote user
-    become: yes
-    file:
-      path: "/home/{{my_ssh_user.name}}/.ssh"
-      state: directory
-      owner: "{{my_ssh_user.name}}"
-      group: "{{my_ssh_user_group}}"
-      mode: 0700
+    run_once: true
 
-  - name: Ensure upload of SSH key
-    become: yes
-    copy:
-      src: "{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
-      dest:  "/home/vagrant/.ssh/{{my_ssh_user.name}}.pub"
-      owner: "{{{{my_ssh_user_key}}"
-      group: "{{{{my_ssh_user_key}}"
-      mode: 0700
+    # Uncomment to copy user public key into user folder in remote machine
+  # - name: Ensure generation of .ssh folder and hand permissions to remote user
+  #   become: yes
+  #   file:
+  #     path: "/home/{{my_ssh_user.name}}/.ssh"
+  #     state: directory
+  #     owner: "{{my_ssh_user.name}}"
+  #     group: "{{my_ssh_user_group}}"
+  #     mode: 0700
 
-  - name: Set authorized key for new user copying from current user
+  # - name: Ensure upload of SSH key
+  #   become: yes
+  #   copy:
+  #     src: "{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
+  #     dest:  "/home/vagrant/.ssh/{{my_ssh_user.name}}.pub"
+  #     owner: "{{{{my_ssh_user_key}}"
+  #     group: "{{{{my_ssh_user_key}}"
+  #     mode: 0700
+
+  - name: Ensure new user ssh key is placed in authorized key folder
     become: yes
     authorized_key:
       user: "{{my_ssh_user.name}}"
       state: present
       manage_dir: true
-      key: "{{ lookup('file','/home/olaolu/.ssh/' ~ my_ssh_user.name ~'.pub.pub')}}"
+      key: "{{ lookup('file','/home/olaolu/.ssh/' ~ my_ssh_user.name ~'.pub')}}"
     tags:
       - key 
 
