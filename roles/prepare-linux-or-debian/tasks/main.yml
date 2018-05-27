@@ -164,8 +164,8 @@
     tags:
       - check
    
-  # - name: Install UFW
-  #   become: "{{remote_controller_user}}"
-  #   package:
-  #     name: ufw
-  #     state: reset
+  - name: Install UFW
+    become: "{{remote_controller_user}}"
+    package:
+      name: ufw
+      state: reset
