@@ -169,3 +169,45 @@
     package:
       name: ufw
       state: present
+  
+  - name: UFW settings
+    block:
+    - name: Ensure ufw logs
+      ufw:
+        logging: on
+
+    #(Note that as ufw manages its own state, simply removing
+    # a rule=allow task can leave those ports exposed. Either use delete=yes
+    # or a separate state=reset task)
+    - name: Ensure OpenSSH is allowed
+      ufw:
+        rule: allow
+        name: OpenSSH
+    
+    # ufw supports connection rate limiting, which is useful for protecting
+    # against brute-force login attacks. ufw will deny connections if an IP
+    # address has attempted to initiate 6 or more connections in the last
+    # 30 seconds. See  http://www.debian-administration.org/articles/187
+    # for details. Typical usage is:
+    - name: Ensure OpenSSH rate limiting and log it
+      ufw:
+        rule: limit
+        port: ssh
+        proto: tcp
+        log: yes
+
+    - name: Ensure access to tcp port 80 is allowed
+      ufw:
+        rule: allow
+        port: 80
+        proto: tcp
+        log: yes
+    
+    - name: Ensure access to tcp port 443 is allowed
+      ufw:
+        rule: allow
+        port: 443
+        proto: tcp
+        log: yes
+
+    become: yes # grant block permission
