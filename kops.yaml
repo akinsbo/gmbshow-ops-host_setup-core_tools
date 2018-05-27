@@ -5,7 +5,7 @@
 ## Install kubectl and kops
 ###########################
 
-- hosts: "{{controller | default('localhost')}}"
+- hosts: localhost
   connection: local
   roles:
-    - kubectl-kops-install
+    - kops

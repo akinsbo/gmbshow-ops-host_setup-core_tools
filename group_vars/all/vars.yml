@@ -57,5 +57,5 @@ my_ssh_user_group: admin
 # #################### 
 # kops-setup vars
 ######################
-my_kops_user: olaolu
-my_iam_group: my_iam_group
+my_iam_user: olaoluak
+my_iam_group: admin

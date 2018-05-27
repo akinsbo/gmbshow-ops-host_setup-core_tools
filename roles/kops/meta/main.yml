@@ -24,4 +24,4 @@ galaxy_info:
     - kubernetes
 
 dependencies:
-  - aws-cli (or setup-remote-controller role)
+  # - setup-remote-controller
