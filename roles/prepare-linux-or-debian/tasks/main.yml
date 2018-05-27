@@ -163,9 +163,9 @@
     local_action: command ssh "{{my_ssh_user.name}}@{{inventory_hostname}}"
     tags:
       - check
-   
-  - name: Install UFW
+   # Uncomplicated firewall(ufw) comes out-of-the-box with ubuntu xenial
+  - name: Ensure UFW is Installed
     become: "{{remote_controller_user}}"
     package:
       name: ufw
-      state: reset
+      state: present
