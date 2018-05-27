@@ -42,10 +42,10 @@ my_ssh_users:
     comment: Name- Tyler Cappelo
 # ...
 my_ssh_previous_user:
-  name: correll
+  name: kelly
   # key: "{{ (lookup'file', 'bob.pub') }}"
-  uid: 000205
-  comment: Name- Correll Williams
+  uid: 000204
+  comment: Name- Kelly Roland
 
 my_ssh_user:
   name: loberson

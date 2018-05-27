@@ -134,8 +134,9 @@
     tags: 
       - vars
       - test
+
   # Deliberately overambitious effort to show support for Ubuntu-16.04 and Debian-8
-  - name: Ensure remote host is safely ssh configured
+  - name: Ensure remote host ssh-configuration is safely updated
     become: yes
     template:
       src: "{{item}}"
@@ -151,7 +152,11 @@
       - "default_linux.sshd_config.j2"
     tags:
       - test
+    notify:
+      - Restart sshd
+    
 
+   
   # - name: Install UFW
   #   become: "{{remote_controller_user}}"
   #   package:
