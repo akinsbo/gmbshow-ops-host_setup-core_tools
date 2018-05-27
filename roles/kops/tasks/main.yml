@@ -1,5 +1,6 @@
 ---
 # - include_tasks: install-kubectl-kops.yml
-- include_tasks: setup-aws-user.yml
+# - include_tasks: setup-aws-user.yml
+- include_tasks: create-state-store.yml
 
   

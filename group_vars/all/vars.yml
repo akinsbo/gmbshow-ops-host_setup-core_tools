@@ -59,3 +59,19 @@ my_ssh_user_group: admin
 ######################
 my_iam_user: olaoluak
 my_iam_group: admin
+
+cluster_name: "cluster.{{app_name}}.com"
+state_store: "s3://kops-state-store-{{app_name}}"
+
+aws_region: us-east-1
+
+############################
+# Tags
+############################
+tag_creator: "{{my_iam_user}}"
+tag_owner: "{{my_iam_user}}"
+tag_application: "{{app_name}}"
+tag_costcenter: 1234
+tag_product: "{{app_name}}"
+tag_confidentiality: StrictlyConfidential
+tag_environment: Development

@@ -1,0 +1,18 @@
+---
+- name: Ensure a S3-Bucket is created for the cluster
+  s3_bucket:
+    name: "{{ state_store | replace('s3://', '') }}"
+    state: present
+    region: "{{ aws_region }}"
+    versioning: yes
+    tags:
+      Name: "{{ state_store | replace('s3://', '') }}"
+      Creator: "{{ tag_creator }}"
+      Owner: "{{ tag_owner }}"
+      Application: "{{ tag_application }}"
+      CostCenter: "{{ tag_costcenter }}"
+      Confidentiality: "{{ tag_confidentiality }}"
+      Environment: "{{ tag_environment }}"
+############################
+# Create the S3 bucket for the Kops state store
+############################
