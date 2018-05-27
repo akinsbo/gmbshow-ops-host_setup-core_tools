@@ -1,0 +1,213 @@
+---
+# This playbook performs the following operations
+# * Root signin
+# * Create new user
+# ** If Debian8, install sudo
+# * Root privileges: Add user to sudo group
+# * Add Public Key Authentication
+# ** Generate key pair
+# ** Copy the public key
+# * Disable Password Authentication
+# * Test Log in
+# * Setup a Basic firewall
+
+- name: Ensure virgin linux system is prepared
+  block:
+  - name: Ensure groups admin and developer are added
+    become: yes
+    group:
+      name: "{{ item }}"
+      state: present
+    with_items:
+      - admin
+      - developer
+
+  - name: Ensure sudo group exists if debian
+    become: yes
+    gather_facts: true
+    apt:
+      name: sudo
+      # update_cache: yes
+      state: present
+    when: ansible_os_family == 'Debian'
+
+  - name: Ensure mkpasswd (through whois) is installed to create password for new users
+    become: yes
+    apt:
+      name: whois
+      # update_cache: yes
+      state: present
+  
+  - name: Ensure mkpasswd is installed
+    command: which mkpasswd
+    register: result
+
+  - name: Ensure password is created
+    command: mkpasswd --method=sha-512 password_user_101 #mkpasswd --method=sha512 --salt=vb1tLY1qiY PASSWORD
+    register: userpass
+
+  - name: Ensure another user is created and added to sudo group
+    become: yes
+    user:
+      name: "{{my_ssh_user.name}}"
+      comment: "{{my_ssh_user.comment}}"
+      # uid: "{{item.uid}}"
+      groups: admin, developer, sudo
+      create_home: yes
+      ## run command 'mkpasswd --method=sha-512' to create your own encrypted password ##
+      password: "{{userpass.stdout}}"
+      state: present
+    tags:
+      - debug
+
+  - name: Fetch the userpasswords
+    debug:
+      msg: "Default passwords for new users: {{userpass.stdout}}"
+
+  - name: Debug pub key location of ssh_users list
+    debug:
+      msg: "Here is where user pub is: {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
+    tags: 
+      - debug
+    verbosity: 3
+ 
+  - name: Check that command is properly written
+    debug:
+      msg: "ssh-keygen -t rsa -b 4096 -f {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
+    verbosity: 3
+
+  - name: Check if public ssh key already exists
+    local_action:
+      module: stat
+      path: "{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
+    register: local_ssh_key_location
+
+  - name: Check local_ssh_key_location.stat.exists
+    debug:
+      msg: "local_ssh_key_location.stat.exists = {{local_ssh_key_location.stat.exists}}"
+    verbosity: 4
+
+  - name: Ensure one new ssh RSA host key is generated locally for new user
+    command: "ssh-keygen -t rsa -f {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}} -C '' -N ''"
+    # args: 
+      # creates:"{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
+    when: local_ssh_key_location.stat.exists == false
+    delegate_to: 127.0.0.1
+    run_once: true
+
+    # Uncomment to copy user public key into user folder in remote machine
+  # - name: Ensure generation of .ssh folder and hand permissions to remote user
+  #   become: yes
+  #   file:
+  #     path: "/home/{{my_ssh_user.name}}/.ssh"
+  #     state: directory
+  #     owner: "{{my_ssh_user.name}}"
+  #     group: "{{my_ssh_user_group}}"
+  #     mode: 0700
+
+  # - name: Ensure upload of SSH key
+  #   become: yes
+  #   copy:
+  #     src: "{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
+  #     dest:  "/home/vagrant/.ssh/{{my_ssh_user.name}}.pub"
+  #     owner: "{{{{my_ssh_user_key}}"
+  #     group: "{{{{my_ssh_user_key}}"
+  #     mode: 0700
+
+  - name: Ensure new user ssh key is placed in authorized key folder
+    become: yes
+    authorized_key:
+      user: "{{my_ssh_user.name}}"
+      state: present
+      manage_dir: true
+      key: "{{ lookup('file','/home/olaolu/.ssh/' ~ my_ssh_user.name ~'.pub')}}"
+    tags:
+      - key
+
+  - name: Ensure os-based config variables are loaded
+    become: yes
+    include_vars: "{{ item }}"
+    with_first_found:
+      - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
+      - "{{ansible_distribution}}.yml"
+      - "default_linux.yml"
+    tags: 
+      - vars
+      - test
+
+  # Deliberately overambitious effort to show support for Ubuntu-16.04 and Debian-8
+  - name: Ensure remote host ssh-configuration is safely updated
+    become: yes
+    template:
+      src: "{{item}}"
+      dest: "{{SSH_CONFIG}}"
+      validate: /usr/sbin/sshd -t -f %s
+      owner: 0
+      group: 0
+      mode: 0600
+      backup: yes
+    with_first_found:
+      - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.sshd_config.j2"
+      - "{{ansible_distribution}}.sshd_config.j2"
+      - "default_linux.sshd_config.j2"
+    tags:
+      - test
+    notify:
+      - Restart sshd
+    
+  - name: Test that new user can connect via ssh
+    become: "{{my_ssh_user.name}}"
+    ping: ~
+
+  - name: Ensure new user can connect via ssh
+    local_action: command ssh "{{my_ssh_user.name}}@{{inventory_hostname}}"
+    tags:
+      - check
+   # Uncomplicated firewall(ufw) comes out-of-the-box with ubuntu xenial
+  - name: Ensure UFW is Installed
+    become: "{{remote_controller_user}}"
+    package:
+      name: ufw
+      state: present
+  
+  - name: UFW settings
+    block:
+    - name: Ensure ufw logs
+      ufw:
+        logging: on
+
+    #(Note that as ufw manages its own state, simply removing
+    # a rule=allow task can leave those ports exposed. Either use delete=yes
+    # or a separate state=reset task)
+    - name: Ensure OpenSSH is allowed
+      ufw:
+        rule: allow
+        name: OpenSSH
+    
+    # ufw supports connection rate limiting, which is useful for protecting
+    # against brute-force login attacks. ufw will deny connections if an IP
+    # address has attempted to initiate 6 or more connections in the last
+    # 30 seconds. See  http://www.debian-administration.org/articles/187
+    # for details. Typical usage is:
+    - name: Ensure OpenSSH rate limiting and log it
+      ufw:
+        rule: limit
+        port: ssh
+        proto: tcp
+        log: yes
+
+    - name: Ensure access to tcp port 80 is allowed
+      ufw:
+        rule: allow
+        port: 80
+        proto: tcp
+        log: yes
+    
+    - name: Ensure access to tcp port 443 is allowed
+      ufw:
+        rule: allow
+        port: 443
+        proto: tcp
+        log: yes
+
+    become: yes # grant block permission

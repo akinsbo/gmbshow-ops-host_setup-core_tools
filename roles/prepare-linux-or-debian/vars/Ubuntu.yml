@@ -1,0 +1,3 @@
+---
+# vars file for Ubuntu.yml in prepare-linux-or-debian
+SSH_CONFIG: /etc/ssh/sshd_config
