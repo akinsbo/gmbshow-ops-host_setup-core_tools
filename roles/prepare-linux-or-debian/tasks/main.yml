@@ -155,7 +155,14 @@
     notify:
       - Restart sshd
     
+  - name: Test that new user can connect via ssh
+    become: "{{my_ssh_user.name}}"
+    ping: ~
 
+  - name: Ensure new user can connect via ssh
+    local_action: command ssh "{{my_ssh_user.name}}@{{inventory_hostname}}"
+    tags:
+      - check
    
   # - name: Install UFW
   #   become: "{{remote_controller_user}}"
