@@ -72,7 +72,7 @@
   - name: Ensure virtualenv is setup with ansible, boto and awscli installed therein
     become: yes
     pip:
-      name: "{{item. package}}"
+      name: "{{item.package}}"
       virtualenv: "{{controller_python_virtenv}}"
       virtualenv_python: "/usr/bin/{{ item.python_bin_and_virtenv_to_Use }}"
     with_items:
@@ -86,7 +86,7 @@
   - name: Ensure virtualenv is setup with ansible, boto3 and awscli installed in a python3 virtenv 
     become: yes
     pip:
-      name: "{{item. package}}"
+      name: "{{item.package}}"
       virtualenv: "{{controller_python3_virtenv}}"
       virtualenv_python: "/usr/bin/{{ item.python_bin_and_virtenv_to_Use }}"
     with_items:

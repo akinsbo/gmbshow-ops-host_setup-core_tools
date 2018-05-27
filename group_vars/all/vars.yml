@@ -17,7 +17,6 @@ kops_darwin_download_path: "https://github.com/kubernetes/kops/releases/download
 remote_controller_user: olaolu
 remote_controller_group: olaolu
 
-
 # virtenv
 controller_python_virtenv: "/usr/local/bin/{{app_name}}/python/venv"
 controller_python3_virtenv: "/usr/local/bin/{{app_name}}/python3/venv"
@@ -54,3 +53,9 @@ my_ssh_user:
   comment: Name- Loberson Gilford
 
 my_ssh_user_group: admin
+
+# #################### 
+# kops-setup vars
+######################
+my_kops_user: olaolu
+my_iam_group: my_iam_group

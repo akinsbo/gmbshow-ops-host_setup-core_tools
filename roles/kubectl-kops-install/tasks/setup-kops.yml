@@ -1,0 +1,41 @@
+---
+#  Ensure AWS keys are configured on the system
+############################
+# Setup Kops for AWS
+############################
+  
+  - name: Create group, add permissions and add user
+    block:
+    - name: Ensure iam group is created
+      iam:
+        iam_type: group
+        name: "{{ my_iam_group }}"
+        state: present
+
+    - name: Ensure iam user is created and added to group
+      iam:
+      iam_type: user
+      name: "{{ my_iam_user }}" 
+      state: present
+      password: "{{ my_temp_password }}"
+      access_key_state: create
+      groups: "{{ my_iam_group }}"
+
+    - name: Ensure iam policies are added to group
+      iam_policy:
+        iam_type: group
+        iam_name: "{{ my_iam_group }}"
+        policy_name: "{{item}}"
+        policy_document:
+
+    - name: Ensure group has required permissions
+      command: aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/"{{ item }}" --group-name "{{ my_iam_group }}"
+      with_items:      
+      - AmazonEC2FullAccess
+      - AmazonRoute53FullAccess
+      - AmazonS3FullAccess
+      - IAMFullAccess
+      - AmazonVPCFullAccess
+  
+  run_once: true
+

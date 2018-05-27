@@ -13,6 +13,8 @@
 
 # Ansible
 *.retry
+vault.yml
+vault.yaml
 
 # Config directories created by gcloud and gsutil on Jenkins
 /.config/gcloud*/

@@ -23,4 +23,5 @@ galaxy_info:
     - kops
     - kubernetes
 
-dependencies: []
+dependencies:
+  - aws-cli (or setup-remote-controller role)
