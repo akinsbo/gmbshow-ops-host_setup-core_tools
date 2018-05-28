@@ -62,8 +62,14 @@ my_iam_group: admin
 
 cluster_name: "cluster.{{app_name}}.com"
 state_store: "s3://kops-state-store-{{app_name}}"
+state_store_aws_region: us-east-1
 
-aws_region: us-east-1
+cluster:
+  ec2_node_type: t2.micro
+  ec2_master_type: t2.micro
+  num_of_nodes: 2
+  num_of_master: 3
+  region: eu_west_1
 
 ############################
 # Tags

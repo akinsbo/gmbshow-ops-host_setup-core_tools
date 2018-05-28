@@ -3,7 +3,7 @@
   s3_bucket:
     name: "{{ state_store | replace('s3://', '') }}"
     state: present
-    region: "{{ aws_region }}"
+    region: "{{ state_store_aws_region }}"
     versioning: yes
     tags:
       Name: "{{ state_store | replace('s3://', '') }}"
