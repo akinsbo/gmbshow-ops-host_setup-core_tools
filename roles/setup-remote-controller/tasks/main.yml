@@ -78,7 +78,7 @@
     with_items:
       - { python_bin_and_virtenv_to_Use: python, package: ansible}
       - { python_bin_and_virtenv_to_Use: python, package: boto}
-      - { python_bin_and_virtenv_to_Use: python, package: boto}
+      - { python_bin_and_virtenv_to_Use: python, package: awscli}
     tags:
       - version
   
