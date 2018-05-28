@@ -1,0 +1,9 @@
+  - name: Ensure new user ssh key is placed in remote authorized key folder
+    become: yes
+    authorized_key:
+      user: "{{my_ssh_user.name}}"
+      state: present
+      manage_dir: true
+      key: "{{ lookup('file','/home/olaolu/.ssh/' ~ my_ssh_user.name ~'.pub')}}"
+    tags:
+      - key

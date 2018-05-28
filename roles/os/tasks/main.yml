@@ -1,0 +1,31 @@
+---
+# This playbook performs the following operations
+# * Root signin
+# * ------------user----------------------
+# * Create new user
+# ** If Debian8, install sudo
+# * Root privileges: Add user to sudo group
+# * ------------ssh key-------------------
+# * Add Public Key Authentication
+# ** Generate key pair
+# ** Copy the public key
+# * Disable Password Authentication
+# * Test Log in
+# * ------------firewall-------------------
+# * Setup a Basic firewall
+
+  # --------------user--------------------
+  - include_tasks: mng_group/create.yml
+  - include_tasks: mng_user/create.yml
+  - include_tasks: mng_pass/generate.yml
+  - include_tasks: mng_pass/display.yml
+  # --------------ssh_key--------------------
+  - include_tasks: mng_sshkey/create.yml
+  - include_tasks: mng_sshkey/authorize.yml
+  - include_tasks: mng_sshkey/configure.yml
+  - include_tasks: mng_sshkey/test.yml
+  # --------------ufw--------------------
+  - include_tasks: mng_ufw/setup.yml
+  - include_tasks: mng_ufw/allow.yml
+  - include_tasks: mng_ufw/rate-limit.yml
+  

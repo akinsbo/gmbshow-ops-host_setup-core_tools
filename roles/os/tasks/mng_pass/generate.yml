@@ -1,0 +1,15 @@
+---
+  - name: Ensure mkpasswd (through whois) is installed to create pasword for new users
+    become: yes
+    apt:
+      name: whois
+      # update_cache: yes
+      state: present
+  
+  - name: Ensure mkpasswd is installed
+    command: which mkpasswd
+    register: result
+
+  - name: Ensure password is created
+    command: mkpasswd --method=sha-512 password_user_101 #mkpasswd --method=sha512 --salt=vb1tLY1qiY PASSWORD
+    register: userpass

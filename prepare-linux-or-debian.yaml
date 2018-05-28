@@ -8,4 +8,4 @@
 - hosts: "{{controller | default('localhost')}}"
   connection: local
   roles:
-    - prepare-linux-or-debian
+    - os

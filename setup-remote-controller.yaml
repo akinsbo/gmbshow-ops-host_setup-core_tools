@@ -9,4 +9,4 @@
   connection: local
   gather_facts: false
   roles:
-    - setup-remote-controller
+    - controller

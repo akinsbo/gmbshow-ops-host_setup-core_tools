@@ -1,0 +1,15 @@
+
+  - name: Ensure another user is created and added to sudo group
+    become: yes
+    user:
+      name: "{{my_ssh_user.name}}"
+      comment: "{{my_ssh_user.comment}}"
+      # uid: "{{item.uid}}"
+      groups: admin, developer, sudo
+      append: yes
+      create_home: yes
+      ## run command 'mkpasswd --method=sha-512' to create your own encrypted password ##
+      password: "{{userpass.stdout}}"
+      state: present
+    tags:
+      - debug
