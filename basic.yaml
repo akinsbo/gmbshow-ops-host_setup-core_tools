@@ -27,4 +27,4 @@
     setup:
 
   roles:
-    - os
+    - basic

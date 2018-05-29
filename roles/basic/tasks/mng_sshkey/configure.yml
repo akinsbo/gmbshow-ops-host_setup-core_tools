@@ -5,9 +5,9 @@
       - "{{ansible_distribution}}-{{ansible_distribution_major_version}}.yml"
       - "{{ansible_distribution}}.yml"
       - "default_linux.yml"
-    tags: 
-      - vars
-      - test
+    tags:
+      - ssh
+      - configure
 
   # Deliberately overambitious effort to show support for Ubuntu-16.04 and Debian-8
   - name: Ensure remote host ssh-configuration is safely updated
@@ -25,6 +25,8 @@
       - "{{ansible_distribution}}.sshd_config.j2"
       - "default_linux.sshd_config.j2"
     tags:
-      - test
+      - ssh
+      - configure
+      
     notify:
       - Restart sshd

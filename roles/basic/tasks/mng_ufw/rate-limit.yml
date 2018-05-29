@@ -13,3 +13,5 @@
       port: ssh
       proto: tcp
       log: yes
+    tags:
+      - ufw

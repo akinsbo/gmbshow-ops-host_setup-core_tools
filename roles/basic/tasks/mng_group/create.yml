@@ -4,9 +4,9 @@
     group:
       name: "{{ item }}"
       state: present
-    with_items:
-      - admin
-      - developer
+    with_items: "{{my_ssh_user_groups}}"
+    tags:
+      - group
 
   - name: Ensure sudo group exists if debian
     become: yes
@@ -16,3 +16,6 @@
       # update_cache: yes
       state: present
     when: ansible_os_family == 'Debian'
+    tags:
+      - group
+      - sudo

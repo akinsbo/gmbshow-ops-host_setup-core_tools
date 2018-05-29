@@ -11,6 +11,8 @@
       iam_type: group
       name: "{{ my_iam_group }}"
       state: present
+    tags:
+      - iam
 
   - name: Ensure iam user is created and added to group
     iam:
@@ -20,6 +22,9 @@
       # password: "{{ my_temp_password }}"
       access_key_state: create
       groups: "{{ my_iam_group }}"
+    tags:
+      - iam
+      - iam_group
 
   # - name: Ensure iam policies are added to group
   #   iam_policy:
@@ -36,5 +41,8 @@
     - AmazonS3FullAccess
     - IAMFullAccess
     - AmazonVPCFullAccess
-
+    tags:
+      - iam_group
+      - iam_group_policy
+      
   run_once: true

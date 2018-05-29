@@ -4,4 +4,6 @@
     become: yes
     service:
       name: sshd
-      state: restarted 
+      state: restarted
+    tags:
+      - ssh

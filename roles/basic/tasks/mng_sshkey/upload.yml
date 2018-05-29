@@ -7,6 +7,8 @@
       owner: "{{my_ssh_user.name}}"
       group: "{{my_ssh_user_group}}"
       mode: 0700
+    tags:
+      - ssh
 
   - name: Ensure upload of SSH key
     become: yes
@@ -16,3 +18,5 @@
       owner: "{{{{my_ssh_user_key}}"
       group: "{{{{my_ssh_user_key}}"
       mode: 0700
+    tags:
+      - ssh

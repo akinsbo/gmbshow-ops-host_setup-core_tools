@@ -5,14 +5,20 @@
   raw: test -e /usr/bin/python || (apt update && apt install -y python-simplejson)
   register: test
   changed_when: test.stdout
+  tags:
+    - upgrade
 
+  # Uncomment for producution
 # - name: Ensure system is upgraded
 #   become: true
 #   apt:
 #     upgrade: safe
+#   tags:
+#     - upgrade
 
 - name: Ensure ansible is setup
   block:
+  # python3, pip3, pip
   - name: Ensure python3 and pip are installed
     gather_facts: true
     become: yes
@@ -28,9 +34,9 @@
       - python3-venv
       - python-pip
     tags:
-      - version
+      - python
 
-  - name: Ensure python version is obtained
+  - name: Get python version
     command: "{{ item }} --version"
     with_items:
       - python3
@@ -38,10 +44,8 @@
     register: pyversion
     tags:
       - version
-      - debug
-      - regex
 
-  - name: Debug pyversion
+  - name: Debug python version
     debug:
       msg: "{{ item }}"
     with_items:
@@ -52,9 +56,8 @@
     verbosity: 3
     tags:
       - version
-      - debug
 
-  - name: test regex
+  - name: Debug regex for python version report
     debug:
       msg: "{{item}}"
     with_items:
@@ -62,15 +65,18 @@
       - "{{ pyversion.results[1].stderr | regex_replace('Python\\s(\\d+)\\.(\\d+)\\.(\\d+)', 'python\\1\\2') }}"
     verbosity: 3
     tags:
-      - regex
+      - version
 
+    # virtualenv
   - name: Install virtualenv via pip
     become: yes
     pip:
       name: virtualenv
+    tags:
+      - virtualenv
 
+    # Also, you don't use sudo in a virtual environment
   - name: Ensure virtualenv is setup with ansible, boto and awscli installed therein
-    become: yes
     pip:
       name: "{{item.package}}"
       virtualenv: "{{controller_python_virtenv}}"
@@ -80,11 +86,14 @@
       - { python_bin_and_virtenv_to_Use: python, package: boto}
       - { python_bin_and_virtenv_to_Use: python, package: awscli}
     tags:
-      - version
+      - virtualenv
+      - ansible
+      - boto
+      - awscli
   
-        # No python3 virtenv for Debian8 because Debian8 installs python3.4 not 3.5
+    # No python3 virtenv for Debian8 because Debian8 installs python3.4 not 3.5
+    # Also, you don't use sudo in a virtual environment
   - name: Ensure virtualenv is setup with ansible, boto3 and awscli installed in a python3 virtenv 
-    become: yes
     pip:
       name: "{{item.package}}"
       virtualenv: "{{controller_python3_virtenv}}"
@@ -95,3 +104,8 @@
       - { python_bin_and_virtenv_to_Use: python3, package: ansible}
     when: 
       - "{{  pyversion.results[0].stdout | regex_replace('Python\\s(\\d+)\\.(\\d+)\\.(\\d+)', '\\1.\\2') | float >= 3.5}}"
+    tags:
+      - virtualenv
+      - ansible
+      - boto3
+      - awscli

@@ -16,6 +16,8 @@
     - {package: kubectl, url: "{{ kubectl_darwin_download_path }}"}
     - {package: kops, url: "{{ kops_darwin_download_path }}"}
   when: ansible_os_family == 'Darwin'
+  tags:
+    - kubectl
 
 - name: Download and install kubectl for linux and others
   become: true
@@ -31,3 +33,6 @@
     - {package: kubectl, url: "{{ kubectl_download_path }}"}
     - {package: kops, url: "{{ kops_download_path }}"}
   when: ansible_os_family != 'Darwin'
+  tags:
+    - kubectl
+    - kops

@@ -14,4 +14,4 @@
       password: "{{user_temp_encrypted_pass.stdout}}"
       state: present
     tags:
-      - debug
+      - user

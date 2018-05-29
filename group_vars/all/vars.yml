@@ -54,8 +54,9 @@ my_ssh_user:
 
 temp_pass: password_user_101
 
-my_ssh_user_group: admin
-
+my_ssh_user_groups: 
+  - admin
+  - developer
 # #################### 
 # kops-setup vars
 ######################

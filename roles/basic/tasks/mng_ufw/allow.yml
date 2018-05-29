@@ -7,6 +7,8 @@
     ufw:
       rule: allow
       name: OpenSSH
+    tags:
+      - ufw
 
   - name: Ensure access to tcp port 80 is allowed
     become: yes
@@ -18,3 +20,5 @@
     with_items:
       - 80
       - 443
+    tags:
+      - ufw

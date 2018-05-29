@@ -3,17 +3,23 @@
     debug:
       msg: "ssh-keygen -t rsa -b 4096 -f {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
     verbosity: 3
+    tags: 
+      - ssh
 
   - name: Check if public ssh key already exists
     local_action:
       module: stat
       path: "{{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}}.pub"
     register: local_ssh_key_location
+    tags: 
+      - ssh
 
   - name: Check local_ssh_key_location.stat.exists
     debug:
       msg: "local_ssh_key_location.stat.exists = {{local_ssh_key_location.stat.exists}}"
     verbosity: 4
+    tags: 
+      - ssh
 
   - name: Ensure one new ssh RSA host key is generated locally for new user
     command: "ssh-keygen -t rsa -f {{lookup('env','HOME')}}/.ssh/{{my_ssh_user.name}} -C '' -N ''"
@@ -22,3 +28,5 @@
     when: local_ssh_key_location.stat.exists == false
     delegate_to: 127.0.0.1
     run_once: true
+    tags: 
+      - ssh

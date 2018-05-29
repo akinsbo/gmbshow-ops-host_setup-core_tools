@@ -5,8 +5,12 @@
     package:
       name: ufw
       state: present
+    tags:
+      - ufw
   
   - name: Ensure UFW settings are set
     become: yes
     ufw:
       logging: on
+    tags:
+      - ufw

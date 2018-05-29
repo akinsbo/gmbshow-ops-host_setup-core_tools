@@ -6,4 +6,4 @@
       manage_dir: true
       key: "{{ lookup('file','/home/olaolu/.ssh/' ~ my_ssh_user.name ~'.pub')}}"
     tags:
-      - key
+      - ssh
