@@ -1,3 +1,5 @@
+---
+  - include_tasks: mng_pass/generate.yml
 
   - name: Ensure another user is created and added to sudo group
     become: yes
@@ -9,7 +11,7 @@
       append: yes
       create_home: yes
       ## run command 'mkpasswd --method=sha-512' to create your own encrypted password ##
-      password: "{{userpass.stdout}}"
+      password: "{{user_temp_encrypted_pass.stdout}}"
       state: present
     tags:
       - debug

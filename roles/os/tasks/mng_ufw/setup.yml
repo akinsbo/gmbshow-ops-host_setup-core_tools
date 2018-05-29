@@ -1,13 +1,12 @@
 ---
    # Uncomplicated firewall(ufw) comes out-of-the-box with ubuntu xenial
   - name: Ensure UFW is Installed
-    become: "{{remote_controller_user}}"
+    become: yes
     package:
       name: ufw
       state: present
   
-  - name: UFW settings
-    block:
-    - name: Ensure ufw logs
-      ufw:
-        logging: on
+  - name: Ensure UFW settings are set
+    become: yes
+    ufw:
+      logging: on

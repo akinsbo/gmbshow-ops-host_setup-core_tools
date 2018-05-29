@@ -17,8 +17,6 @@
   # --------------user--------------------
   - include_tasks: mng_group/create.yml
   - include_tasks: mng_user/create.yml
-  - include_tasks: mng_pass/generate.yml
-  - include_tasks: mng_pass/display.yml
   # --------------ssh_key--------------------
   - include_tasks: mng_sshkey/create.yml
   - include_tasks: mng_sshkey/authorize.yml

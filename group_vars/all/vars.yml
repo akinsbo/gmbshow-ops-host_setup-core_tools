@@ -14,7 +14,7 @@ kops_download_path: "https://github.com/kubernetes/kops/releases/download/{{ kop
 kops_darwin_download_path: "https://github.com/kubernetes/kops/releases/download/{{ kops_version }}/kops-darwin-amd64"
 
 # controller-user
-remote_controller_user: olaolu
+remote_controller_root_user: olaolu
 remote_controller_group: olaolu
 
 # virtenv
@@ -51,6 +51,8 @@ my_ssh_user:
   # key: "{{ (lookup'file', 'bob.pub') }}"
   uid: 000205
   comment: Name- Loberson Gilford
+
+temp_pass: password_user_101
 
 my_ssh_user_group: admin
 

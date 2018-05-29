@@ -10,6 +10,10 @@
     command: which mkpasswd
     register: result
 
-  - name: Ensure password is created
-    command: mkpasswd --method=sha-512 password_user_101 #mkpasswd --method=sha512 --salt=vb1tLY1qiY PASSWORD
-    register: userpass
+  - name: Generate password to be used by user
+    command: "mkpasswd --method=sha-512 {{temp_pass}}" #mkpasswd --method=sha512 --salt=vb1tLY1qiY PASSWORD
+    register: encrypted_pass
+
+  - name: Hand password to mng_user's create task
+    set_fact:
+      user_temp_encrypted_pass: "{{encrypted_pass}}"
