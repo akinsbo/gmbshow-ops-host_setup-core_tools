@@ -1,0 +1,17 @@
+---
+#  Ensure AWS keys are configured on the system
+############################
+# Setup iam_user for AWS
+############################
+- name: Ensure iam user is created and added to group
+  iam:
+    iam_type: user
+    name: "{{ my_iam_user }}" 
+    state: present
+    # password: "{{ my_temp_password }}"
+    access_key_state: create
+    groups: "{{ my_iam_group }}"
+  tags:
+    - iam
+    - iam_group
+  run_once: true

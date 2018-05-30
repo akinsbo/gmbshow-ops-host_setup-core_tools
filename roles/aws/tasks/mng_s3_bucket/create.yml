@@ -1,4 +1,7 @@
 ---
+############################
+# Create the S3 bucket for the Kops state store
+############################
 - name: Ensure a S3-Bucket is created for the cluster
   s3_bucket:
     name: "{{ state_store | replace('s3://', '') }}"
@@ -13,6 +16,4 @@
       CostCenter: "{{ tag_costcenter }}"
       Confidentiality: "{{ tag_confidentiality }}"
       Environment: "{{ tag_environment }}"
-############################
-# Create the S3 bucket for the Kops state store
-############################
+

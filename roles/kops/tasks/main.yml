@@ -1,7 +1,8 @@
 ---
 # - include_tasks: install-kubectl-kops.yml
 # - include_tasks: setup-aws-user.yml
-- include_tasks: create-state-store.yml
+- include: roles/aws/tasks/mng_iam/user/create.yml
+- include_tasks: roles/aws/tasks/mng_s3_bucket/create.yml
 - include_tasks: create-cluster.yml
 
   

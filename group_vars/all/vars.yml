@@ -62,12 +62,13 @@ my_ssh_user_groups:
 ######################
 my_iam_user: olaoluak
 my_iam_group: admin
+kops_role: ClusterAdmin
 
-cluster_name: "cluster.{{app_name}}.com"
 state_store: "s3://kops-state-store-{{app_name}}"
 state_store_aws_region: us-east-1
 
 cluster:
+  name: "cluster.{{app_name}}.com"
   ec2_node_type: t2.micro
   ec2_master_type: t2.micro
   num_of_nodes: 2
