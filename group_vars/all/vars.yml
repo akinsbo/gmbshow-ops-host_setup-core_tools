@@ -75,6 +75,8 @@ cluster:
   num_of_master: 3
   region: eu_west_1
 
+ec2_region: eu_west_1
+
 ############################
 # Tags
 ############################

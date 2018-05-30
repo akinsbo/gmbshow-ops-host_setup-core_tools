@@ -1,0 +1,4 @@
+- name: Remove key pair by name
+  ec2_key:
+    name: "{{ec2_key_name}}"
+    state: absent
