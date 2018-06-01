@@ -12,6 +12,7 @@
     mode: 0700
   when: ec2_keypair.changed
 
+# copy previously registered ec2_keypair variable
 - name: Save key to local machine
   copy:
     content: "{{ec2_keypair.key.private_key }}"

@@ -57,25 +57,6 @@ temp_pass: password_user_101
 my_ssh_user_groups: 
   - admin
   - developer
-# #################### 
-# kops-setup vars
-######################
-my_iam_user: olaoluak
-my_iam_group: admin
-kops_role: ClusterAdmin
-
-state_store: "s3://kops-state-store-{{app_name}}"
-state_store_aws_region: us-east-1
-
-cluster:
-  name: "cluster.{{app_name}}.com"
-  ec2_node_type: t2.micro
-  ec2_master_type: t2.micro
-  num_of_nodes: 2
-  num_of_master: 3
-  region: eu_west_1
-
-ec2_region: eu_west_1
 
 ############################
 # Tags
@@ -87,3 +68,42 @@ tag_costcenter: 1234
 tag_product: "{{app_name}}"
 tag_confidentiality: StrictlyConfidential
 tag_environment: Development
+
+############################
+# Route 53
+############################
+route53:
+  zone:
+    DNS: maryboyeshow.org
+    comment: The MaryBoye show
+
+  record:
+    subDNS: k8s
+    type: A
+    value: 127.0.0.1
+
+  alias:
+    record:
+      type: A
+      
+# #################### 
+# kops-setup vars
+######################
+my_iam_user: olaoluak
+my_iam_group: admin
+kops_role: ClusterAdmin
+
+state_store: "s3://kops-state-store-{{app_name}}"
+state_store_aws_region: us-east-1
+
+cluster:
+  name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}.com"
+  ec2_node_type: t2.micro
+  ec2_master_type: t2.micro
+  num_of_nodes: 2
+  num_of_master: 3
+  region: eu_west_1
+  bastion: true
+
+ec2_key_name: "{{app_name}}"
+ec2_region: eu_west_1
