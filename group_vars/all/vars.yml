@@ -106,4 +106,6 @@ cluster:
   bastion: true
 
 ec2_key_name: "{{app_name}}"
+#  where to store ec2_keys on controller machine
+ec2_keys_dir: "{{ lookup('env', HOME)}}/ec2_keys"
 ec2_region: eu_west_1

@@ -7,7 +7,7 @@
 
 - name: Create folder for EC2 key
   file:
-    path: "{{ lookup('env', HOME)}}/{{ec2_region}}"
+    path: "{{ec2_keys_dir}}/{{ec2_region}}"
     state: directory
     mode: 0700
   when: ec2_keypair.changed
@@ -15,11 +15,10 @@
 # copy previously registered ec2_keypair variable
 - name: Save key to local machine
   copy:
-    content: "{{ec2_keypair.key.private_key }}"
-    dest:  "{{lookup('env', HOME)}}/{{ec2_region}}/{{ec2_key_name}}.pem"
+    content: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pem"
     mode: 0400
   when: ec2_keypair.changed
 
 - name: Generate a public key from the private key
-  shell: "ssh-keygen -y -f {{lookup('env', HOME)}}/{{ec2_region}}/{{ec2_key_name}}.pem > {{lookup('env', HOME)}}/{{ec2_region}}/{{ec2_key_name}}.pub"
+  shell: "ssh-keygen -y -f {{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pem > {{ec2_region}}/{{ec2_key_name}}.pub"
   when: ec2_keypair.changed
