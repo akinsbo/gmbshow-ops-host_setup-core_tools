@@ -3,4 +3,4 @@
     iam:
       iam_type: group
       name: "{{ iam_group }}"
-      state: present
+      state: absent

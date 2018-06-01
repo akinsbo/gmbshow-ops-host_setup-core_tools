@@ -1,11 +1,9 @@
 ---
 ############################
-# Create the S3 bucket for the Kops state store
+# Delete the S3 bucket for the Kops state store
 ############################
 - name: Ensure a S3-Bucket is created
   s3_bucket:
     name: "{{ bucket_name }}"
     region: "{{ bucket_region }}"
-    state: present
-    versioning: yes
-    tags: "{{bucket_tags}}"
+    state: absent

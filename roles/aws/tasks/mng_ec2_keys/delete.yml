@@ -9,4 +9,4 @@
 - name: Delete keys from local machine
   file:
     state: absent
-    path: "{{lookup('env', HOME)}}/{{ec2_keys_dir}}/{{ec2_region}}"
+    path: "{{ec2_keys_dir}}/{{ec2_region}}"

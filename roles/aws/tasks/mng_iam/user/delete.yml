@@ -6,12 +6,7 @@
 - name: Ensure iam user is created and added to group
   iam:
     iam_type: user
-    name: "{{ iam_user_name }}"
-    groups: "{{ iam_user_groups }}" 
-    state: present
-    # password: "{{ my_temp_password }}"
-    access_key_state: create
-  tags:
-    - iam
-    - iam_group
-  run_once: true
+    name: "{{ iam_user }}"
+    groups: "{{ iam_groups }}" 
+    access_key_state: remove
+    state: absent

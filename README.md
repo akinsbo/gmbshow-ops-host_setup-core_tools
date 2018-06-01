@@ -10,3 +10,9 @@ ansible-playbook -i hosts.ini install-kubectl.yaml
 ```
 
 You may need either --ask-become-pass or ansible_become_pass
+
+
+## To run entire infrastructure, run:
+```sh
+
+ansible-playbook site.yml --limit webservers

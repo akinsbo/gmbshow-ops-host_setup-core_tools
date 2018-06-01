@@ -1,0 +1,40 @@
+---
+- name: Check if EC2 keys are present on machine
+  stat:
+    path: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pem"
+  register: file_stat
+
+- name: If absent, ensure EC2 key directory is created
+  file:
+    path: "{{ec2_keys_dir}}/{{ec2_region}}"
+    state: directory
+    mode: 0700
+  when: file_stat.stat.exists == false
+
+- include: roles/aws/tasks/mng_s3_bucket/download.yml
+  vars:
+    bucket_name: "{{ state_store | replace('s3://', '') }}"
+    bucket_region: "{{ ec2_region }}"
+    src_file: "infra/{{ec2_region}}/{{ec2_key_name}}.pem"
+    dest_file: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pem"
+
+- include: roles/aws/tasks/mng_s3_bucket/download.yml
+  vars:
+    bucket_name: "{{ state_store | replace('s3://', '') }}"
+    bucket_region: "{{ ec2_region }}"
+    src_file: "infra/{{ec2_region}}/{{ec2_key_name}}.pub"
+    dest_file: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pub"
+
+- name: Remove URL from known_hosts
+  known_hosts:
+    name: "api.{{cluster.name}}"
+    state: absent
+
+# Change key permissions
+- file:
+    path: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pem"
+    mode: 0600
+
+- file:
+    path: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pub"
+    mode: 0600

@@ -1,7 +1,7 @@
 
 ---
-- name: "Get all availability zones from aws for region {{ ec2_region }}"
-  command: "aws ec2 describe-availability-zones --region {{ ec2_region }} --filters Name=state,Values=available"
+- name: "Get all availability zones from aws for region {{ ec2_get_avail_region }}"
+  command: "aws ec2 describe-availability-zones --region {{ ec2_get_avail_region }} --filters Name=state,Values=available"
   register: aws_cmd
 
 - name: "Register one of the zones as an environment variable"

@@ -89,12 +89,9 @@ route53:
 # #################### 
 # kops-setup vars
 ######################
-my_iam_user: olaoluak
-my_iam_group: admin
 kops_role: ClusterAdmin
 
 state_store: "s3://kops-state-store-{{app_name}}"
-state_store_aws_region: us-east-1
 
 cluster:
   name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}.com"
@@ -109,3 +106,12 @@ ec2_key_name: "{{app_name}}"
 #  where to store ec2_keys on controller machine
 ec2_keys_dir: "{{ lookup('env', HOME)}}/ec2_keys"
 ec2_region: eu_west_1
+
+iam:
+  user:
+    name: olaoluak
+    groups: admin
+
+# #################### 
+# s3_bucket 
+######################
