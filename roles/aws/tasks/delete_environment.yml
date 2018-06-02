@@ -15,8 +15,22 @@
   vars:
     module_key_name: "{{ ec2_key_name }}"
     module_region: "{{ ec2_region }}"
-    module_keys_dir: "{{ ec2_keys_dir }}"
+    module_keys_dir: "{{ ec2_keys_dir }}" 
 
+- include: roles/aws/tasks/mng_iam/user/delete.yml
+  vars:
+    module_iam_user: "{{ iam.user.name }}"
+    module_iam_groups: "{{ iam.user.groups }}"
+
+- include_tasks: roles/aws/tasks/mng_s3_bucket/delete.yml
+  vars:
+    module_bucket_name: "{{ state_store | replace('s3://', '') }}"
+    module_bucket_region: "{{ ec2_region }}"
+
+- include_tasks: group/create.yml
+  vars:
+    module_iam_group: "{{ iam.user.groups }}"  
+    
 # - include: mng_route53/zone/delete.yml
 #   vars:
 #     module_zone_name: "{{route53.zone.DNS}}"
