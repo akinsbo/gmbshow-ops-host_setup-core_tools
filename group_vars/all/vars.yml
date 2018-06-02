@@ -61,13 +61,22 @@ my_ssh_user_groups:
 ############################
 # Tags
 ############################
-tag_creator: "{{my_iam_user}}"
-tag_owner: "{{my_iam_user}}"
+tag_creator: "{{iam.user.name}}"
+tag_owner: "{{iam.user.name}}"
 tag_application: "{{app_name}}"
 tag_costcenter: 1234
 tag_product: "{{app_name}}"
 tag_confidentiality: StrictlyConfidential
 tag_environment: Development
+
+s3_bucket_tags:
+  Name: "{{ state_store | replace('s3://', '') }}"
+  Creator: "{{ tag_creator }}"
+  Owner: "{{ tag_owner }}"
+  Application: "{{ tag_application }}"
+  CostCenter: "{{ tag_costcenter }}"
+  Confidentiality: "{{ tag_confidentiality }}"
+  Environment: "{{ tag_environment }}"
 
 ############################
 # Route 53
@@ -105,13 +114,13 @@ cluster:
   ec2_master_type: t2.micro
   num_of_nodes: 2
   num_of_master: 3
-  region: eu_west_1
+  region: eu-west-1
   bastion: true
 
 ec2_key_name: "{{app_name}}"
 #  where to store ec2_keys on controller machine
-ec2_keys_dir: "{{ lookup('env', HOME)}}/ec2_keys"
-ec2_region: eu_west_1
+ec2_keys_dir: "{{ lookup('env', 'HOME')}}/ec2_keys"
+ec2_region: eu-west-1
 
 iam:
   user:

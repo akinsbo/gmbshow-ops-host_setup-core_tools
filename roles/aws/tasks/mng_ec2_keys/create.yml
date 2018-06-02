@@ -21,7 +21,8 @@
   when: myregistered_ec2_keypair.changed
 
 - name: Generate a public key from the private key
-  shell: "ssh-keygen -y -f \
-          {{module_keys_dir}}/{{module_region}}/{{module_key_name}}.pem \
-          > {{ec2_region}}/{{ec2_key_name}}.pub"
+  command: "ssh-keygen -y -f \
+          {{module_keys_dir}}/{{module_region}}/{{module_key_name}}.pem"
+  args:
+    creates: "{{ec2_region}}/{{ec2_key_name}}.pub"
   when: myregistered_ec2_keypair.changed

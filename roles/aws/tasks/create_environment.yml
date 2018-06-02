@@ -23,6 +23,9 @@
   vars:
     module_bucket_name: "{{ state_store | replace('s3://', '') }}"
     module_bucket_region: "{{ ec2_region }}"
+    module_bucket_tags: "{{ s3_bucket_tags }}"
+    register: myregistered_s3create_output
+  # when: "not myregistered_s3create_output.stdout | search(you already own it)" 
 
 - include: mng_s3_bucket/upload.yml
   vars:

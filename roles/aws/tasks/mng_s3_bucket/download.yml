@@ -1,5 +1,5 @@
 - name: Download a file from s3-bucket
-  s3:
+  aws_s3:
     region: "{{ module_bucket_region }}"
     bucket: "{{ module_bucket_name }}"
     object: "{{ module_src_file }}"
