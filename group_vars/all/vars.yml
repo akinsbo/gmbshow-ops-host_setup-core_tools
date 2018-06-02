@@ -74,7 +74,7 @@ tag_environment: Development
 ############################
 route53:
   zone:
-    DNS: maryboyeshow.org
+    DNS: maryboye.org
     comment: The MaryBoye show
 
   record:
@@ -108,7 +108,7 @@ s3_bucket_tags:
   Environment: "{{ tag_environment }}"
 
 cluster:
-  name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}.com"
+  name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}"
   ec2_node_type: t2.micro
   ec2_master_type: t2.micro
   num_of_nodes: 2
@@ -116,7 +116,7 @@ cluster:
   region: eu-west-1
   bastion: true
 
-ec2_key_name: "{{app_name}}_testg"
+ec2_key_name: "{{app_name}}_testi"
 #  where to store ec2_keys on controller machine
 ec2_keys_dir: "{{ lookup('env', 'HOME')}}/ec2_keys"
 ec2_region: eu-west-1
