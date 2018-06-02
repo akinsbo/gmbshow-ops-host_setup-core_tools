@@ -8,14 +8,14 @@
     mysetfact_create_command: "kops create cluster {{ cluster.name }} \
                                 --cloud aws \
                                 --ssh-public-key {{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pub \
-                                --master-count {{cluster.num_of_master}}
+                                --master-count {{cluster.num_of_master}} \
                                 --node-count {{ cluster.num_of_nodes }} \
                                 --zones {{ mysetfact_aws_avail_zone }} \
                                 --master-zones {{ mysetfact_aws_avail_zone }} \
                                 --node-size {{ cluster.ec2_node_type }} \
                                 --master-size {{ cluster.ec2_master_type }} \
                                 --state {{ state_store }} \
-                                --cloud-labels 'Team Dev,Owner {{iam.user.name}}'' \
+                                --cloud-labels 'Team=Dev,Owner={{iam.user.name}}' \
                                 {% if cluster.bastion == True %}
                                 --bastion \
                                 --topology private \
@@ -27,7 +27,7 @@
       command: "{{ mysetfact_create_command }}"
     # register: myregistered_cluster_cmd
   rescue:
-    - include: delete_cluster.yaml
+    - include: delete_cluster.yml
     
     - name: "Try to create the cluster again"
       command: "{{ mysetfact_create_command }}"

@@ -1,4 +1,4 @@
-- name: Download a file from s3-bucket
+- name: "Download a file from s3-bucket {{ module_bucket_name }} in region {{ module_bucket_region }}"
   aws_s3:
     region: "{{ module_bucket_region }}"
     bucket: "{{ module_bucket_name }}"

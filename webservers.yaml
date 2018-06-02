@@ -8,5 +8,5 @@
 - hosts: localhost
   connection: local
   roles:
-    - aws
+    # - aws
     - kops

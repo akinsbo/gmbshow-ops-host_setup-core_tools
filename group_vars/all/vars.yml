@@ -69,15 +69,6 @@ tag_product: "{{app_name}}"
 tag_confidentiality: StrictlyConfidential
 tag_environment: Development
 
-s3_bucket_tags:
-  Name: "{{ state_store | replace('s3://', '') }}"
-  Creator: "{{ tag_creator }}"
-  Owner: "{{ tag_owner }}"
-  Application: "{{ tag_application }}"
-  CostCenter: "{{ tag_costcenter }}"
-  Confidentiality: "{{ tag_confidentiality }}"
-  Environment: "{{ tag_environment }}"
-
 ############################
 # Route 53
 ############################
@@ -107,6 +98,14 @@ kops_aws_managed_policies:
   - AmazonVPCFullAccess
 
 state_store: "s3://kops-state-store-{{app_name}}"
+s3_bucket_tags:
+  Name: "{{ state_store | replace('s3://', '') }}"
+  Creator: "{{ tag_creator }}"
+  Owner: "{{ tag_owner }}"
+  Application: "{{ tag_application }}"
+  CostCenter: "{{ tag_costcenter }}"
+  Confidentiality: "{{ tag_confidentiality }}"
+  Environment: "{{ tag_environment }}"
 
 cluster:
   name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}.com"
@@ -117,7 +116,7 @@ cluster:
   region: eu-west-1
   bastion: true
 
-ec2_key_name: "{{app_name}}"
+ec2_key_name: "{{app_name}}_testg"
 #  where to store ec2_keys on controller machine
 ec2_keys_dir: "{{ lookup('env', 'HOME')}}/ec2_keys"
 ec2_region: eu-west-1

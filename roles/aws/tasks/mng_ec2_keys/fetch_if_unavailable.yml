@@ -11,24 +11,23 @@
     mode: 0700
   when: file_stat.stat.exists == false
 
-- include: roles/aws/tasks/mng_s3_bucket/download.yml
-  vars:
-    module_bucket_name: "{{ state_store | replace('s3://', '') }}"
-    module_bucket_region: "{{ ec2_region }}"
-    module_src_file: "infra/{{ec2_region}}/{{ec2_key_name}}.pem"
-    module_dest_file: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pem"
-  tags:
-    - fetch-key
-
-- include: roles/aws/tasks/mng_s3_bucket/download.yml
-  vars:
-    module_bucket_name: "{{ state_store | replace('s3://', '') }}"
-    module_bucket_region: "{{ ec2_region }}"
-    module_src_file: "infra/{{ec2_region}}/{{ec2_key_name}}.pub"
-    module_dest_file: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pub"
-  tags:
-    - fetch-key
-    
+- name: Download the ec2_key. If absent, create it then download it.
+  block:
+    # download the ec2_keys
+    - include_tasks: roles/aws/tasks/mng_ec2_keys/download.yml
+      tags:
+        - fetch-key
+  rescue:
+    # if failed, then create the keys and upload the keys
+    - include: roles/aws/tasks/create_environment.yml
+      tags:
+        - fetch-key
+  always:
+    #  now redo the download
+    - include: roles/aws/tasks/mng_ec2_keys/download.yml
+      tags:
+        - fetch-key
+        
 - name: Remove URL from known_hosts
   known_hosts:
     name: "api.{{cluster.name}}"
