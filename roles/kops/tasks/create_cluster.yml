@@ -28,5 +28,6 @@
     # register: myregistered_cluster_cmd
   rescue:
     - include: delete_cluster.yaml
+    
     - name: "Try to create the cluster again"
       command: "{{ mysetfact_create_command }}"

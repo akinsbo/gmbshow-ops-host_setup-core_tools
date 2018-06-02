@@ -1,0 +1,23 @@
+---
+- include: mng_s3_bucket/delete.yml
+  vars:
+    module_bucket_name: "{{ state_store | replace('s3://', '') }}"
+    module_bucket_region: "{{ ec2_region }}"
+
+- include: mng_route53/register/delete.yml
+  vars:
+    module_zone_name: "{{route53.zone.DNS}}"
+    module_record_name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}"
+    module_record_type: "{{route53.record.type}}"
+    module_record_value: "{{ route53.record.value }}"
+
+- include: mng_ec2_keys/delete.yml
+  vars:
+    module_key_name: "{{ ec2_key_name }}"
+    module_region: "{{ ec2_region }}"
+    module_keys_dir: "{{ ec2_keys_dir }}"
+
+# - include: mng_route53/zone/delete.yml
+#   vars:
+#     module_zone_name: "{{route53.zone.DNS}}"
+#     module_zone_comment: "{{route53.zone.comment}}"
