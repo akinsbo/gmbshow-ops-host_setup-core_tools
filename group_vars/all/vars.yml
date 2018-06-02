@@ -90,6 +90,12 @@ route53:
 # kops-setup vars
 ######################
 kops_role: ClusterAdmin
+kops_aws_managed_policies:
+  - AmazonEC2FullAccess
+  - AmazonRoute53FullAccess
+  - AmazonS3FullAccess
+  - IAMFullAccess
+  - AmazonVPCFullAccess
 
 state_store: "s3://kops-state-store-{{app_name}}"
 

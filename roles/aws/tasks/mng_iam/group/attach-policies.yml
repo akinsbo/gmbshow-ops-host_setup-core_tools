@@ -3,10 +3,4 @@
 # Setup iam_group policies for AWS
 ###########################
 - name: Ensure group has required managed policies
-  command: aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/"{{ item }}" --group-name "{{ iam_group }}"
-  with_items:      
-  - AmazonEC2FullAccess
-  - AmazonRoute53FullAccess
-  - AmazonS3FullAccess
-  - IAMFullAccess
-  - AmazonVPCFullAccess
+  command: aws iam attach-group-policy --policy-arn arn:aws:iam::aws:policy/"{{ group_policy }}" --group-name "{{ iam_group }}"
