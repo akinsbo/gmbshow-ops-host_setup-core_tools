@@ -1,0 +1,5 @@
+---
+- name: Create the cluster in AWS
+  command: "kops upfate cluster {{ cluster.name }} \
+                                --state={{state_store}} \
+                                --yes"

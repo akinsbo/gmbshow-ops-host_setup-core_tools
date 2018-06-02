@@ -4,8 +4,8 @@
 ############################
 - name: Ensure a S3-Bucket is created
   s3_bucket:
-    name: "{{ bucket_name }}"
-    region: "{{ bucket_region }}"
+    name: "{{ module_bucket_name }}"
+    region: "{{ module_bucket_region }}"
     state: present
     versioning: yes
-    tags: "{{bucket_tags}}"
+    tags: "{{module_bucket_tags}}"

@@ -2,20 +2,20 @@
 # set aws_avail_zone variable (for use in kops-create zone and master-zone args)
 - include: roles/aws/tasks/get_availability_zone/main.yml
   vars:
-    ec2_get_avail_region: "{{ ec2_region }}"
+    module_get_avail_region: "{{ ec2_region }}"
 
 - set_fact:
-    create_command: "kops create cluster {{ cluster.name }} \
+    mysetfact_create_command: "kops create cluster {{ cluster.name }} \
                                 --cloud aws \
                                 --ssh-public-key {{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pub \
                                 --master-count {{cluster.num_of_master}}
                                 --node-count {{ cluster.num_of_nodes }} \
-                                --zones {{ aws_avail_zone }} \
-                                --master-zones {{ aws_avail_zone }} \
+                                --zones {{ mysetfact_aws_avail_zone }} \
+                                --master-zones {{ mysetfact_aws_avail_zone }} \
                                 --node-size {{ cluster.ec2_node_type }} \
                                 --master-size {{ cluster.ec2_master_type }} \
                                 --state {{ state_store }} \
-                                --cloud-labels 'Team Dev,Owner {{my_iam_user.name}}'' \
+                                --cloud-labels 'Team Dev,Owner {{iam.user.name}}'' \
                                 {% if cluster.bastion == True %}
                                 --bastion \
                                 --topology private \
@@ -23,10 +23,10 @@
                                  {% endif %}"
 
 - block:
-    - name: "Build cluster configuration in zone {{ aws_avail_zone }}"
-      command: "{{ create_command }}"
-    # register: cluster_cmd
+    - name: "Build cluster configuration in zone {{ mysetfact_aws_avail_zone }}"
+      command: "{{ mysetfact_create_command }}"
+    # register: myregistered_cluster_cmd
   rescue:
     - include: delete_cluster.yaml
     - name: "Try to create the cluster again"
-      command: "{{ create_command }}"
+      command: "{{ mysetfact_create_command }}"

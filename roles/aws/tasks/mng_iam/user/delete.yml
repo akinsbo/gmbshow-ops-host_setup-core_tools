@@ -6,7 +6,7 @@
 - name: Ensure iam user is created and added to group
   iam:
     iam_type: user
-    name: "{{ iam_user }}"
-    groups: "{{ iam_groups }}" 
+    name: "{{ module_iam_user }}"
+    groups: "{{ module_iam_groups }}" 
     access_key_state: remove
     state: absent

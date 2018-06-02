@@ -1,13 +1,13 @@
 
 ---
-- name: "Get all availability zones from aws for region {{ ec2_get_avail_region }}"
-  command: "aws ec2 describe-availability-zones --region {{ ec2_get_avail_region }} --filters Name=state,Values=available"
-  register: aws_cmd
+- name: "Get all availability zones from aws for region {{ module_get_avail_region }}"
+  command: "aws ec2 describe-availability-zones --region {{ module_get_avail_region }} --filters Name=state,Values=available"
+  register: myregistered_aws_cmd
 
 - name: "Register one of the zones as an environment variable"
   set_fact:
-    aws_avail_zone: "{{(aws_cmd.stdout|from_json).AvailabilityZones[0].ZoneName}}"
+    mysetfact_aws_avail_zone: "{{(myregistered_aws_cmd.stdout|from_json).AvailabilityZones[0].ZoneName}}"
   
 - name: print zone
   debug:
-    msg: "{{ aws_avail_zone }}"
+    msg: "{{ mysetfact_aws_avail_zone }}"

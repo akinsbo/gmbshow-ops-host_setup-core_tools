@@ -2,5 +2,5 @@
 - name: Ensure iam group is created
     iam:
       iam_type: group
-      name: "{{ iam_group }}"
+      name: "{{ module_iam_group }}"
       state: absent

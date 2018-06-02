@@ -1,7 +1,7 @@
 - name: Upload a file to s3-bucket
   s3:
-    bucket: "{{ bucket_name }}"
-    object: "{{ dest_file }}"
-    src: "{{ src_file }}"
+    bucket: "{{ module_bucket_name }}"
+    object: "{{ module_dest_file }}"
+    src: "{{ module_src_file }}"
     permission: "{{ file_permissions | default('private') }}"
     mode: put

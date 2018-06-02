@@ -1,0 +1,8 @@
+---
+#  to prevent clashes in dynamic variables and group/all/vars, preceed ,#module vars with 'module'
+#  Do not use new keyword 'module' as start of variable name in group/vars/all
+- include: mng_ec2_keys/create.yml
+  vars:
+    module_key_name: "{{ ec2_key_name }}"
+    module_region: "{{ ec2_region }}"
+    module_keys_dir: "{{ ec2_keys_dir }}"

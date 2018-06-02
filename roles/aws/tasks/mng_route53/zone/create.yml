@@ -1,0 +1,6 @@
+---
+- name: Create a DNS hosted zone
+  route53_zone:
+    zone: "{{ module_zone_name }}"
+    comment: "{{ module_zone_comment }}"
+    state: present

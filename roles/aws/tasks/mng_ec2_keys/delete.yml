@@ -1,6 +1,6 @@
 - name: Remove key pair by name
   ec2_key:
-    name: "{{ec2_key_name}}"
+    name: "{{module_key_name}}"
     state: absent
 
 - name: Remove SSH key from known hosts
@@ -9,4 +9,4 @@
 - name: Delete keys from local machine
   file:
     state: absent
-    path: "{{ec2_keys_dir}}/{{ec2_region}}"
+    path: "{{module_keys_dir}}/{{module_region}}"

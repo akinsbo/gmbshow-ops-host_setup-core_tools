@@ -1,0 +1,8 @@
+---
+- name: Delete DNS record
+  route53:
+    state: absent
+    zone: "{{ module_zone_name }}"
+    record: "{{ module_record_name }}"
+    type: "{{ module_record_type }}"
+    value: "{{ module_record_value }}"

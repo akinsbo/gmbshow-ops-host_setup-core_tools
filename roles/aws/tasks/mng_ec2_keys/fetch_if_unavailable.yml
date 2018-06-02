@@ -13,15 +13,15 @@
 
 - include: roles/aws/tasks/mng_s3_bucket/download.yml
   vars:
-    bucket_name: "{{ state_store | replace('s3://', '') }}"
-    bucket_region: "{{ ec2_region }}"
+    module_bucket_name: "{{ state_store | replace('s3://', '') }}"
+    module_bucket_region: "{{ ec2_region }}"
     src_file: "infra/{{ec2_region}}/{{ec2_key_name}}.pem"
     dest_file: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pem"
 
 - include: roles/aws/tasks/mng_s3_bucket/download.yml
   vars:
-    bucket_name: "{{ state_store | replace('s3://', '') }}"
-    bucket_region: "{{ ec2_region }}"
+    module_bucket_name: "{{ state_store | replace('s3://', '') }}"
+    module_bucket_region: "{{ ec2_region }}"
     src_file: "infra/{{ec2_region}}/{{ec2_key_name}}.pub"
     dest_file: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pub"
 
