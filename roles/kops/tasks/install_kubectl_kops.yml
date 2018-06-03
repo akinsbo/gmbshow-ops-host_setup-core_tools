@@ -1,43 +1,20 @@
 ---
-##############
-# Install Kubectl
-##############
-- name: Ensure gathering of facts
-  setup:
+#############################
+# Install Kubectl & Kops
+#############################
+- include: roles/common/tasks/download_pkg.yml
+  vars:
+    module_package: kubectl
+    module_darwin_url: "{{ kubectl_darwin_download_path }}"
+    module_linux_url: "{{ kubectl_download_path }}"
   tags:
-    - install-kops
-  when: ansible_os_family is undefined
-
-- name: Download and install kubectl for darwin os
-  become: true
-  get_url:
-    url: "{{ item.url }}"
-    dest: "/usr/local/bin/{{item.package}}"
-    owner: "{{local_ansible_user}}"
-    group: "{{local_ansible_group}}"
-    mode: 0755
-    force: yes
-    # TODO Add hash check
-  with_items:
-    - {package: kubectl, url: "{{ kubectl_darwin_download_path }}"}
-    - {package: kops, url: "{{ kops_darwin_download_path }}"}
-  when: ansible_os_family == 'Darwin'
-  tags: 
+    - instal-kubectl 
     - install-kops
 
-- name: Download and install kubectl for linux and others
-  become: true
-  get_url:
-    url: "{{ item.url }}"
-    dest: "/usr/local/bin/{{item.package}}"
-    owner: "{{local_ansible_user}}"
-    group: "{{local_ansible_group}}"
-    mode: 0755
-    force: yes
-    # TODO Add hash check
-  with_items:
-    - {package: kubectl, url: "{{ kubectl_download_path }}"}
-    - {package: kops, url: "{{ kops_download_path }}"}
-  when: ansible_os_family != 'Darwin'
+- include: roles/common/tasks/download_pkg.yml
+  vars:
+    module_package: kops
+    module_darwin_url: "{{ kops_darwin_download_path }}"
+    module_linux_url: "{{ kops_download_path }}"
   tags: 
     - install-kops

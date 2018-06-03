@@ -1,0 +1,57 @@
+---
+########################
+# Install Terraform
+########################
+- name: Ensure gathering of facts
+  setup:
+  when: ansible_os_family is undefined
+
+- name: Download, unzip and install
+  block:
+  - name: "Download, unarchive and install {{module_package}} for darwin os"
+    unarchive:
+      src: "{{ module_darwin_url }}"
+      dest: /usr/local/bin
+      owner: "{{local_ansible_user}}"
+      group: "{{local_ansible_group}}"
+      remote_src: yes
+      mode: 0755
+    when: ansible_os_family == 'Darwin'
+
+  - name: "Download, unarchive and install {{module_package}} for linux and others"
+    unarchive:
+      src: "{{ module_linux_url }}"
+      dest: /usr/local/bin
+      owner: "{{local_ansible_user}}"
+      group: "{{local_ansible_group}}"
+      remote_src: yes
+      mode: 0755
+    when: ansible_os_family != 'Darwin'
+  become: true
+  when: "module_linux_url | regex_search('(\\.zip$|\\.tar\\.?)')"
+
+- name: Download and install
+  block:
+  - name: "Download and install {{module_package}} for darwin os"
+    get_url:
+      url: "{{ module_darwin_url }}"
+      dest: "/usr/local/bin/{{module_package}}"
+      owner: "{{local_ansible_user}}"
+      group: "{{local_ansible_group}}"
+      mode: 0755
+      force: yes
+      # TODO Add hash check
+    when: ansible_os_family == 'Darwin'
+
+  - name: "Download and install {{module_package}} for linux and others"
+    get_url:
+      url: "{{ module_linux_url }}"
+      dest: "/usr/local/bin/{{module_package}}"
+      owner: "{{local_ansible_user}}"
+      group: "{{local_ansible_group}}"
+      mode: 0755
+      force: yes
+      # TODO Add hash check
+    when: ansible_os_family != 'Darwin'
+  become: true
+  when: "(module_linux_url | regex_search('(\\.zip$|\\.tar\\.?)') | length) < 1"

@@ -53,10 +53,10 @@
     - create
     - kops-create
 
-- include: apply_cluster_creation.yml
-  tags:
-    - create
-    - kops-create
+# - include: apply_cluster_creation.yml
+#   tags:
+#     - create
+#     - kops-create
 
 - include: delete_cluster.yml
   tags:

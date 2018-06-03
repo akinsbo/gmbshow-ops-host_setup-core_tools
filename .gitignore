@@ -16,6 +16,10 @@
 vault.yml
 vault.yaml
 
+# cloud formation
+# ignore kops generated file
+kubernetes.json
+
 # Config directories created by gcloud and gsutil on Jenkins
 /.config/gcloud*/
 /.gsutil/
@@ -80,6 +84,25 @@ nbdist/
 
 # Todo
 .todo
+
+# Terraform
+## Local .terraform directories
+**/.terraform/*
+
+## .tfstate files
+*.tfstate
+*.tfstate.*
+
+## Crash log files
+crash.log
+
+## kops generated .tf file
+kubernetes.tf
+# Ignore any .tfvars files that are generated automatically for each Terraform run. Most
+# .tfvars files are managed as part of configuration and so should be included in
+# version control.
+#
+# example.tfvars
 
 # User cluster configs
 .kubeconfig

@@ -18,8 +18,8 @@
                                 --topology {{cluster.topology}} \
                                 --networking {{cluster.networking}}
                                  {% endif %}
-                                --out {{cluster.terraform_location}} \
-                                --target {{cluster.terraform_file}}"
+                                --out {{cluster.output_location}} \
+                                --target {{cluster.output_file_type}}"
 
 
 - block:

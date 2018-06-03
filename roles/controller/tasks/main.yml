@@ -113,3 +113,7 @@
     tags:
       - kops
       - kubectl
+
+  - include: roles/terraform/tasks/install.yml
+    tags:
+      - terraform

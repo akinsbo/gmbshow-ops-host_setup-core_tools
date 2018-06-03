@@ -4,12 +4,12 @@ app_name: mbshow
 app_full_name: The maryboye show
 
 # kubectl
-kubectl_version: "v1.10.1"
+kubectl_version: "v1.10.3"
 kubectl_download_path: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
 kubectl_darwin_download_path: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version }}/bin/darwin/amd64/kubectl"
 
 # kops
-kops_version: "1.9.0"
+kops_version: "1.9.1"
 kops_download_path: "https://github.com/kubernetes/kops/releases/download/{{ kops_version }}/kops-linux-amd64"
 kops_darwin_download_path: "https://github.com/kubernetes/kops/releases/download/{{ kops_version }}/kops-darwin-amd64"
 
@@ -20,6 +20,9 @@ remote_controller_group: olaolu
 # virtenv
 controller_python_virtenv: "/usr/local/bin/{{app_name}}/python/venv"
 controller_python3_virtenv: "/usr/local/bin/{{app_name}}/python3/venv"
+
+local_ansible_user: olaolu
+local_ansible_group: olaolu
 
 # ssh users
 my_ssh_users:
@@ -97,16 +100,6 @@ kops_aws_managed_policies:
   - IAMFullAccess
   - AmazonVPCFullAccess
 
-state_store: "s3://kops-state-store-{{app_name}}"
-s3_bucket_tags:
-  Name: "{{ state_store | replace('s3://', '') }}"
-  Creator: "{{ tag_creator }}"
-  Owner: "{{ tag_owner }}"
-  Application: "{{ tag_application }}"
-  CostCenter: "{{ tag_costcenter }}"
-  Confidentiality: "{{ tag_confidentiality }}"
-  Environment: "{{ tag_environment }}"
-
 cluster:
   name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}"
   ec2_node_type: t2.micro
@@ -119,6 +112,8 @@ cluster:
   zones: "" # e.g. "{{region}}a,{{region}}b,{{region}}c"
   networking: calico
   topology: private
+  output_location: "{{playbook_dir}}/roles/terraform/files"
+  output_file_type: cloudformation #terraform #e.g. cloudformation
 
 ec2_key_name: "{{app_name}}_testi"
 #  where to store ec2_keys on controller machine
@@ -133,3 +128,19 @@ iam:
 # #################### 
 # s3_bucket 
 ######################
+state_store: "s3://kops-state-store-{{app_name}}"
+s3_bucket_tags:
+  Name: "{{ state_store | replace('s3://', '') }}"
+  Creator: "{{ tag_creator }}"
+  Owner: "{{ tag_owner }}"
+  Application: "{{ tag_application }}"
+  CostCenter: "{{ tag_costcenter }}"
+  Confidentiality: "{{ tag_confidentiality }}"
+  Environment: "{{ tag_environment }}"
+
+###################### 
+# Terraform
+######################
+terraform_version: "0.11.7"
+terraform_download_path: "https://releases.hashicorp.com/terraform/{{terraform_version}}/terraform_{{terraform_version}}_linux_amd64.zip"
+terraform_darwin_download_path: "https://releases.hashicorp.com/terraform/{{terraform_version}}/terraform_{{terraform_version}}_darwin_amd64.zip"
