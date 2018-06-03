@@ -15,9 +15,12 @@
                                 --cloud-labels 'Team=Dev,Owner={{iam.user.name}}' \
                                 {% if cluster.bastion == True %}
                                 --bastion \
-                                --topology {{topology}} \
-                                --networking {{networking}}
-                                 {% endif %}"
+                                --topology {{cluster.topology}} \
+                                --networking {{cluster.networking}}
+                                 {% endif %}
+                                --out {{cluster.terraform_location}} \
+                                --target {{cluster.terraform_file}}"
+
 
 - block:
     - name: "Build cluster configuration in zone {{ mysetfact_aws_avail_zone }}"

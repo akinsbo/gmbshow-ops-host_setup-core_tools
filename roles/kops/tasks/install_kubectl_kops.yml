@@ -1,35 +1,43 @@
 ---
-############################
-# Install Kubectl and kops
-############################
-# Download and install kubectl for OSX users
-- include: roles/common/tasks/download_pkg.yml
+##############
+# Install Kubectl
+##############
+- name: Ensure gathering of facts
+  setup:
+  tags:
+    - install-kops
+  when: ansible_os_family is undefined
+
+- name: Download and install kubectl for darwin os
   become: true
-  vars:
-    module_file_name: "{{ package }}"
-    module_dest_folder: "/usr/local/bin/{{item.package}}"
-    module_file__owner: "{{local_ansible_user}}"
-    module_file__owner_group: "{{local_ansible_group}}"
+  get_url:
+    url: "{{ item.url }}"
+    dest: "/usr/local/bin/{{item.package}}"
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
+    mode: 0755
+    force: yes
+    # TODO Add hash check
   with_items:
     - {package: kubectl, url: "{{ kubectl_darwin_download_path }}"}
     - {package: kops, url: "{{ kops_darwin_download_path }}"}
   when: ansible_os_family == 'Darwin'
-  tags:
-    - kubectl
-    - kops
-  
-  # Download and install kubectl for linux and others
-- include: roles/common/tasks/download_pkg.yml
+  tags: 
+    - install-kops
+
+- name: Download and install kubectl for linux and others
   become: true
-  vars:
-    module_file_name: "{{ package }}"
-    module_dest_folder: "/usr/local/bin/{{item.package}}"
-    module_file__owner: "{{local_ansible_user}}"
-    module_file__owner_group: "{{local_ansible_group}}"
+  get_url:
+    url: "{{ item.url }}"
+    dest: "/usr/local/bin/{{item.package}}"
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
+    mode: 0755
+    force: yes
+    # TODO Add hash check
   with_items:
     - {package: kubectl, url: "{{ kubectl_download_path }}"}
     - {package: kops, url: "{{ kops_download_path }}"}
   when: ansible_os_family != 'Darwin'
-  tags:
-    - kubectl
-    - kops
+  tags: 
+    - install-kops

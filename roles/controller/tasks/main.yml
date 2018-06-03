@@ -108,3 +108,8 @@
       - ansible
       - boto3
       - awscli
+
+  - include: roles/kops/tasks/install_kubectl_kops.yml
+    tags:
+      - kops
+      - kubectl
