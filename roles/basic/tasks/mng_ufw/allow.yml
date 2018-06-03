@@ -1,0 +1,24 @@
+---
+  #(Note that as ufw manages its own state, simply removing
+  # a rule=allow task can leave those ports exposed. Either use delete=yes
+  # or a separate state=reset task)
+  - name: Ensure OpenSSH is allowed
+    become: yes
+    ufw:
+      rule: allow
+      name: OpenSSH
+    tags:
+      - ufw
+
+  - name: Ensure access to tcp port 80 is allowed
+    become: yes
+    ufw:
+      rule: allow
+      port: "{{item}}"
+      proto: tcp
+      log: yes
+    with_items:
+      - 80
+      - 443
+    tags:
+      - ufw

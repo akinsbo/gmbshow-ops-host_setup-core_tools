@@ -1,0 +1,5 @@
+---
+- name: Destroy the AWS cluster
+  command: "kops delete cluster {{ cluster.name }} \
+                                --state={{state_store}} \
+                                --yes"

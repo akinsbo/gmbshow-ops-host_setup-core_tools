@@ -1,0 +1,6 @@
+--- 
+############################
+# Setup iam_group policies for AWS
+###########################
+- name: Ensure group has required managed policies
+  command: aws iam detach-group-policy --policy-arn arn:aws:iam::aws:policy/"{{ module_group_policy }}" --group-name "{{ module_iam_group }}"

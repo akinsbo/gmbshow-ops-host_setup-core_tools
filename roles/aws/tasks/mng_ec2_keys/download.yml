@@ -1,0 +1,18 @@
+---
+- include: roles/aws/tasks/mng_s3_bucket/download.yml
+  vars:
+    module_bucket_name: "{{ state_store | replace('s3://', '') }}"
+    module_bucket_region: "{{ ec2_region }}"
+    module_src_file: "infra/{{ec2_region}}/{{ec2_key_name}}.pem"
+    module_dest_file: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pem"
+  tags:
+    - fetch-key
+
+- include: roles/aws/tasks/mng_s3_bucket/download.yml
+  vars:
+    module_bucket_name: "{{ state_store | replace('s3://', '') }}"
+    module_bucket_region: "{{ ec2_region }}"
+    module_src_file: "infra/{{ec2_region}}/{{ec2_key_name}}.pub"
+    module_dest_file: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pub"
+  tags:
+    - fetch-key
