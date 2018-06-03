@@ -1,0 +1,20 @@
+---
+#############################
+# Install Kubectl & Kops
+#############################
+- include: roles/common/tasks/download_pkg.yml
+  vars:
+    module_package: kubectl
+    module_darwin_url: "{{ kubectl_darwin_download_path }}"
+    module_linux_url: "{{ kubectl_download_path }}"
+  tags:
+    - instal-kubectl 
+    - install-kops
+
+- include: roles/common/tasks/download_pkg.yml
+  vars:
+    module_package: kops
+    module_darwin_url: "{{ kops_darwin_download_path }}"
+    module_linux_url: "{{ kops_download_path }}"
+  tags: 
+    - install-kops

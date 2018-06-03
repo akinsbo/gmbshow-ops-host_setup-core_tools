@@ -1,0 +1,27 @@
+galaxy_info:
+  author: Olaolu Akinsete
+  description: Provision kubectl and kubernetes kops
+
+  issue_tracker_url: mantis.l:8012/view_all_bug_page.php
+
+  license: license (GPLv2, CC-BY, etc)
+
+  min_ansible_version: 1.2
+
+  github_branch: https://github.com/akinsbo/gmbshow-ops-host_setup-core_tools
+
+  platforms:
+  - name: Ubuntu
+    versions:
+    - Xenial
+  - name: OSX
+    versions:
+    - all
+
+  galaxy_tags:
+    - kubectl
+    - kops
+    - kubernetes
+
+dependencies:
+  # - setup-remote-controller

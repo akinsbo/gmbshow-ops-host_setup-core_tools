@@ -1,0 +1,6 @@
+---
+- name: Ensure iam group is created
+  iam:
+    iam_type: group
+    name: "{{ module_iam_group }}"
+    state: present

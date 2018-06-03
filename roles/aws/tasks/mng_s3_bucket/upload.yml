@@ -1,0 +1,8 @@
+- name: Upload a file to s3-bucket
+  aws_s3:
+    region: "{{ module_bucket_region }}"
+    bucket: "{{ module_bucket_name }}"
+    object: "{{ module_dest_file }}"
+    src: "{{ module_src_file }}"
+    permission: "{{ file_permissions | default('private') }}"
+    mode: put

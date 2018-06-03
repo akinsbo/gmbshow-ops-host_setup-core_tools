@@ -1,0 +1,22 @@
+---
+############################
+# Create the S3 bucket for the Kops state store
+############################
+- name: Check if s3-bucket exists
+  # command: "aws s3 ls '{{ module_bucket_name }}' 2>&1 | grep -q 'NoSuchBucket'"
+  command: "aws s3api head-bucket --bucket {{ module_bucket_name }}"
+  register: myregistered_aws_check
+  ignore_errors: yes
+
+- name: Debug if s3-bucket exists
+  debug:
+    var: myregistered_aws_check
+
+- name: Ensure a S3-Bucket is created
+  s3_bucket:
+    name: "{{ module_bucket_name }}"
+    region: "{{ module_bucket_region }}"
+    state: present
+    versioning: yes
+    tags: "{{module_bucket_tags}}"
+  when: '"404" in myregistered_aws_check.stderr'

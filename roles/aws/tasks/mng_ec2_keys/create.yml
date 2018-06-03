@@ -1,0 +1,49 @@
+---
+- name: Generate EC2 key
+  ec2_key:
+    name: "{{module_key_name}}"
+    region: "{{module_region}}"
+  register: myregistered_ec2_keypair
+
+- name: Check if EC2 folder exists
+  stat:
+    path: "{{module_keys_dir}}/{{module_region}}"
+  register: myregistered_ec2folder
+
+# if folder does not exist, create folder
+- name: Create folder for EC2 key
+  file:
+    path: "{{module_keys_dir}}/{{module_region}}"
+    state: directory
+    mode: 0700
+  when: myregistered_ec2folder.stat.exists == false
+
+- name: Check if private ec2_key exists locally
+  stat:
+    path: "{{module_keys_dir}}/{{module_region}}.pem"
+  register: myregistered_pem_file
+
+- name: Debug key
+  debug:
+    var: myregistered_ec2_keypair
+
+# if key changed or file does not exist, create file
+# copy previously registered ec2_keypair variable
+- name: Save key to local machine
+  copy:
+    content: "{{ myregistered_ec2_keypair.key.private_key }}" 
+    dest: "{{module_keys_dir}}/{{module_region}}/{{module_key_name}}.pem"
+    mode: 0400
+  when: '"myregistered_ec2_keypair.changed" or "myregistered_pem_file.stat.exists == false"'
+
+- name: Check if private ec2_key exists locally
+  stat:
+    path: "{{module_keys_dir}}/{{module_region}}.pub"
+  register: myregistered_pub_file
+
+# if key changed or file does not exist, create file
+- name: Generate a public key from the private key
+  shell: "ssh-keygen -y -f \
+          {{module_keys_dir}}/{{module_region}}/{{module_key_name}}.pem \
+          > {{module_keys_dir}}/{{module_region}}/{{module_key_name}}.pub"
+  when: '"myregistered_ec2_keypair.changed" or "myregistered_pub_file.stat.exists == false"'

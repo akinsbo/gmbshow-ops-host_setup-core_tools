@@ -1,0 +1,23 @@
+---
+#  to prevent clashes in dynamic variables and group/all/vars, preceed ,#module vars with 'module'
+#  Do not use new keyword 'module' as start of variable name in group/vars/all
+- include_tasks: roles/aws/tasks/mng_ec2_keys/create.yml
+  vars:
+    module_key_name: "{{ ec2_key_name }}"
+    module_region: "{{ ec2_region }}"
+    module_keys_dir: "{{ ec2_keys_dir }}"
+
+# upload created ec2_keys
+- include_tasks: roles/aws/tasks/mng_ec2_keys/upload.yml
+
+- include: roles/aws/tasks/mng_route53/zone/create.yml
+  vars:
+    module_zone_name: "{{route53.zone.DNS}}"
+    module_zone_comment: "{{route53.zone.comment}}"
+
+- include: roles/aws/tasks/mng_route53/register/create.yml
+  vars:
+    module_zone_name: "{{route53.zone.DNS}}"
+    module_record_name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}"
+    module_record_type: "{{route53.record.type}}"
+    module_record_value: "{{ route53.record.value }}"

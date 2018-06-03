@@ -1,0 +1,7 @@
+- name: "Download a file from s3-bucket {{ module_bucket_name }} in region {{ module_bucket_region }}"
+  aws_s3:
+    region: "{{ module_bucket_region }}"
+    bucket: "{{ module_bucket_name }}"
+    object: "{{ module_src_file }}"
+    dest: "{{ module_dest_file }}"
+    mode: get

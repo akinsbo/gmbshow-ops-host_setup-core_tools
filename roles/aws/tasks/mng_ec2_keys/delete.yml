@@ -1,0 +1,12 @@
+- name: Remove key pair by name
+  ec2_key:
+    name: "{{module_key_name}}"
+    state: absent
+
+- name: Remove SSH key from known hosts
+  command: "ssh-keygen -R api.{{route53.record.subDNS}}.{{route53.zone.DNS}}"
+
+- name: Delete keys from local machine
+  file:
+    state: absent
+    path: "{{module_keys_dir}}/{{module_region}}"

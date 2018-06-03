@@ -1,0 +1,30 @@
+---
+# Author: Olaolu Akinsete<akinsbo@gmail.com>
+# Date: May 23, 2018<3:46am>
+######################################################
+## Prepare fresh linux or debian machine
+######################################################
+
+- hosts: "{{controller | default('localhost')}}"
+  connection: local                        
+  gather_facts: no
+
+  pre_tasks:
+
+  # - name: Wait for Hosts to boot and connect via ssh 
+  #   wait_for:
+  #     port: 22
+  #     state: started
+  #     search_regex: OpenSSH
+  #     timeout: 10
+
+  - name: Ensure Python 2.x is installed
+    become: true
+    raw: test -e /usr/bin/python || (apt update && apt install -y python-simplejson)
+    register: test
+
+  - name: Gather facts
+    setup:
+
+  roles:
+    - basic
