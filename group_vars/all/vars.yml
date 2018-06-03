@@ -117,6 +117,8 @@ cluster:
   bastion: true
   master_zones: "" # e.g. "{{region}}a,{{region}}b,{{region}}c"
   zones: "" # e.g. "{{region}}a,{{region}}b,{{region}}c"
+  networking: calico
+  topology: private
 
 ec2_key_name: "{{app_name}}_testi"
 #  where to store ec2_keys on controller machine

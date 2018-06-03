@@ -15,8 +15,8 @@
                                 --cloud-labels 'Team=Dev,Owner={{iam.user.name}}' \
                                 {% if cluster.bastion == True %}
                                 --bastion \
-                                --topology private \
-                                --networking calico
+                                --topology {{topology}} \
+                                --networking {{networking}}
                                  {% endif %}"
 
 - block:
