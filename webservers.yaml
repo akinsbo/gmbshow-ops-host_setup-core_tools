@@ -7,9 +7,7 @@
 
 - hosts: localhost
   connection: local
-  # TODO: Ensure this returns three zones:
-  # * Ask for confirmation to continue if there are two or less zones in this region
-  # * Ask for confirmation to use three (or four by user input) if they are more than three zones
+  
   pre_tasks:
     # set aws_avail_zone variable (for use in kops-create zone and master-zone args)
     - include: roles/aws/tasks/get_availability_zone/main.yml
@@ -21,6 +19,7 @@
     - name: number_of_zones
       pause:
         prompt: "There are {{mysetfact_num_aws_avail_zone}} zones in this region, namely: {{mysetfact_aws_avail_zone}}. Set vars for zones to deploy in else [ALL] zones would be used?" 
+  
   roles:
     # - aws
     - kops

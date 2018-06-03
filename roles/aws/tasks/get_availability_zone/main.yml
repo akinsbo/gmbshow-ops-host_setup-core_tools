@@ -8,10 +8,6 @@
   set_fact:
     mysetfact_aws_avail_zone: "{{ myregistered_aws_cmd.stdout|from_json|json_query('AvailabilityZones[].ZoneName')|join(',') }}"
 
-- name: Debug length of variable
-  debug: 
-    msg: "There are {{mysetfact_num_aws_avail_zone}} zones in this region, namely: {{mysetfact_aws_avail_zone}}"
-
 - name: Register number of available zones as an environment variable
   set_fact:
     mysetfact_num_aws_avail_zone: "{{(myregistered_aws_cmd.stdout|from_json).AvailabilityZones | length}}"
