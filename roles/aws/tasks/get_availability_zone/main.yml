@@ -3,14 +3,14 @@
 - name: "Get all availability zones from aws for region {{ module_get_avail_region }}"
   command: "aws ec2 describe-availability-zones --region {{ module_get_avail_region }} --filters Name=state,Values=available"
   register: myregistered_aws_cmd
+  tags:
+    - tru
 
 - name: "Register the zones as an environment variable"
   set_fact:
-    mysetfact_aws_avail_zone: "{{(myregistered_aws_cmd.stdout|from_json).AvailabilityZones[0].ZoneName}}"
+    mysetfact_aws_avail_zone: "{{ myregistered_aws_cmd.stdout|from_json|json_query('AvailabilityZones[].ZoneName')|join(',') }}"
   # TODO: Ensure this returns three zones:
-  # * Ask for confirmation to continue if they are two or less zones
+  # * Ask for confirmation to continue if there are two or less zones in this region
   # * Ask for confirmation to use three (or four by user input) if they are more than three zones
-
-- name: print zone
-  debug:
-    msg: "{{ mysetfact_aws_avail_zone }}"
+  tags:
+    - tru
