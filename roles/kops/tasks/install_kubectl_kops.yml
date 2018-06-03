@@ -3,7 +3,7 @@
 # Install Kubectl and kops
 ############################
 # Download and install kubectl for OSX users
-- include: roles/common/tasks/download_pkg
+- include: roles/common/tasks/download_pkg.yml
   become: true
   vars:
     module_file_name: "{{ package }}"
@@ -19,7 +19,7 @@
     - kops
   
   # Download and install kubectl for linux and others
-- include: roles/common/tasks/download_pkg
+- include: roles/common/tasks/download_pkg.yml
   become: true
   vars:
     module_file_name: "{{ package }}"
