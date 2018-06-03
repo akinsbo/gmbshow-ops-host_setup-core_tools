@@ -1,0 +1,9 @@
+---
+- name: "Download {{ module_file_name}}"
+  get_url:
+    url: "{{ module_file_url }}"
+    dest: "{{ module_dest_folder }}"
+    owner: "{{module_file_owner}}"
+    group: "{{module_file__owner_group}}"
+    mode: a+x
+    force: yes
