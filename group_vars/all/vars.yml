@@ -115,6 +115,8 @@ cluster:
   num_of_master: 3
   region: eu-west-1
   bastion: true
+  master_zones: "" # e.g. "{{region}}a,{{region}}b,{{region}}c"
+  zones: "" # e.g. "{{region}}a,{{region}}b,{{region}}c"
 
 ec2_key_name: "{{app_name}}_testi"
 #  where to store ec2_keys on controller machine
