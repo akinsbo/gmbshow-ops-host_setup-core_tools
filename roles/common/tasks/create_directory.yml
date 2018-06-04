@@ -1,0 +1,8 @@
+---
+- name: Ensure directory is created
+  file:
+    path: "{{ module_path }}"
+    state: directory
+    owner: root
+    group: root
+    mode: 0775

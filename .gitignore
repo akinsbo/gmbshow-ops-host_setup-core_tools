@@ -15,6 +15,7 @@
 *.retry
 vault.yml
 vault.yaml
+/tmp/
 
 # cloud formation
 # ignore kops generated file
