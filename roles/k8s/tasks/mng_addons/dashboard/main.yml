@@ -1,0 +1,15 @@
+---
+# Ensure a temp directory is created to place temp files
+- include: roles/common/tasks/create_directory
+  vars:
+    module_path: "{{role_path}}/files/tmp"
+
+- name: Ensure kubernetes dashboard deployment configuration is added
+  become: false
+  template:
+    src: kubernetes-dashboard.yaml.j2
+    dest: "{{role_path}}/files/tmp/kubernetes-dashboard.yaml"
+    mode: 0644
+
+- name: Ensure dashboard is deployed
+  shell: "kubectl apply -f {{role_path}}/files/tmp/kubernetes-dashboard.yaml --server=https://192.168.39.153:8080"

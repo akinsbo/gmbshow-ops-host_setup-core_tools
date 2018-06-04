@@ -1,0 +1,7 @@
+---
+# tasks file for k8s
+- include: mng_addons/dashboard/main.yml
+  tags:
+    - k8s
+    - addons
+    - dashboard
