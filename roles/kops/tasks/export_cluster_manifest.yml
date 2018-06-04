@@ -1,0 +1,16 @@
+---
+#  Ensure the temp directory exists
+- include: roles/common/tasks/create_directory
+  vars:
+    module_path: "{{role_path}}/files/tmp"
+
+- name: Ensure AWS cluster k8s manifest is created for cluster
+  command: "kops get cluster {{ cluster.name }} \
+                                --output yaml \
+                                > {{role_path}}/files/tmp/manifest_{{ cluster.name }}.yaml"
+
+- name: Ensure FULL AWS cluster k8s manifest is created for cluster
+  command: "kops get cluster {{ cluster.name }} \
+                                --full \
+                                --output yaml \
+                                > {{role_path}}/files/tmp/manifest_{{ cluster.name }}.yaml"
