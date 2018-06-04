@@ -144,3 +144,8 @@ s3_bucket_tags:
 terraform_version: "0.11.7"
 terraform_download_path: "https://releases.hashicorp.com/terraform/{{terraform_version}}/terraform_{{terraform_version}}_linux_amd64.zip"
 terraform_darwin_download_path: "https://releases.hashicorp.com/terraform/{{terraform_version}}/terraform_{{terraform_version}}_darwin_amd64.zip"
+
+
+# K8s
+# add-ons
+k8s_dashboard_url: https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml

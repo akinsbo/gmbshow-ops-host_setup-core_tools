@@ -1,5 +1,5 @@
 ---
 - name: Ensure infrastructure is destroyed
-  command: yes 'y' | terraform destroy
+  command: terraform destroy
   args:
     chdir: "{{ role_path }}/files"

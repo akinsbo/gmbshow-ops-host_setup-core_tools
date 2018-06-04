@@ -25,3 +25,4 @@
     # - aws
     - kops
     - terraform
+    - k8s
