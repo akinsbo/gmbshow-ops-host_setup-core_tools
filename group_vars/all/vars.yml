@@ -113,7 +113,7 @@ cluster:
   networking: calico
   topology: private
   output_location: "{{playbook_dir}}/roles/terraform/files"
-  output_file_type: cloudformation #terraform #e.g. cloudformation
+  output_file_type: terraform #e.g. cloudformation
 
 ec2_key_name: "{{app_name}}_testi"
 #  where to store ec2_keys on controller machine

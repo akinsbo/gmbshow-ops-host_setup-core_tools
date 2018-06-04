@@ -1,0 +1,6 @@
+---
+- name: Ensure AWS cluster k8s manifest is created for cluster
+  command: "kops update cluster {{ cluster.name }} \
+                                --state={{state_store}} \
+                                --dry-run \
+                                --output yaml"

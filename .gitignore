@@ -92,6 +92,7 @@ nbdist/
 ## .tfstate files
 *.tfstate
 *.tfstate.*
+terraform_saved_plan
 
 ## Crash log files
 crash.log
@@ -103,7 +104,7 @@ kubernetes.tf
 # version control.
 #
 # example.tfvars
-
+data
 # User cluster configs
 .kubeconfig
 

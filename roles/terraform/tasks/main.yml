@@ -1,0 +1,29 @@
+---
+- include: plan.yml
+  tags:
+    - create
+    - terraform
+
+- name: Ensure plan is safe
+  pause:
+    prompt: Please ENSURE the plan is safe before you continue.
+  tags:
+    - create
+    - terraform
+
+- include: apply.yml
+  tags:
+    - create
+    - terraform
+
+- name: Ensure user wants to destroy
+  pause:
+    prompt: Are you sure you want to DESTROY?
+  tags:
+    - destroy
+    - destroy-terraform
+
+- include: destroy.yml
+  tags: 
+    - destroy
+    - destroy-terraform
