@@ -53,6 +53,18 @@
     - create
     - kops-create
 
+- include: export_cluster_config.yml
+  tags:
+    - create
+    - kops-create
+    - config
+
+# - include: export_cluster_manifest.yml
+#   tags:
+#     - create
+#     - kops-create
+#     - config
+
 # - include: apply_cluster_creation.yml
 #   tags:
 #     - create

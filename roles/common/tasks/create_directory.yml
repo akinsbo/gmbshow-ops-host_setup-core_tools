@@ -3,6 +3,6 @@
   file:
     path: "{{ module_path }}"
     state: directory
-    owner: root
-    group: root
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
     mode: 0775

@@ -17,10 +17,10 @@
         - avail
         - create
         
-    - name: number_of_zones
-      pause:
-        prompt: "There are {{mysetfact_num_aws_avail_zone}} zones in this region, namely: {{mysetfact_aws_avail_zone}}. Set vars for zones to deploy in else [ALL] zones would be used?" 
-  
+    # - name: number_of_zones
+    #   pause:
+    #     prompt: "There are {{mysetfact_num_aws_avail_zone}} zones in this region, namely: {{mysetfact_aws_avail_zone}}. Set vars for zones to deploy in else [ALL] zones would be used?" 
+
   roles:
     # - aws
     - kops

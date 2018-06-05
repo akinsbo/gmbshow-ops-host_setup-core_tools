@@ -149,3 +149,5 @@ terraform_darwin_download_path: "https://releases.hashicorp.com/terraform/{{terr
 # K8s
 # add-ons
 k8s_dashboard_url: https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
+
+heapster_url: https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb

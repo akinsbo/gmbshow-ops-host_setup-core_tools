@@ -5,3 +5,10 @@
     - k8s
     - addons
     - dashboard
+
+- name: Run proxy command to serve dashboard
+  command: kubeclt proxy
+  tags:
+    - k8s
+    - addons
+    - dashboard
