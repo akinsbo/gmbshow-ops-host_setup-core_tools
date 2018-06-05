@@ -22,4 +22,4 @@
 - include: checks/main.yml
   tags:
     - k8s
-    - cluster-check
+    - cluster-checks

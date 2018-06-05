@@ -1,0 +1,19 @@
+---
+- name: Run command
+  command: "{{module_command}}"
+  register: myregistered_cmd
+  ignore_errors: yes
+
+#  be aware that if you do not set a unique mark the block will be overwritten on each iteration
+- name: "Log output and errors if any into {{module_cmdlogfile}}"
+  blockinfile:
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK {{module_command}}-->"
+    path: "{{module_cmdlogfile}}"
+    block: |
+            <h3>{{ module_command_aim }}</h3>
+            <h4>- Command ran:{{ module_command}}</h4>
+            <p style="color:blue;margin-left:30px;">Output:{{ myregistered_cmd.stdout }}</p>
+            <br>
+            <p style="color:red;margin-left:30px;">Error:{{ myregistered_cmd.stderr }}</p>
+            <p>Last updated on {{ ansible_date_time.iso8601 }}</p>
+            <br><br>

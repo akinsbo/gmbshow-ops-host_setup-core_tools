@@ -1,0 +1,9 @@
+---
+- name: Ensure file exists
+  copy:
+    content: ""
+    dest: "{{module_path}}"
+    force: no
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
+    mode: 0775

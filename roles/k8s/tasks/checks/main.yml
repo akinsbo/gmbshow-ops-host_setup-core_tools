@@ -1,8 +1,23 @@
 ---
 # - name: Ensure snapshot directory is created
-- name: Waiting for cluster to finish building...
-  command: kubectl get nodes
-  register: myreg_cmd
-  until: "not myreg_cmd.stderr | regex_search('no such host')"
-  retries: 200
-  delay: 5
+# - name: Waiting for cluster to finish building...
+#   command: kubectl get nodes
+#   register: myreg_cmd
+#   until: "not myreg_cmd.stderr | regex_search('no such host')"
+#   retries: 200
+#   delay: 5
+
+  # TODO: List out health commands and log
+- include: roles/common/tasks/command_log/main.yml
+  vars:
+    module_file: "{{role_path}}/files/logs/log_{{ansible_date_time.iso8601}}.html"
+    module_command_array:
+      - {command: "kubectl get nodes", aim: "fetching nodes"}
+      - {command: "kubectl list cluster", aim: "listing clusters"}
+      - {command: "kubectl get cs", aim: "checking cluster health (component status)"}
+      - {command: "kubectl get pods", aim: "fetching pods"}
+      - {command: "kubectl get deployments", aim: "fetching deployments"}
+      - {command: "kubectl config view", aim: "check current config"}
+      - {command: "kubectl cluster-info", aim: "cluster info"}
+  tags:
+    - cluster-checks
