@@ -26,3 +26,11 @@ ansible-playbook -i hosts.ini webservers.yaml --tags="create"
 ansible-playbook -i hosts.ini webservers.yaml --tags="destroy"
 
 ```
+
+## To perform checks on cluster
+
+```sh
+
+ansible-playbook -i hosts.ini webservers.yaml --tags="cluster-checks"
+
+```
