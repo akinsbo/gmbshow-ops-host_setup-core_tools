@@ -1,4 +1,9 @@
 ---
+# Ensure a temp directory is created to place temp files
+- include: roles/common/tasks/create_directory.yml
+  vars:
+    module_path: "{{role_path}}/files/tmp"
+  
 # tasks file for k8s
 - include: mng_addons/dashboard/main.yml
   tags:
@@ -7,8 +12,14 @@
     - dashboard
 
 - name: Run proxy command to serve dashboard
-  command: kubeclt proxy
+  command: kubectl proxy
   tags:
     - k8s
     - addons
     - dashboard
+
+# Ensure checks are run
+- include: checks/main.yml
+  tags:
+    - k8s
+    - cluster-check

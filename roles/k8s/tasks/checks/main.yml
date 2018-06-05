@@ -1,0 +1,8 @@
+---
+# - name: Ensure snapshot directory is created
+- name: Waiting for cluster to finish building...
+  command: kubectl get nodes
+  register: myreg_cmd
+  until: "not myreg_cmd.stderr | regex_search('no such host')"
+  retries: 200
+  delay: 5

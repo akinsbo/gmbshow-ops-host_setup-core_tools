@@ -1,0 +1,18 @@
+---
+# Ensure a temp directory is created to place temp files
+- include: roles/common/tasks/create_directory.yml
+  vars:
+    module_path: "{{role_path}}/files/tmp"
+
+- name: Move template file for {{module_template_file}} add-on
+  become: false
+  template:
+    src: "{{module_template_file}}.yaml.j2"
+    dest: "{{role_path}}/files/tmp/{{module_template_file}}.yaml"
+    mode: 0644
+
+- name: Ensure dashboard is deployed
+  command: "kubectl apply -f {{role_path}}/files/tmp/{{module_template_file}}.yaml"
+
+- name: Ensure corresponding url is opened
+  command: "firefox {{module_url}}"
