@@ -10,10 +10,9 @@
     marker: "<!-- {mark} ANSIBLE MANAGED BLOCK {{module_command}}-->"
     path: "{{module_cmdlogfile}}"
     block: |
-            <h3>{{ module_command_aim }}</h3>
-            <h4>- Command ran:{{ module_command}}</h4>
+            <h2><em>{{ module_command_aim }}</em></h2>
+            <h4 style="color:darkgray;">- Command ran: <span style="color:gray;">{{ module_command}}</span></h4>
             <p style="color:blue;margin-left:30px;">Output:{{ myregistered_cmd.stdout }}</p>
-            <br>
             <p style="color:red;margin-left:30px;">Error:{{ myregistered_cmd.stderr }}</p>
             <p>Last updated on {{ ansible_date_time.iso8601 }}</p>
-            <br><br>
+            <br>
