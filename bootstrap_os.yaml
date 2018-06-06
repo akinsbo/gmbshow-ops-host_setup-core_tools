@@ -27,4 +27,4 @@
     setup:
 
   roles:
-    - basic
+    - bootstrap_os
