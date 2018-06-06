@@ -1,0 +1,22 @@
+---
+# Ensure a temp directory is created to place temp files
+- include: roles/common/tasks/create_directory.yml
+  vars:
+    module_path: "{{role_path}}/files/tmp"
+
+- name: "Ensure {{deployment}} deployment configuration is added"
+  become: false
+  template:
+    src: "{{deployment}}.yaml.j2"
+    dest: "{{role_path}}/files/tmp/{{deployment}}.yaml"
+    mode: 0644
+
+- name: "Ensure {{deployment}} is deployed"
+  command: "kubectl apply -f {{role_path}}/files/tmp/{{deployment}}.yaml"
+
+- name: "Ensure {{deployment}} is deployed"
+  command: "kubectl get services/{{deployment}}-svc -o go-template='{{(index .spec.clusterIP)}}"
+  register: myregistered_cluster_ip
+
+- name: "Ensure url exists if any"
+  command: "firefox {{myregistered_cluster_ip.stdout}}:80"
