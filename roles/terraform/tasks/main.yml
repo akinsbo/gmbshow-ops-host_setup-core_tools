@@ -27,3 +27,15 @@
   tags: 
     - destroy
     - destroy-terraform
+
+- include: update_tf/add_ebs.yml
+  tags:
+    - update-terraform
+    - update-tf
+    - create
+
+- include: update_tf/open_sg_ports.yml
+  tags:
+    - update-terraform
+    - update-tf
+    - create

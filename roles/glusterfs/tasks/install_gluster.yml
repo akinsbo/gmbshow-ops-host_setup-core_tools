@@ -1,0 +1,9 @@
+---
+- name: Check that mount.glusterfs command runs
+  command: "mount.glusterfs"
+  register: myregistered_glusterfs_cmd
+
+
+- name: Install glusterfs if not working
+- include: 
+

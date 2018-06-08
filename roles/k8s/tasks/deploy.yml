@@ -14,8 +14,8 @@
 - name: "Ensure {{deployment}} is deployed"
   command: "kubectl apply -f {{role_path}}/files/tmp/{{deployment}}.yaml"
 
-- name: "Ensure {{deployment}} is deployed"
-  command: "kubectl get services/{{deployment}}-svc -o go-template='{{(index .spec.clusterIP)}}"
+- name: "Get {{deployment}} address"
+  command: "kubectl get services/{{deployment}}-svc -o go-template='{{(index .spec.clusterIP)}}'"
   register: myregistered_cluster_ip
 
 - name: "Ensure url exists if any"

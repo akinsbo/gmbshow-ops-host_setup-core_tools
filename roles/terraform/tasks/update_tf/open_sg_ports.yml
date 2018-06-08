@@ -1,0 +1,29 @@
+---
+- name: Add the ebs block to the nodes in the terraform
+  blockinfile:
+    path: roles/terraform/files/kubernetes.tf
+    insertbefore: 'resource "aws_security_group_rule" "node-egress"'
+    marker: "#### {mark} ANSIBLE MANAGED BLOCK (SG RULES for node-{{item.description}}-{{item.from_port}}-{{item.to_port}})####"
+    content: |
+          resource "aws_security_group_rule" "node-{{item.description}}-{{item.from_port}}-{{item.to_port}}" {
+            type              = "egress"
+            security_group_id = "${aws_security_group.nodes-k8s-maryboye-org.id}"
+            from_port         = {{item.from_port}}
+            to_port           = {{item.to_port}}
+            protocol          = "-1"
+            cidr_blocks       = ["0.0.0.0/0"]
+          }
+          resource "aws_security_group_rule" "{{item.description}}-node-tcp-{{item.from_port}}-{{item.to_port}}" {
+            type                     = "ingress"
+            security_group_id        = "${aws_security_group.nodes-k8s-maryboye-org.id}"
+            source_security_group_id = "${aws_security_group.bastion-k8s-maryboye-org.id}"
+            from_port                = {{item.from_port}}
+            to_port                  = {{item.to_port}}
+            protocol                 = "tcp"
+          }
+  with_items:
+    - {from_port: 2222, to_port: 2222, description: 'glusterfs_pods_sshd'}
+    - {from_port: 24007, to_port: 24008, description: 'glusterfs_daemon'}
+    - {from_port: 49152, to_port: 49251, description: 'glusterfs_mgt'}
+
+    

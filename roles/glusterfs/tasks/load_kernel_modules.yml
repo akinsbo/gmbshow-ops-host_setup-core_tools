@@ -1,0 +1,2 @@
+---
+- name: Check for loaded lsmod

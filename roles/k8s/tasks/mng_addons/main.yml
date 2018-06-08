@@ -12,4 +12,4 @@
     - kubernetes-dashboard
     - grafana
     - heapster
-    - influxdb
+    - influxdb-grafana

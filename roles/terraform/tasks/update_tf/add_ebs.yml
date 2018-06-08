@@ -1,0 +1,14 @@
+---
+- name: Add the ebs block to the nodes in the terraform
+  blockinfile:
+    path: roles/terraform/files/kubernetes.tf
+    insertafter: 'resource "aws_launch_configuration" "nodes-{{route53.record.subDNS}}.{{route53.zone.DNS}}"'
+    marker: "##### {mark} ANSIBLE MANAGED BLOCK (EBS PROVISION)####"
+    backup: yes
+    content: |
+          ebs_block_device {
+            device_name           = "/dev/xvdb"
+            volume_size           = 128
+            volume_type           = "gp2"
+            delete_on_termination = true
+          }

@@ -148,6 +148,11 @@ terraform_darwin_download_path: "https://releases.hashicorp.com/terraform/{{terr
 
 # K8s
 # add-ons
+# Latest links can be found at https://kubernetes.io/docs/admin/cluster-large/
 k8s_dashboard_url: https://raw.githubusercontent.com/kubernetes/dashboard/master/src/deploy/recommended/kubernetes-dashboard.yaml
-
+influxdb_grafana_url: https://github.com/kubernetes/kubernetes/blob/master/cluster/addons/cluster-monitoring/influxdb/influxdb-grafana-controller.yaml
 heapster_url: https://github.com/kubernetes/heapster/tree/master/deploy/kube-config/influxdb
+
+
+# gluster
+# gk-deploy_path: https://github.com/gluster/gluster-kubernetes/blob/master/deploy/gk-deploy

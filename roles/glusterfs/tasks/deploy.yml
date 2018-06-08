@@ -1,0 +1,4 @@
+---
+# specify nodes to deploy on
+- name: Deploy glusterfs with gk-deploy
+  script:  "{{ lookup('file', 'gk-deploy') }}

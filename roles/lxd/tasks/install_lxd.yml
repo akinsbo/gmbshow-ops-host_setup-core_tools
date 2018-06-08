@@ -1,4 +1,0 @@
----
-- include: roles/common/tasks/install_pkg.yml
-  vars:
-    - module_pkgs: lxd
