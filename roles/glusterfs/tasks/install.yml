@@ -1,0 +1,13 @@
+---
+- name: Check that mount.glusterfs command runs
+  command: "mount.glusterfs"
+  register: myregistered_glusterfs_cmd
+  ignore_errors: yes
+
+# Install glusterfs if cmd didn't work
+- include: roles/common/tasks/install_pkg.yml
+  vars:
+    module_pkg: gluster-server
+    module_apt_key: "{{gluster_apt_key}}"
+    module_repo_source: "{{gluster_repo_source}}"
+  when: myregistered_glusterfs_cmd.stdout is ''

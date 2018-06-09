@@ -34,3 +34,14 @@ ansible-playbook -i hosts.ini webservers.yaml --tags="destroy"
 ansible-playbook -i hosts.ini webservers.yaml --tags="cluster-checks"
 
 ```
+
+### Maintenance
+
+#### Ansible Preview Modules used
+
+Periodically update preview modules until at least stableinterface.
+The preview modules may also be downloaded into a library directory.
+The following are ansible preview modules used:
+    - Role: Gluster
+    - Tasks: install_gluster.yml
+    - Modules: apt-key & apt_repository

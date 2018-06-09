@@ -3,6 +3,10 @@
 app_name: mbshow
 app_full_name: The maryboye show
 
+# gluster
+gluster_version: "3.10"
+gluster_apt_key: http://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/rsa.pub
+gluster_repo_source: deb [arch=amd64] http://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/LATEST/Debian/jessie/apt jessie main
 # kubectl
 kubectl_version: "v1.10.3"
 kubectl_download_path: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
@@ -24,7 +28,7 @@ controller_python3_virtenv: "/usr/local/bin/{{app_name}}/python3/venv"
 local_ansible_user: olaolu
 local_ansible_group: olaolu
 
-# Inventory
+# Dynamic Inventory
 ec2_py_path: "{{playbook_dir}}/inventories/ec2_py_path"
 
 # ssh users
@@ -124,6 +128,10 @@ cluster:
   output_file_type: terraform #e.g. cloudformation
   ssh_public_key: "{{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pub"
   ssh_private_key: "{{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pem"
+  # kubernetes kops generated-defaults
+  kops_sec_group_suffix: "{{cluster.name | regex_replace ('.','-')}}"
+  kops_group_tagname: "{{cluster.name | regex_replace ('.','_')}}"
+  kops_node_inventory_group: "tag_Name_nodes_{{cluster.kops_group_tagname}}"
 
 iam:
   user:
