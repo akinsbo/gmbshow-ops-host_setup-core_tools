@@ -25,4 +25,5 @@
     # - aws
     - kops
     - terraform
+    - {role: glusterfs, tags: glusterfs}
     - k8s

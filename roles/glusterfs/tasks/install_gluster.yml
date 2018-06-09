@@ -4,6 +4,8 @@
   register: myregistered_glusterfs_cmd
 
 
-- name: Install glusterfs if not working
-- include: 
+# Install glusterfs if not working
+- include: #
+  tags:
+    - install-gluster
 

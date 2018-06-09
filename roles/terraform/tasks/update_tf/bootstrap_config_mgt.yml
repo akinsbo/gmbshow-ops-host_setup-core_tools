@@ -13,10 +13,12 @@
             }
 
             provisioner "remote-exec" {
-            command = "ansible-playbook -i \
-            /usr/local/bin/terraform-inventory -\
-            u ubuntu sample-playbook.yml \
-            --private-key=/home/user/.ssh/aws_user.pem -u ubuntu"
+            command = "ansible-playbook -i {{ec2_py_path}} \
+            tag_Name_nodes_maryboyecluster_maryboye_org \
+             webservers.yml \
+            -u admin \
+            --private-key={{cluster.ssh_private_key}}
+            --tags=glusterfs, install-glusterfs"
             }
           }
 

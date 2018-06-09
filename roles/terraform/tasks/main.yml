@@ -1,20 +1,39 @@
 ---
+#  update the tf file
+- include: update_tf/add_ebs.yml
+  tags:
+    - update-terraform
+    - update-tf
+    - create
+    - terraform-create
+
+- include: update_tf/open_sg_ports.yml
+  tags:
+    - update-terraform
+    - update-tf
+    - create
+    - terraform-create
+
+# plan and create
 - include: plan.yml
   tags:
     - create
     - terraform
+    - terraform-create
 
-- name: Ensure plan is safe
-  pause:
-    prompt: Please ENSURE the plan is safe before you continue.
-  tags:
-    - create
-    - terraform
+# - name: Ensure plan is safe
+#   pause:
+#     prompt: Please ENSURE the plan is safe before you continue.
+#   tags:
+#     - create
+#     - terraform
+#     - terraform-create
 
 - include: apply.yml
   tags:
     - create
     - terraform
+    - terraform-create
 
 - name: Ensure user wants to destroy
   pause:
@@ -27,15 +46,3 @@
   tags: 
     - destroy
     - destroy-terraform
-
-- include: update_tf/add_ebs.yml
-  tags:
-    - update-terraform
-    - update-tf
-    - create
-
-- include: update_tf/open_sg_ports.yml
-  tags:
-    - update-terraform
-    - update-tf
-    - create

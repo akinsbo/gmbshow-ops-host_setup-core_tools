@@ -24,6 +24,9 @@ controller_python3_virtenv: "/usr/local/bin/{{app_name}}/python3/venv"
 local_ansible_user: olaolu
 local_ansible_group: olaolu
 
+# Inventory
+ec2_py_path: "{{playbook_dir}}/inventories/ec2_py_path"
+
 # ssh users
 my_ssh_users:
   - name: kilo
@@ -100,6 +103,11 @@ kops_aws_managed_policies:
   - IAMFullAccess
   - AmazonVPCFullAccess
 
+ec2_key_name: "{{app_name}}_testi"
+#  where to store ec2_keys on controller machine
+ec2_keys_dir: "{{ lookup('env', 'HOME')}}/ec2_keys"
+ec2_region: eu-west-1
+
 cluster:
   name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}"
   ec2_node_type: t2.micro
@@ -114,11 +122,8 @@ cluster:
   topology: private
   output_location: "{{playbook_dir}}/roles/terraform/files"
   output_file_type: terraform #e.g. cloudformation
-
-ec2_key_name: "{{app_name}}_testi"
-#  where to store ec2_keys on controller machine
-ec2_keys_dir: "{{ lookup('env', 'HOME')}}/ec2_keys"
-ec2_region: eu-west-1
+  ssh_public_key: "{{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pub"
+  ssh_private_key: "{{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pem"
 
 iam:
   user:
