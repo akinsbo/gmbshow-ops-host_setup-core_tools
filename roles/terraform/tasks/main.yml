@@ -7,12 +7,13 @@
     - create
     - terraform-create
 
-- include: update_tf/open_sg_ports.yml
-  tags:
-    - update-terraform
-    - update-tf
-    - create
-    - terraform-create
+# This is already covered by generated terraform
+# - include: update_tf/open_sg_ports.yml
+#   tags:
+#     - update-terraform
+#     - update-tf
+#     - create
+#     - terraform-create
 
 # plan and create
 - include: plan.yml

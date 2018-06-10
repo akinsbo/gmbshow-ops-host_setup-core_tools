@@ -1,7 +1,7 @@
 ---
 #  Insert into node group inventory
 - include: roles/common/tasks/mng_inventory/insert.yml
-  module_line: "[{{cluster.kops_node_inventory_group}}]"
+  module_line: "[{{kops_node_inventory_group}}]"
   module_description: "Node group"
   tags:
     - gluster-create
@@ -21,7 +21,7 @@
 
 #  Install gluster-server in node group using ansible command
 - include: install.yml
-  delegate_to: "{{cluster.kops_node_inventory_group}}"
+  delegate_to: "{{kops_node_inventory_group}}"
   tags: 
     - install-gluster
 
