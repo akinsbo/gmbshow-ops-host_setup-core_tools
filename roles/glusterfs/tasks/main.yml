@@ -26,3 +26,6 @@
     - install-gluster
 
 #  Other setup
+#  Create bricks
+
+# start gluster daemon

@@ -1,5 +1,5 @@
 ---
-- name: Add the ebs block to the nodes in the terraform
+- name: Add the security group rules for gluster to the nodes in the terraform
   blockinfile:
     path: roles/terraform/files/kubernetes.tf
     insertbefore: 'resource "aws_security_group_rule" "node-egress"'
@@ -7,16 +7,16 @@
     content: |
           resource "aws_security_group_rule" "node-{{item.description}}-{{item.from_port}}-{{item.to_port}}" {
             type              = "egress"
-            security_group_id = "${aws_security_group.nodes-{{cluster.kops_sec_group_suffix}}.id}"
+            security_group_id = "${aws_security_group.nodes-{{kops_sec_group_suffix}}.id}"
             from_port         = {{item.from_port}}
             to_port           = {{item.to_port}}
-            # protocol          = "-1"
+            protocol          = "-1"
             # cidr_blocks       = ["0.0.0.0/0"] # probably already done by AWS
           }
           resource "aws_security_group_rule" "{{item.description}}-node-tcp-{{item.from_port}}-{{item.to_port}}" {
             type                     = "ingress"
-            security_group_id        = "${aws_security_group.nodes-{{cluster.kops_sec_group_suffix}}.id}"
-            source_security_group_id = "${aws_security_group.bastion-{{cluster.kops_sec_group_suffix}}.id}"
+            security_group_id        = "${aws_security_group.nodes-{{kops_sec_group_suffix}}.id}"
+            source_security_group_id = "${aws_security_group.bastion-{{kops_sec_group_suffix}}.id}"
             from_port                = {{item.from_port}}
             to_port                  = {{item.to_port}}
             protocol                 = "tcp"

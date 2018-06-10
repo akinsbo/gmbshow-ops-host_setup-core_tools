@@ -126,12 +126,15 @@ cluster:
   topology: private
   output_location: "{{playbook_dir}}/roles/terraform/files"
   output_file_type: terraform #e.g. cloudformation
-  ssh_public_key: "{{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pub"
-  ssh_private_key: "{{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pem"
-  # kubernetes kops generated-defaults
-  kops_sec_group_suffix: "{{cluster.name | regex_replace ('.','-')}}"
-  kops_group_tagname: "{{cluster.name | regex_replace ('.','_')}}"
-  kops_node_inventory_group: "tag_Name_nodes_{{cluster.kops_group_tagname}}"
+
+# ssh keys
+ssh_public_key: "{{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pub"
+ssh_private_key: "{{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pem"
+
+# kubernetes kops generated-defaults
+kops_sec_group_suffix: "{{cluster.name | regex_replace ('\\.','-')}}"
+kops_group_tagname: "{{cluster.name | regex_replace ('\\.','_')}}"
+kops_node_inventory_group: "tag_Name_nodes_{{cluster.kops_group_tagname}}"
 
 iam:
   user:
