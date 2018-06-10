@@ -2,7 +2,7 @@
 - name: Make ec2.py and private key executable
   file: 
     path: "{{item}}"
-    mode: 4000
+    mode: "ugo+x"
   with_items:
     - "{{ec2_py_path}}"
     - "{{cluster.ssh_private_key}}"
