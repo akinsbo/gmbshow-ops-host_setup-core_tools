@@ -1,6 +1,6 @@
 ---
 #  Ensure Helm is installed
-- include: roles/common/tasks/download_pkg.yml
+- include_tasks: roles/common/tasks/download_pkg.yml
   vars:
     module_linux_url: https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-linux-amd64.tar.gz
     module_darwin_url: https://storage.googleapis.com/kubernetes-helm/helm-v2.9.1-darwin-amd64.tar.gz

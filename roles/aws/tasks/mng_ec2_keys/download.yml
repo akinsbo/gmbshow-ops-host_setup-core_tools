@@ -1,5 +1,5 @@
 ---
-- include: roles/aws/tasks/mng_s3_bucket/download.yml
+- include_tasks: roles/aws/tasks/mng_s3_bucket/download.yml
   vars:
     module_bucket_name: "{{ state_store | replace('s3://', '') }}"
     module_bucket_region: "{{ ec2_region }}"
@@ -8,7 +8,7 @@
   tags:
     - fetch-key
 
-- include: roles/aws/tasks/mng_s3_bucket/download.yml
+- include_tasks: roles/aws/tasks/mng_s3_bucket/download.yml
   vars:
     module_bucket_name: "{{ state_store | replace('s3://', '') }}"
     module_bucket_region: "{{ ec2_region }}"

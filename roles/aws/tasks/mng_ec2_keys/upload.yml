@@ -1,18 +1,18 @@
 ---
-- include: roles/aws/tasks/mng_s3_bucket/create.yml
+- include_tasks: roles/aws/tasks/mng_s3_bucket/create.yml
   vars:
     module_bucket_name: "{{ state_store | replace('s3://', '') }}"
     module_bucket_region: "{{ ec2_region }}"
     module_bucket_tags: "{{ s3_bucket_tags }}"
 
-- include: roles/aws/tasks/mng_s3_bucket/upload.yml
+- include_tasks: roles/aws/tasks/mng_s3_bucket/upload.yml
   vars:
     module_bucket_name: "{{ state_store | replace('s3://', '') }}"
     module_bucket_region: "{{ ec2_region }}"
     module_src_file: "{{ec2_keys_dir}}/{{ec2_region}}/{{ec2_key_name}}.pub"
     module_dest_file: "infra/{{ec2_region}}/{{ec2_key_name}}.pub"
 
-- include: roles/aws/tasks/mng_s3_bucket/upload.yml
+- include_tasks: roles/aws/tasks/mng_s3_bucket/upload.yml
   vars:
     module_bucket_name: "{{ state_store | replace('s3://', '') }}"
     module_bucket_region: "{{ ec2_region }}"

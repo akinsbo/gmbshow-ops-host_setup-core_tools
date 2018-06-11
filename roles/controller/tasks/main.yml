@@ -23,7 +23,7 @@
   # python3, pip3, pip
   # Ensure python3 and pip are installed
 
-  - include: roles/common/tasks/install_pkg.yml
+  - include_tasks: roles/common/tasks/install_pkg.yml
     gather_facts: true
     become: yes
     vars:
@@ -110,11 +110,11 @@
       - boto3
       - awscli
 
-  - include: roles/kops/tasks/install_kubectl_kops.yml
+  - include_tasks: roles/kops/tasks/install_kubectl_kops.yml
     tags:
       - kops
       - kubectl
 
-  - include: roles/terraform/tasks/install.yml
+  - include_tasks: roles/terraform/tasks/install.yml
     tags:
       - terraform

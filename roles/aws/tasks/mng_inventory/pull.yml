@@ -14,7 +14,7 @@
 
 #  set aws credentials in boto profile from .env
 #  Ensure ~/boto exists
-- include: roles/common/tasks/create_file.yml
+- include_tasks: roles/common/tasks/create_file.yml
   vars:
     module_path: "{{lookup('env', 'HOME')}}/boto"
 
@@ -32,7 +32,7 @@
     - { option: aws_secret_access_key, value: lookup('env', 'AWS_SECRET_KEY')}
 
 #  list out dynamic inventory
-- include: roles/common/tasks/command_log/main.yml
+- include_tasks: roles/common/tasks/command_log/main.yml
   vars:
     module_command_become: yes
     module_file: "{{playbook_dir}}/log/temp/inventory_list.log.html"

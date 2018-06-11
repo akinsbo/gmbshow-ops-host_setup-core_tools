@@ -1,6 +1,6 @@
 ---
 # Ensure a temp directory is created to place temp files
-- include: roles/common/tasks/create_directory.yml
+- include_tasks: roles/common/tasks/create_directory.yml
   vars:
     module_path: "{{role_path}}/files/tmp"
 

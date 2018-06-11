@@ -1,6 +1,6 @@
 ---
 #  update the tf file
-- include: update_tf/add_ebs.yml
+- include_tasks: update_tf/add_ebs.yml
   tags:
     - update-terraform
     - update-tf
@@ -8,7 +8,7 @@
     - terraform-create
 
 # This is already covered by generated terraform
-# - include: update_tf/open_sg_ports.yml
+# - include_tasks: update_tf/open_sg_ports.yml
 #   tags:
 #     - update-terraform
 #     - update-tf
@@ -16,7 +16,7 @@
 #     - terraform-create
 
 # plan and create
-- include: plan.yml
+- include_tasks: plan.yml
   tags:
     - create
     - terraform
@@ -30,7 +30,7 @@
 #     - terraform
 #     - terraform-create
 
-- include: apply.yml
+- include_tasks: apply.yml
   tags:
     - create
     - terraform
@@ -43,7 +43,7 @@
     - destroy
     - destroy-terraform
 
-- include: destroy.yml
+- include_tasks: destroy.yml
   tags: 
     - destroy
     - destroy-terraform

@@ -5,7 +5,7 @@
   ignore_errors: yes
 
 # Install glusterfs if cmd didn't work
-- include: roles/common/tasks/install_pkg.yml
+- include_tasks: roles/common/tasks/install_pkg.yml
   vars:
     module_pkg: gluster-server
     module_apt_key: "{{gluster_apt_key}}"
