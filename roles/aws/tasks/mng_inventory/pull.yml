@@ -12,6 +12,25 @@
     - "{{ec2_py_path}}"
     - "{{cluster.ssh_private_key}}"
 
+#  set aws credentials in boto profile from .env
+#  Ensure ~/boto exists
+- include: roles/common/tasks/create_file.yml
+  vars:
+    module_path: "{{lookup('env', 'HOME')}}/boto"
+
+# set the inifile settings
+  - name: Ensure aws credentials in boto profile from .env
+  ini_file:
+    path: "{{lookup('env', 'HOME')}}/boto"
+    section: "profile_{{ environment }}" #e.g. profile_prod
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+    mode: 0600
+    backup: yes
+  with_items:
+    - { option: aws_access_key_id, value: lookup('env', 'AWS_KEY_ID')}
+    - { option: aws_secret_access_key, value: lookup('env', 'AWS_SECRET_KEY')}
+
 #  list out dynamic inventory
 - include: roles/common/tasks/command_log/main.yml
   vars:

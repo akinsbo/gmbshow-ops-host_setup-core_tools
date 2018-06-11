@@ -1,0 +1,26 @@
+# ---
+# - name: show main credentials
+
+# - name: save main credential
+
+# - findfirst:
+#   - ~/.boto file (if boto file exists and profile is specified)
+#   - use current config (with option to persist as profile into boto file)
+#   - .env file (if existing and it contains these keys)
+
+# - block:
+#   - set_fact:
+#       aws_access_var: "{{ lookup('ini', 'AWS_ACCESS_KEY_ID section=Credentials file=' ~ item) }}"
+#     with_first_found:
+#       - boto.cfg
+#       - "{{ lookup('env', 'HOME')}}/boto"
+#       - "{{ lookup('env', 'HOME')}}/.boto"
+
+#   - debug:
+#       msg: "var is {{ aws_access_var }} "
+# - rescue: # try with ~/.boto 
+#   - set_fact:
+#       aws_access_var: "{{ lookup('ini', 'AWS_ACCESS_KEY_ID section=Credentials file=' ~ item) }}"
+#     with_first_found:
+#       - boto.cfg
+#       - "{{ lookup('env', 'HOME')}}/boto"

@@ -3,6 +3,8 @@
 app_name: mbshow
 app_full_name: The maryboye show
 
+environment: prod 
+
 # gluster
 gluster_version: "3.10"
 gluster_apt_key: http://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/rsa.pub
