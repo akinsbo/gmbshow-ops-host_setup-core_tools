@@ -1,6 +1,6 @@
 ---
 - name: Run command
-  become: yes
+  become: "{{module_become}}"
   command: "{{module_command}}"
   register: myregistered_cmd
   ignore_errors: yes

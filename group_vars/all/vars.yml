@@ -116,7 +116,7 @@ cluster:
   name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}"
   ec2_node_type: t2.micro
   ec2_master_type: t2.micro
-  num_of_nodes: 2
+  num_of_nodes: 3
   num_of_master: 3
   region: eu-west-1
   bastion: true

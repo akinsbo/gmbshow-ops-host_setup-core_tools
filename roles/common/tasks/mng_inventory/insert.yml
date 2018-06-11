@@ -1,4 +1,9 @@
 ---
+- debug:
+    msg: "ssh -i {{cluster.ssh_private_key}} root@172.20.63.35"   
+  tags:
+    - debug_ssh
+
 - name: Make ec2.py and private key executable
   file: 
     path: "{{item}}"
@@ -10,6 +15,7 @@
 #  list out dynamic inventory
 - include: roles/common/tasks/command_log/main.yml
   vars:
+    module_command_become: yes
     module_file: "{{playbook_dir}}/log/temp/inventory_list.log.html"
     module_command_array:
       - {command: "{{playbook_dir}}/inventory/ec2.py --list", aim: "List out dynamic inventory"}

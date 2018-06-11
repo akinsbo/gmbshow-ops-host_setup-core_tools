@@ -14,6 +14,7 @@
 
 - include: roles/common/tasks/command_log/template.yml
   vars:
+    module_become: "{{module_command_become}}"
     module_command: "{{item.command}}"
     module_command_aim: "{{item.aim}}"
     module_cmdlogfile: "{{mysetfact_module_cmdlogfile}}"
