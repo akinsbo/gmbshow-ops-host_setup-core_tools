@@ -487,7 +487,7 @@ class Ec2Inventory(object):
 
         # Do we need to just include hosts that match a pattern?
         self.pattern_include = config.get('ec2', 'pattern_include')
-        if self.pattern_include_tasks:
+        if self.pattern_include:
             self.pattern_include = re.compile(self.pattern_include)
 
         # Do we need to exclude hosts that match a pattern?

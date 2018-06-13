@@ -2,15 +2,24 @@
 # Run and log output of command into file
 - name: Set the name of the file
   set_fact:
-    mysetfact_module_cmdlogfile: "{{module_file}}"
+    mysetfact_module_cmdlogfile: "{{module_file}}.{{ansible_date_time.iso8601}}.log.html"
+  tags:
+    - cluster-checks
+    - gluster-create
 
 - include_tasks: roles/common/tasks/create_directory.yml
   vars: 
     module_path: "{{mysetfact_module_cmdlogfile}}"
+  tags:
+    - cluster-checks
+    - gluster-create
 
 - include_tasks: roles/common/tasks/create_file.yml
   vars: 
     module_path: "{{mysetfact_module_cmdlogfile}}"
+  tags:
+    - cluster-checks
+    - gluster-create
 
 - include_tasks: roles/common/tasks/command_log/template.yml
   vars:
@@ -19,6 +28,9 @@
     module_command_aim: "{{item.aim}}"
     module_cmdlogfile: "{{mysetfact_module_cmdlogfile}}"
   with_items: "{{module_command_array}}"
+  tags:
+    - cluster-checks
+    - gluster-create
 # 
 #/....,..........example usage,,,,,,,,,,,,,,
 # - include_tasks: roles/common/tasks/command_log/main.yml
@@ -37,3 +49,6 @@
 
 - name: Open the log in browser page {{mysetfact_module_cmdlogfile}}
   command: "firefox {{mysetfact_module_cmdlogfile}}"
+  tags:
+    - cluster-checks
+    - gluster-create

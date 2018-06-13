@@ -7,3 +7,6 @@
     owner: "{{local_ansible_user}}"
     group: "{{local_ansible_group}}"
     mode: 0775
+  tags:
+    - cluster-checks
+    - gluster-create

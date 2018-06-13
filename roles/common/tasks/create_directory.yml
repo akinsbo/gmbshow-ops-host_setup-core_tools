@@ -7,4 +7,6 @@
     group: "{{local_ansible_group}}"
     mode: 0775
     recurse: yes
-    
+  tags:
+    - cluster-checks
+    - gluster-create    

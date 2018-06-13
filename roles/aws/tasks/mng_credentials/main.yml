@@ -1,26 +1,19 @@
-# ---
-# - name: show main credentials
-
-# - name: save main credential
-
-# - findfirst:
-#   - ~/.boto file (if boto file exists and profile is specified)
-#   - use current config (with option to persist as profile into boto file)
-#   - .env file (if existing and it contains these keys)
-
-# - block:
-#   - set_fact:
-#       aws_access_var: "{{ lookup('ini', 'AWS_ACCESS_KEY_ID section=Credentials file=' ~ item) }}"
-#     with_first_found:
-#       - boto.cfg
-#       - "{{ lookup('env', 'HOME')}}/boto"
-#       - "{{ lookup('env', 'HOME')}}/.boto"
-
-#   - debug:
-#       msg: "var is {{ aws_access_var }} "
-# - rescue: # try with ~/.boto 
-#   - set_fact:
-#       aws_access_var: "{{ lookup('ini', 'AWS_ACCESS_KEY_ID section=Credentials file=' ~ item) }}"
-#     with_first_found:
-#       - boto.cfg
-#       - "{{ lookup('env', 'HOME')}}/boto"
+---
+- name: Search for aws credential profile otherwise, create one
+  block:
+    - debug:
+        msg: "ini is {{lookup('ini', 'section=aws_access_key_id file={{file_to_use}} section={{lookup ('first_found',dict(boto_conf_credentials_section_precedence))}}"
+      with_first_found: 
+        - file: "{{boto_config_file_precedence}}"
+      loop_control:
+        loop_var: file_to_use
+      register: register_cmd
+    - debug:
+        msg: "register_cmd is {{register_cmd.results}}"
+  rescue:
+    - debug:
+        msg: "in rescue"
+    - include_tasks: roles/aws/tasks/mng_credentials/create_boto_profile.yml
+  tags:
+    - dynamic
+    - gluster-create

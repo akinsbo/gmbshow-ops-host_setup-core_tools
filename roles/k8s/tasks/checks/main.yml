@@ -10,7 +10,7 @@
   # TODO: List out health commands and log
 - include_tasks: roles/common/tasks/command_log/main.yml
   vars:
-    module_file: "{{role_path}}/files/logs/{{ansible_date_time.iso8601}}.log.html"
+    module_file: "{{role_path}}/files/logs"
     module_command_become: no
     module_command_array:
       - {command: "kubectl get nodes", aim: "fetching nodes"}

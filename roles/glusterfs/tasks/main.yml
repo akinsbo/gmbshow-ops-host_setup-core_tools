@@ -1,6 +1,6 @@
 ---
 #  Insert into node group inventory
-- include_tasks: roles/common/tasks/mng_inventory/insert.yml
+- include_tasks: roles/aws/tasks/mng_inventory/dynamically_populate.yml
   module_line: "[{{kops_node_inventory_group}}]"
   module_description: "Node group"
   tags:

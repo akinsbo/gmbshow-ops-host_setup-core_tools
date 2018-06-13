@@ -1,0 +1,28 @@
+---
+#  set aws credentials in profile
+#  Ensure aws credentials profile file exists
+- include_tasks: roles/common/tasks/create_file.yml
+  vars:
+    module_path: "{{boto_config_file_precedence[0]}}"
+  tags:
+    - gluster-create
+
+# Ensure aws credentials are configured if profile cannot be used
+- include_tasks: roles/aws/tasks/mng_credentials/export_current_cred.yml
+  tags:
+    - gluster-create
+
+# set the inifile settings
+- name: Ensure aws credentials in {{boto_config_file_precedence[0]}} from mysetfacts
+  ini_file:
+    path: "{{boto_config_file_precedence[0]}}"
+    section: "{{my_env}}" #e.g. profile prod
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+    mode: 0600
+    backup: yes
+  with_items:
+    - { option: aws_access_key_id, value: "{{mysetfact_AWS_ACCESS_KEY_ID}}"}
+    - { option: aws_secret_access_key, value: "{{mysetfact_AWS_SECRET_ACCESS_KEY}}"}
+  tags:
+    - gluster-create

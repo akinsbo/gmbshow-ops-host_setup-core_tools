@@ -3,7 +3,19 @@
 app_name: mbshow
 app_full_name: The maryboye show
 
-environment: prod 
+# environment
+my_env: prod
+boto_conf_credentials_section_precedence:
+  - "{{my_env}}"
+  - credentials
+  - default
+
+boto_config_file_precedence:
+  - "{{ lookup('env', 'HOME')}}/.aws/credentials"
+  - "{{ lookup('env', 'HOME')}}/boto.cfg"
+  - "{{ lookup('env', 'HOME')}}/.boto"  
+  - "{{ lookup('env', 'HOME')}}/.aws/config"
+
 
 # gluster
 gluster_version: "3.10"

@@ -1,0 +1,17 @@
+---
+- name: Get the current aws config keys
+  command: "aws configure get {{item}}"
+  register: my_registered_access_keys
+  with_items:
+    - aws_access_key_id
+    - aws_secret_access_key
+  tags:
+    - gluster-create
+
+- name: Ensure the credentials are exported
+  set_fact: "{{item.key_export}}={{item.previously_regd}}"
+  with_items:
+    - {key_export: mysetfact_AWS_ACCESS_KEY_ID, previously_regd: "{{my_registered_access_keys.results[0].stdout}}"}
+    - {key_export: mysetfact_AWS_SECRET_ACCESS_KEY, previously_regd: "{{my_registered_access_keys.results[1].stdout}}"}
+  tags:
+    - gluster-create
