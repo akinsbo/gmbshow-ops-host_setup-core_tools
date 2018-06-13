@@ -75,4 +75,5 @@
   tags:
     - destroy
     - kops-destroy
+    - never
   
