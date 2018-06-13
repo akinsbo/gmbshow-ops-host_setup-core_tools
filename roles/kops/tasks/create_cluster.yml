@@ -25,7 +25,6 @@
 - block:
     - name: "Build cluster configuration in zone {{ mysetfact_aws_avail_zone }}"
       command: "{{ mysetfact_create_command }}"
-    # register: myregistered_cluster_cmd
   rescue:
     - include_tasks: delete_cluster.yml
     

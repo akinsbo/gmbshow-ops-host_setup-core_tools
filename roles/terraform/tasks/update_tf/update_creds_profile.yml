@@ -1,0 +1,16 @@
+---
+# create credentials profile if not created
+- include_tasks: roles/aws/tasks/mng_credentials/create_boto_profile.yml
+  tags:
+    - debug_ssh
+    - gluster-create
+
+- name: Add the aws profile
+  blockinfile:
+    path: roles/terraform/files/kubernetes.tf
+    insertafter: 'provider "aws" {'
+    marker: "##### {mark} ANSIBLE MANAGED BLOCK (CREDENTIAL PROFILE PROVISION)####"
+    backup: yes
+    content: |
+            shared_credentials_file = "{{boto_config_file_precedence[0]}}"
+            profile           = "{{boto_conf_credentials_section_precedence[0]}}"

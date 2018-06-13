@@ -1,4 +1,7 @@
 ---
+#  update credentials profile in provider section
+- include_tasks: update_tf/update_creds_profile.yml
+
 #  update the tf file
 - include_tasks: update_tf/add_ebs.yml
   tags:
@@ -22,14 +25,6 @@
     - terraform
     - terraform-create
 
-# - name: Ensure plan is safe
-#   pause:
-#     prompt: Please ENSURE the plan is safe before you continue.
-#   tags:
-#     - create
-#     - terraform
-#     - terraform-create
-
 - include_tasks: apply.yml
   tags:
     - create
@@ -42,6 +37,7 @@
   tags:
     - destroy
     - destroy-terraform
+    - never
 
 - include_tasks: destroy.yml
   tags: 

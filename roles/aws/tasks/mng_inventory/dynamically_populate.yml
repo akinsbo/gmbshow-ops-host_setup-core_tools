@@ -5,7 +5,7 @@
     - debug_ssh
     - gluster-create
 
-# prepare credentials
+# create credentials profile if not created
 - include_tasks: roles/aws/tasks/mng_credentials/create_boto_profile.yml
   tags:
     - debug_ssh
