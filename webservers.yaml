@@ -7,13 +7,26 @@
 
 - hosts: localhost
   connection: local
-  
+  gather_facts: no
+
   pre_tasks:
-  # set aws_avail_zone variable (for use in kops-create zone and master-zone args)
-  - include_tasks: roles/aws/tasks/get_availability_zone/main.yml
-    tags:
-      - avail
-      - create
+    - include_tasks: roles/terraform/tasks/update_tf/update_creds_profile.yml
+      tags:
+        - test_env
+        
+    - setup:
+      tags:
+        - test_env
+        
+    # Set environmental variable
+    - include_tasks: roles/terraform/tasks/mng_env/set.yml
+      tags:
+        - test_env
+
+    - include_tasks: roles/aws/tasks/get_availability_zone/main.yml
+      tags:
+        - avail
+        - create
   
     # - name: number_of_zones
     #   pause:

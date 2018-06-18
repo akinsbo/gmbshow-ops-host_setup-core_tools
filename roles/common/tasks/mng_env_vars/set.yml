@@ -1,0 +1,38 @@
+---
+# Ensure /etc/environment file exists
+- include_tasks: roles/common/tasks/create_file.yml
+  vars:
+    common_file_module_become: yes
+    common_file_module_path: "{{common_os_environ_file}}"
+  tags:
+    - test_env
+
+# - name: Set environmental variables
+#   environment:
+#       PATH: "{{module_env_var}}:{{ module_env_value }}"
+- name: Ensure option exists
+  block:
+  - name: "Check if env var exists in {{common_os_environ_file}}"
+    command: "grep '^{{common_module_env_var}}' {{common_os_environ_file}}"
+    ignore_errors: yes
+    register: myregistered_grep_output
+
+  - name: If option does not exists add it
+    become: yes
+    lineinfile:
+      path: "{{common_os_environ_file}}" 
+      state: present
+      line: "{{common_module_env_var}}={{common_module_env_value}}"    
+    when: myregistered_grep_output.rc == 1
+
+- name: Modify environmental variables option
+  become: yes
+  ini_file:
+    path: "{{common_os_environ_file}}" 
+    state: present
+    section: null
+    option: "{{common_module_env_var}}"
+    value: "{{common_module_env_value}}"
+    no_extra_spaces: yes
+  tags:
+    - test_env

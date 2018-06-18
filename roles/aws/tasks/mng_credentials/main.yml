@@ -4,7 +4,7 @@
     - debug:
         msg: "ini is {{lookup('ini', 'section=aws_access_key_id file={{file_to_use}} section={{lookup ('first_found',dict(boto_conf_credentials_section_precedence))}}"
       with_first_found: 
-        - file: "{{boto_config_file_precedence}}"
+        - file: "{{aws_boto_config_file_precedence}}"
       loop_control:
         loop_var: file_to_use
       register: register_cmd

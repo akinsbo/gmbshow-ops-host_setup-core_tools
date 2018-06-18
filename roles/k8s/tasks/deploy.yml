@@ -1,8 +1,8 @@
 ---
 # Ensure a temp directory is created to place temp files
-- include_tasks: roles/common/tasks/create_directory.yml
+- include_tasks: roles/common/tasks/create_dir.yml
   vars:
-    module_path: "{{role_path}}/files/tmp"
+    command_dir_module_path: "{{role_path}}/files/tmp"
 
 - name: "Ensure {{deployment}} deployment configuration is added"
   become: false

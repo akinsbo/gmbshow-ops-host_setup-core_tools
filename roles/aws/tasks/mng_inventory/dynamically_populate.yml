@@ -22,11 +22,11 @@
     - gluster-create
 
 #  list out dynamic inventory
-- include_tasks: roles/common/tasks/command_log/main.yml
+- include_tasks: roles/common/tasks/cmd_log/main.yml
   vars:
     module_command_become: no
     module_file: "{{playbook_dir}}/log/temp/inventory_list"
-    module_command_array:
+   common_cmd_log_module_command_array:
       - {command: "{{playbook_dir}}/inventory/ec2.py --boto-profile prod", aim: "List out dynamic inventory"}
   # delegate_to: 127.0.0.1
   tags:

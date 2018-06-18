@@ -1,0 +1,7 @@
+---
+- include_tasks: set.yml
+  vars:
+    common_env_module_var: "{{common_module_env_var}}"
+    common_env_module_value: ""
+  tags:
+    - test_env

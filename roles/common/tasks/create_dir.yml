@@ -1,0 +1,19 @@
+---
+- name: Check if directory exists
+  stat: 
+      path: "{{ common_dir_module_path | dirname}}"
+  register: myregistered_dir
+
+- name: Ensure directory is created
+  file:
+    path: "{{ common_dir_module_path | dirname}}"
+    state: directory
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
+    mode: "{{ common_dir_mode | default(0775)}}"
+    recurse: yes
+  tags:
+    - cluster-checks
+    - gluster-create
+    - test_env
+  when: myregistered_dir.stat.exists == false

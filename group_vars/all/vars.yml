@@ -10,7 +10,7 @@ boto_conf_credentials_section_precedence:
   - credentials
   - default
 
-boto_config_file_precedence:
+aws_boto_config_file_precedence:
   - "{{ lookup('env', 'HOME')}}/.aws/credentials"
   - "{{ lookup('env', 'HOME')}}/boto.cfg"
   - "{{ lookup('env', 'HOME')}}/.boto"  
@@ -39,8 +39,12 @@ remote_controller_group: olaolu
 controller_python_virtenv: "/usr/local/bin/{{app_name}}/python/venv"
 controller_python3_virtenv: "/usr/local/bin/{{app_name}}/python3/venv"
 
+common_os_environ_file: /etc/environment
+
 local_ansible_user: olaolu
 local_ansible_group: olaolu
+
+log_path: "{{playbook_dir}}/log"
 
 # Dynamic Inventory
 ec2_py_path: "{{playbook_dir}}/inventory/ec2.py"
@@ -173,7 +177,7 @@ s3_bucket_tags:
 terraform_version: "0.11.7"
 terraform_download_path: "https://releases.hashicorp.com/terraform/{{terraform_version}}/terraform_{{terraform_version}}_linux_amd64.zip"
 terraform_darwin_download_path: "https://releases.hashicorp.com/terraform/{{terraform_version}}/terraform_{{terraform_version}}_darwin_amd64.zip"
-
+terraform_log_path: "{{log_path}}/terraform.log"
 
 # K8s
 # add-ons

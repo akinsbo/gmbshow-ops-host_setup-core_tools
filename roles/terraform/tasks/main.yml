@@ -10,6 +10,14 @@
     - create
     - terraform-create
 
+- include_tasks: mng_env/set.yml
+  tags:
+    - update-terraform
+    - update-tf
+    - create
+    - terraform-create
+    - test_env
+
 # This is already covered by generated terraform
 # - include_tasks: update_tf/open_sg_ports.yml
 #   tags:
@@ -44,3 +52,8 @@
     - destroy
     - destroy-terraform
     - never
+
+# Prevent other terraform plans from logging in this project's logs
+# - include_tasks: mng_env/reset.yml
+#   tags:
+#     - always

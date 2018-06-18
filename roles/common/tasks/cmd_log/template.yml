@@ -1,7 +1,7 @@
 ---
 - name: Run command
-  become: "{{module_become}}"
-  shell: "{{module_command}}"
+  become: "{{common_log_module_become}}"
+  shell: "{{common_log_module_command}}"
   register: myregistered_cmd
   ignore_errors: yes
   tags:
@@ -9,13 +9,13 @@
     - gluster-create
 
 #  be aware that if you do not set a unique mark the block will be overwritten on each iteration
-- name: "Log output and errors if any into {{module_cmdlogfile}}"
+- name: "Log output and errors if any into {{common_log_module_cmdlogfile}}"
   blockinfile:
-    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK {{module_command}}-->"
-    path: "{{module_cmdlogfile}}"
+    marker: "<!-- {mark} ANSIBLE MANAGED BLOCK {{common_log_module_command}}-->"
+    path: "{{common_log_module_cmdlogfile}}"
     block: |
-            <h2><em>{{ module_command_aim }}</em></h2>
-            <h4 style="color:darkgray;">- Command ran: <span style="color:gray;">{{ module_command}}</span></h4>
+            <h2><em>{{ common_log_module_command_aim }}</em></h2>
+            <h4 style="color:darkgray;">- Command ran: <span style="color:gray;">{{ common_log_module_command}}</span></h4>
             <p style="color:blue;margin-left:30px;">Output:{{ myregistered_cmd.stdout| default("-")}}</p>
             <p style="color:red;margin-left:30px;">Error:{{ myregistered_cmd.stderr | default("-")}}</p>
             <p>Last updated on {{ ansible_date_time.iso8601 }}</p>

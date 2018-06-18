@@ -1,8 +1,8 @@
 ---
 # Ensure a temp directory is created to place temp files
-- include_tasks: roles/common/tasks/create_directory.yml
+- include_tasks: roles/common/tasks/create_dir.yml
   vars:
-    module_path: "{{role_path}}/files/tmp"
+    command_dir_module_path: "{{role_path}}/files/tmp"
 
 #  Deploy addons
 - include_tasks: roles/k8s/tasks/deploy.yml

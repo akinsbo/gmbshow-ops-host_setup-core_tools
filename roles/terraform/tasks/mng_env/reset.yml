@@ -1,0 +1,8 @@
+---
+# Reset environmental variables
+- include_tasks: roles/common/tasks/mng_env_vars/reset.yml
+  vars:
+    common_module_env_var: "{{item}}"
+  with_items:
+    - "TF_LOG"
+    - "TF_LOG_PATH"

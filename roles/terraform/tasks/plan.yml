@@ -14,5 +14,8 @@
   command: "terraform plan -out={{mysetfact_terraform_saved_plan}}"
   args:
     chdir: "{{role_path}}/files"
+  environment:
+    TF_LOG: Trace
+    TF_LOG_PATH: "{{terraform_log_path}}"
   tags:
     - terraform

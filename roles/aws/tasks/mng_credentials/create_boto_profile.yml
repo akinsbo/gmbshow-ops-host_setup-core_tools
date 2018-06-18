@@ -3,7 +3,7 @@
 #  Ensure aws credentials profile file exists
 - include_tasks: roles/common/tasks/create_file.yml
   vars:
-    module_path: "{{boto_config_file_precedence[0]}}"
+    common_file_module_path: "{{aws_boto_config_file_precedence[0]}}"
   tags:
     - gluster-create
 
@@ -13,9 +13,9 @@
     - gluster-create
 
 # set the inifile settings
-- name: Ensure aws credentials in {{boto_config_file_precedence[0]}} from mysetfacts
+- name: Ensure aws credentials in {{aws_boto_config_file_precedence[0]}} from mysetfacts
   ini_file:
-    path: "{{boto_config_file_precedence[0]}}"
+    path: "{{aws_boto_config_file_precedence[0]}}"
     section: "{{my_env}}" #e.g. profile prod
     option: "{{item.option}}"
     value: "{{item.value}}"
