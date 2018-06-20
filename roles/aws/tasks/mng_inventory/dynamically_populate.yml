@@ -6,7 +6,7 @@
     - gluster-create
 
 # create credentials profile if not created
-- include_tasks: roles/aws/tasks/mng_credentials/create_boto_profile.yml
+- include_tasks: roles/aws/tasks/mng_credentials/create_profile.yml
   tags:
     - debug_ssh
     - gluster-create

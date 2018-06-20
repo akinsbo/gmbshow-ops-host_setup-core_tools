@@ -1,0 +1,9 @@
+---
+# Fetch file
+  - name: set fact with name
+    set_fact:
+      mysetfact_file: "{{file_to_find}}"
+    with_first_found: "{{common_module_file_precedence}}"
+    loop_control:
+      loop_var: file_to_find
+    register: myregistered_search

@@ -1,0 +1,18 @@
+---
+# Override setting (if set to override or if setting has no value)
+- include_tasks: roles/common/tasks/mng_config_file/override_settings.yml
+  vars:
+    common_module_config_override_file: "{{common_module_config_file}}"
+    common_module_config_override_become:  "{{common_module_config_delete_become}}"
+    common_module_config_override_section: "{{common_module_config_delete_section}}"
+    common_module_config_override_settings:  "{{common_module_config_delete_settings}}"
+    common_module_config_override_present: absent
+
+
+# =================================vars===================================================
+# vars:
+#   common_module_config_file:
+#   common_module_config_delete_become:
+#   common_module_config_delete_section:
+#   common_module_config_delete_settings:
+#     - {option: abc, value: xyz}

@@ -1,0 +1,30 @@
+---
+#  Ensure file exists
+- include_tasks: roles/common/tasks/create_file.yml
+  vars:
+    common_file_module_path: "{{common_module_config_file}}"
+
+# Ensure setting exists
+- include_tasks: roles/common/tasks/mng_config_file/support/create_setting.yml
+  vars:
+    common_module_config_setting_file: "{{common_module_config_file}}"
+    common_module_config_setting_become: "{{common_module_config_add_become}}"
+    common_module_config_create_section: "{{common_module_config_add_section}}"
+    common_module_config_create_settings: "{{common_module_config_add_settings}}"
+
+# Override setting (if set to override or if setting has no value)
+- include_tasks: roles/common/tasks/mng_config_file/support/override_settings.yml
+  vars:
+    common_module_config_override_file: "{{common_module_config_file}}"
+    common_module_config_override_become:  "{{common_module_config_add_become}}"
+    common_module_config_override_section: "{{common_module_config_add_section}}"
+    common_module_config_override_settings:  "{{common_module_config_add_settings}}"
+    common_module_config_override_present: present
+
+# ===================================vars=================================================
+# vars:
+#   common_module_config_file:
+#   common_module_config_become_settings:
+#   common_module_config_add_section:
+#   common_module_config_add_settings:
+#     - {option: abc, value: xyz}

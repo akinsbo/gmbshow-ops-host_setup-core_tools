@@ -1,0 +1,24 @@
+---
+# add to the inifile settings
+- name: Ensure options are set in {{common_module_config_override_file}} from my setfacts
+  become: "{{common_module_config_override_become}}"  
+  ini_file:
+    path: "{{common_module_config_override_file}}"
+    state: "{{common_module_config_override_present}}"
+    section: "{{common_module_config_override_section | default(null)}}" #e.g. profile prod
+    option: "{{item.option}}"
+    value: "{{item.value}}"
+    mode: 0600
+    backup: yes
+    no_extra_spaces: yes
+  with_items: "{{common_module_config_override_settings}}"
+
+
+#======================
+# vars: 
+  # common_module_config_override_file:
+  # common_module_config_override_become:
+  # common_module_config_override_present
+  # common_module_config_override_section:
+  # common_module_config_override_settings:
+    # - {option: abc, value: xyz}

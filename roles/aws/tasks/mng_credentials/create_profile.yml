@@ -1,0 +1,55 @@
+---
+#  -----------------------------------aws.credentials-------------------------------------
+- name: Ensure credentials exists in desired profile
+  block:
+  - include: roles/common/tasks/mng_config_file/add.yml
+    vars:
+      common_module_setting_to_find: aws_access_key_id #setting to search for 
+      common_module_file_precedence: "{{aws.credentials.file_precedence}}"
+      common_module_section_precedence: "{{boto_conf_credentials_section_precedence}}"
+      common_module_config_add_section: "{{my_env}}"
+      common_module_config_add_settings:
+        - { option: aws_access_key_id, value: "{{mysetfact_AWS_ACCESS_KEY_ID}}"}
+        - { option: aws_secret_access_key, value: "{{mysetfact_AWS_SECRET_ACCESS_KEY}}"}
+  rescue:
+  # Get the aws credentials currently configured if profile cannot be found
+  - include_tasks: roles/aws/tasks/mng_credentials/get_current_cred.yml
+
+  # Set the current configuration into the config file
+  - include: roles/common/tasks/mng_config_file/add.yml
+    vars:
+      common_module_setting_to_find: aws_access_key_id #setting to search for 
+      common_module_file_precedence: "{{aws.credentials.file_precedence}}"
+      common_module_section_precedence: "{{boto_conf_credentials_section_precedence}}"
+      common_module_config_add_section: "{{my_env}}"
+      common_module_config_add_settings:
+        - { option: aws_access_key_id, value: "{{mysetfact_AWS_ACCESS_KEY_ID}}"}
+        - { option: aws_secret_access_key, value: "{{mysetfact_AWS_SECRET_ACCESS_KEY}}"}
+
+#  -----------------------------------aws.config--------------------------------------------
+# Ensure aws.config exists
+- name: Ensure aws.config exists and contains desired profile
+  block:
+  - include: roles/common/tasks/mng_config_file/add.yml
+    vars:
+      common_module_config_setting_to_find: "region" #setting to search for 
+      common_module_file_precedence: "{{aws.config.file}}"
+      common_module_section_precedence: "{{boto_conf_credentials_section_precedence}}"
+      common_module_config_add_section: "{{my_env}}"
+      common_module_config_add_settings:
+        - { option: region, value: "{{mysetfact_REGION}}"}
+        - { option: output, value: "{{mysetfact_OUTPUT}}"}
+  rescue:
+  # Get the aws credentials currently configured if profile cannot be found
+  - include_tasks: roles/aws/tasks/mng_credentials/get_current_cred.yml
+
+  # Try to set the current configuration into the config file
+  - include: roles/common/tasks/mng_config_file/add.yml
+    vars:
+      common_module_config_setting_to_find: "region" #setting to search for 
+      common_module_file_precedence: "{{aws.config.file}}"
+      common_module_section_precedence: "{{boto_conf_credentials_section_precedence}}"
+      common_module_config_add_section: "{{my_env}}"
+      common_module_config_add_settings:
+        - { option: region, value: "{{mysetfact_REGION}}"}
+        - { option: output, value: "{{mysetfact_OUTPUT}}"}

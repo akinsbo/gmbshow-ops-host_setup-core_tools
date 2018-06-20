@@ -1,6 +1,6 @@
 ---
 # create credentials profile if not created
-- include_tasks: roles/aws/tasks/mng_credentials/create_boto_profile.yml
+- include_tasks: roles/aws/tasks/mng_credentials/create_profile.yml
   tags:
     - gluster-create
 
@@ -11,8 +11,9 @@
     marker: "##### {mark} ANSIBLE MANAGED BLOCK (CREDENTIAL PROFILE PROVISION)####"
     backup: yes
     content: |2 # Apply 2 spaces before text 
-        shared_credentials_file = "{{aws_boto_config_file_precedence[0]}}"
+        shared_credentials_file = "{{aws.credentials.file_precedence[0]}}"
         profile = "{{boto_conf_credentials_section_precedence[0]}}"
+        version = "~> {{terraform_aws_provider_version}}"
   tags:
     - test_task
     - gluster-create

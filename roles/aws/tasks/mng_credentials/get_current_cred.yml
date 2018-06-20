@@ -5,6 +5,8 @@
   with_items:
     - aws_access_key_id
     - aws_secret_access_key
+    - region
+    - output
   tags:
     - gluster-create
 
@@ -13,5 +15,7 @@
   with_items:
     - {key_export: mysetfact_AWS_ACCESS_KEY_ID, previously_regd: "{{my_registered_access_keys.results[0].stdout}}"}
     - {key_export: mysetfact_AWS_SECRET_ACCESS_KEY, previously_regd: "{{my_registered_access_keys.results[1].stdout}}"}
+    - {key_export: mysetfact_REGION, previously_regd: "{{my_registered_access_keys.results[2].stdout}}"}
+    - {key_export: mysetfact_OUTPUT, previously_regd: "{{my_registered_access_keys.results[3].stdout}}"}  
   tags:
     - gluster-create
