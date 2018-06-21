@@ -3,10 +3,14 @@
   stat: 
       path: "{{ common_file_module_path}}"
   register: myregistered_file
+  tags:
+    - cluster-checks
+    - gluster-create
+    - test_env
 
 - name: Create file
   block:
-  - include_tasks: create_dir.yml
+  - include_tasks: roles/common/tasks/create_dir.yml
     vars:
       common_dir_module_path: "{{common_file_module_path}}"
     tags:
@@ -15,7 +19,7 @@
       - test_env
 
   - name: Ensure file exists
-    become: "{{common_file_module_become | default(no)}}"
+    become: "{{common_file_module_become | default('no') | bool}}"
     copy:
       content: ""
       dest: "{{common_file_module_path}}"

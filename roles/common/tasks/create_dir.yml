@@ -3,7 +3,11 @@
   stat: 
       path: "{{ common_dir_module_path | dirname}}"
   register: myregistered_dir
-
+  tags:
+    - cluster-checks
+    - gluster-create
+    - test_env
+    
 - name: Ensure directory is created
   file:
     path: "{{ common_dir_module_path | dirname}}"

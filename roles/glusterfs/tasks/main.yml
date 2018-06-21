@@ -1,10 +1,12 @@
 ---
 #  Insert into node group inventory
 - include_tasks: roles/aws/tasks/mng_inventory/dynamically_populate.yml
-  module_line: "[{{kops_node_inventory_group}}]"
-  module_description: "Node group"
+  vars:
+    common_module_inventory_line: "[{{kops_node_inventory_group}}]"
+    common_module_inventory_description: "Node group"
   tags:
     - gluster-create
+
 
 # - name: set gluster install command to run on nodes
 #   set_fact:

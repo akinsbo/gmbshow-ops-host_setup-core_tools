@@ -10,9 +10,9 @@
   # TODO: List out health commands and log
 - include_tasks: roles/common/tasks/cmd_log/main.yml
   vars:
-    module_file: "{{role_path}}/files/logs"
-    module_command_become: no
-   common_cmd_log_module_command_array:
+    common_module_cmd_log_file: "{{role_path}}/files/logs"
+    common_module_cmd_log_command_become: no
+    common_module_cmd_log_command_array:
       - {command: "kubectl get nodes", aim: "fetching nodes"}
       - {command: "kubectl list cluster", aim: "listing clusters"}
       - {command: "kubectl get cs", aim: "checking cluster health (component status)"}

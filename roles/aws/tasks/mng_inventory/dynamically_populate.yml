@@ -24,18 +24,23 @@
 #  list out dynamic inventory
 - include_tasks: roles/common/tasks/cmd_log/main.yml
   vars:
-    module_command_become: no
-    module_file: "{{playbook_dir}}/log/temp/inventory_list"
-   common_cmd_log_module_command_array:
-      - {command: "{{playbook_dir}}/inventory/ec2.py --boto-profile prod", aim: "List out dynamic inventory"}
+    common_module_cmd_log_command_become: no
+    common_module_cmd_log_file: "{{log_path}}/temp/inventory_list"
+    common_module_cmd_log_command_array:
+      - {command: "{{playbook_dir}}/inventory/ec2.py --boto-profile {{aws.credentials.profile.name}}", aim: "List out dynamic inventory"}
   # delegate_to: 127.0.0.1
   tags:
     - gluster-create
 
-- name: Insert {{module_description}} into inventory
+- name: Insert {{common_module_inventory_description}} into inventory
   lineinfile:
     path: "{{inventory_file}}"
-    line: "{{module_line}}"
+    line: "{{common_module_inventory_line}}"
     state: present 
   tags:
     - gluster-create
+
+#################################
+# vars:
+#   common_module_inventory_description:
+#   common_module_inventory_line:

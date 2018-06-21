@@ -191,3 +191,4 @@ heapster_url: https://github.com/kubernetes/heapster/tree/master/deploy/kube-con
 
 # gluster
 # gk-deploy_path: https://github.com/gluster/gluster-kubernetes/blob/master/deploy/gk-deploy
+
