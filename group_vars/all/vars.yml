@@ -3,32 +3,18 @@
 app_name: mbshow
 app_full_name: The maryboye show
 
-# # environment
-# my_env: prod
-# boto_conf_credentials_section_precedence:
-#   - "{{my_env}}"
-#   - credentials
-#   - default
-
-# aws.credentials.profile.name: "{{my_env}}"
-
-# aws.credentials.file_precedence:
-#   - "{{ lookup('env', 'HOME')}}/.aws/credentials"
-#   - "{{ lookup('env', 'HOME')}}/boto.cfg"
-#   - "{{ lookup('env', 'HOME')}}/.boto"  
-
-# aws.config.file:
-#   - "{{ lookup('env', 'HOME')}}/.aws/config"
+# environment
+my_env: prod
 
 aws:
   credentials:
     profile: 
-      name: "{{my_env}}"
+      name: "{{my_env}}" # e.g. default, Credentials
       override_with_current_cred: yes
     file_precedence:
       - "{{ lookup('env', 'HOME')}}/.aws/credentials"
-      - "{{ lookup('env', 'HOME')}}/boto.cfg"
       - "{{ lookup('env', 'HOME')}}/.boto"
+      - "{{ lookup('env', 'HOME')}}/boto.cfg" # use profie name: Credentials (if using this as first choice)
   config:
     file: "{{ lookup('env', 'HOME')}}/.aws/config"
 

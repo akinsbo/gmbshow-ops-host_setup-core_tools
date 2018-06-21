@@ -12,7 +12,7 @@
     backup: yes
     content: |2 # Apply 2 spaces before text 
         shared_credentials_file = "{{aws.credentials.file_precedence[0]}}"
-        profile = "{{boto_conf_credentials_section_precedence[0]}}"
+        profile = "{{aws.credentials.profile.name}}"
         version = "~> {{terraform_aws_provider_version}}"
   tags:
     - test_task

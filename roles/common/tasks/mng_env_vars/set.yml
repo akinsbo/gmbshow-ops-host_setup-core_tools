@@ -5,9 +5,10 @@
     common_module_config_file: "{{common_os_environ_file}}" 
     common_module_config_add_become: yes
     common_module_config_add_section: null
+    common_module_config_override: yes
     common_module_config_add_settings:
       - {option: "{{common_module_env_var}}", value: "{{common_module_env_value}}"}
 
-vars:
-  common_module_env_var:
-  common_module_env_value:
+# vars:
+#   common_module_env_var:
+#   common_module_env_value:

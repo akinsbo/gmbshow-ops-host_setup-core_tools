@@ -5,26 +5,31 @@
     common_file_module_path: "{{common_module_config_file}}"
 
 # Ensure setting exists
-- include_tasks: roles/common/tasks/mng_config_file/support/create_setting.yml
+- include_tasks: roles/common/tasks/mng_config_file/settings/create.yml
   vars:
     common_module_config_setting_file: "{{common_module_config_file}}"
     common_module_config_setting_become: "{{common_module_config_add_become}}"
-    common_module_config_create_section: "{{common_module_config_add_section}}"
-    common_module_config_create_settings: "{{common_module_config_add_settings}}"
+    common_module_config_setting_section: "{{common_module_config_add_section}}"
+    common_module_config_settings: "{{common_module_config_add_settings}}"
+
+- name: Debug override
+  debug:
+    msg: "common_module_config_override = {{common_module_config_override}}"
 
 # Override setting (if set to override or if setting has no value)
-- include_tasks: roles/common/tasks/mng_config_file/support/override_settings.yml
+- include_tasks: roles/common/tasks/mng_config_file/settings/override.yml
   vars:
     common_module_config_override_file: "{{common_module_config_file}}"
     common_module_config_override_become:  "{{common_module_config_add_become}}"
     common_module_config_override_section: "{{common_module_config_add_section}}"
     common_module_config_override_settings:  "{{common_module_config_add_settings}}"
-    common_module_config_override_present: present
-
+    common_module_config_override_state: present
+  when: common_module_config_override == yes
 # ===================================vars=================================================
 # vars:
 #   common_module_config_file:
-#   common_module_config_become_settings:
+#   common_module_config_add_become:
 #   common_module_config_add_section:
+#   common_module_config_override: yes
 #   common_module_config_add_settings:
 #     - {option: abc, value: xyz}

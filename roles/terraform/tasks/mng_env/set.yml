@@ -2,10 +2,8 @@
 # Set environmental variable
 - include_tasks: roles/common/tasks/mng_env_vars/set.yml
   vars:
-    common_module_env_var: "{{item.var}}"
+    common_module_env_var: "{{item.option}}"
     common_module_env_value: "{{item.value}}"
   with_items:
-    - {var: "TF_LOG", value: "Trace" }
-    - {var: "TF_LOG_PATH", value: "{{terraform_log_path}}" }
-  tags:
-    - test_env
+    - {option: "TF_LOG", value: "Trace" }
+    - {option: "TF_LOG_PATH", value: "{{terraform_log_path}}" }

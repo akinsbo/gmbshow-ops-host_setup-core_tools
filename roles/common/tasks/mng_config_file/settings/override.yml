@@ -4,21 +4,21 @@
   become: "{{common_module_config_override_become}}"  
   ini_file:
     path: "{{common_module_config_override_file}}"
-    state: "{{common_module_config_override_present}}"
+    state: "{{common_module_config_override_state}}"
     section: "{{common_module_config_override_section | default(null)}}" #e.g. profile prod
-    option: "{{item.option}}"
-    value: "{{item.value}}"
+    option: "{{settings_item.option}}"
+    value: "{{settings_item.value}}"
     mode: 0600
     backup: yes
     no_extra_spaces: yes
   with_items: "{{common_module_config_override_settings}}"
-
-
+  loop_control:
+    loop_var: settings_item
 #======================
 # vars: 
   # common_module_config_override_file:
   # common_module_config_override_become:
-  # common_module_config_override_present
+  # common_module_config_override_state:  # e.g. present
   # common_module_config_override_section:
   # common_module_config_override_settings:
     # - {option: abc, value: xyz}

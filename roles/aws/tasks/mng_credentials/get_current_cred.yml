@@ -17,5 +17,6 @@
     - {key_export: mysetfact_AWS_SECRET_ACCESS_KEY, previously_regd: "{{my_registered_access_keys.results[1].stdout}}"}
     - {key_export: mysetfact_REGION, previously_regd: "{{my_registered_access_keys.results[2].stdout}}"}
     - {key_export: mysetfact_OUTPUT, previously_regd: "{{my_registered_access_keys.results[3].stdout}}"}  
+  no_log: true
   tags:
     - gluster-create
