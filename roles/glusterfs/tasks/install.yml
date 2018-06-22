@@ -1,4 +1,13 @@
 ---
+#  Load kernel modules
+- include: roles/glusterfs/tasks/setup/load_kernel_modules
+  vars:
+    gluster_module_kernel: "{{item}}"
+  with_items:
+    - dm_snapshot
+    - dm_mirror
+    - dm_thin_pool
+
 - name: Check that mount.glusterfs command runs
   command: "mount.glusterfs"
   register: myregistered_glusterfs_cmd
@@ -10,4 +19,5 @@
     module_pkg: gluster-server
     module_apt_key: "{{gluster_apt_key}}"
     module_repo_source: "{{gluster_repo_source}}"
-  when: myregistered_glusterfs_cmd.stdout is ''
+  when: myregistered_glusterfs_cmd.rc == 1
+

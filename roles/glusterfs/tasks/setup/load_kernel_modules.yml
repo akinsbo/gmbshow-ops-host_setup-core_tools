@@ -1,0 +1,9 @@
+---
+- name: Check for loaded lsmod
+  command: "lsmod | grep {{gluster_module_kernel}}"
+  ignore_errors: yes
+  register: myregistered_search
+
+- name: Load it
+  command: "modprobe {{gluster_module_kernel}}"
+  when: myregistered_search.rc == 1

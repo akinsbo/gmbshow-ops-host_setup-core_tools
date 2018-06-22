@@ -1,0 +1,6 @@
+start = "{\"clusters\":[{\"nodes\":["
+end = "]}]}"
+for i in is
+do
+    "{\"node\":{\"hostnames\":{\"manage\":\"${NODE}\",\"storage\":[\"${STORAGE_IP_ADDRESS}\"]},\"zone\":1},\"devices\":[\"/dev/vdb\",\"/dev/vdc\",\"/dev/vdd\"]}"
+done

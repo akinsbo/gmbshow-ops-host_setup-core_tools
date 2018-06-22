@@ -152,7 +152,9 @@ cluster:
 # kubernetes kops generated-defaults
 kops_sec_group_suffix: "{{cluster.name | regex_replace ('\\.','-')}}"
 kops_group_tagname: "{{cluster.name | regex_replace ('\\.','_')}}"
+kops_bastion_inventory_group: "tag_Name_bastions_{{kops_group_tagname}}"
 kops_node_inventory_group: "tag_Name_nodes_{{kops_group_tagname}}"
+kops_master_inventory_group: "tag_Name_master_{{kops_group_tagname}}"
 
 iam:
   user:

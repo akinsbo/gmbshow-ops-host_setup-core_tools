@@ -1,46 +1,19 @@
 ---
-- debug:
-    msg: "ssh -i {{cluster.ssh_private_key}} root@172.20.63.35"   
-  tags:
-    - debug_ssh
-    - gluster-create
-
-# create credentials profile if not created
-- include_tasks: roles/aws/tasks/mng_credentials/create_profile.yml
-  tags:
-    - debug_ssh
-    - gluster-create
-
-- name: Make ec2.py and private key executable
-  file: 
-    path: "{{item}}"
-    mode: "ugo+x"
-  with_items:
-    - "{{ec2_py_path}}"
-    - "{{cluster.ssh_private_key}}"
-  tags:
-    - gluster-create
-
 #  list out dynamic inventory
-- include_tasks: roles/common/tasks/cmd_log/main.yml
+- include_tasks: roles/aws/tasks/mng_inventory/list.yml
   vars:
-    common_module_cmd_log_command_become: no
-    common_module_cmd_log_file: "{{log_path}}/temp/inventory_list"
-    common_module_cmd_log_command_array:
-      - {command: "{{playbook_dir}}/inventory/ec2.py --boto-profile {{aws.credentials.profile.name}}", aim: "List out dynamic inventory"}
-  # delegate_to: 127.0.0.1
-  tags:
-    - gluster-create
+    aws_module_inventory_list_group: 127.0.0.1
 
-- name: Insert {{common_module_inventory_description}} into inventory
-  lineinfile:
-    path: "{{inventory_file}}"
-    line: "{{common_module_inventory_line}}"
-    state: present 
-  tags:
-    - gluster-create
+- include_tasks: roles/aws/tasks/mng_inventory/insert.yml
+  vars:
+    aws_module_inventory_insert_group: "{{aws_module_inventory_group}}"
+    aws_module_inventory_insert_description: "{{aws_module_inventory_description}}"
+  
+- include_tasks: roles/aws/tasks/mng_inventory/list.yml
+  vars:
+    aws_module_inventory_list_group: "{{aws_module_inventory_group}}"
 
 #################################
 # vars:
-#   common_module_inventory_description:
-#   common_module_inventory_line:
+#   aws_module_inventory_description:
+#   aws_module_inventory_group:

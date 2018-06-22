@@ -1,0 +1,12 @@
+---
+- name: "Insert {{aws_module_inventory_insert_description}} into inventory"
+  lineinfile:
+    path: "{{inventory_file}}"
+    line: "{{aws_module_inventory_insert_group}}"
+    state: present 
+  tags:
+    - gluster-create
+
+# vars:
+#   aws_module_inventory_insert_group:
+#   aws_module_inventory_insert_description: 
