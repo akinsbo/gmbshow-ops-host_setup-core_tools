@@ -45,11 +45,11 @@
 #   tags:
 #     - cluster-checks
 
-# - name: Open the log in browser page {{mysetfact_module_cmdlogfile}}
-#   command: "firefox {{mysetfact_module_cmdlogfile}}"
-#   tags:
-#     - cluster-checks
-#     - gluster-create
+- name: Open the log in browser page {{mysetfact_module_cmdlogfile}}
+  command: "firefox -new-tab {{mysetfact_module_cmdlogfile}}"
+  tags:
+    - cluster-checks
+    - gluster-create
 
 # ##################################
 # vars:
