@@ -12,9 +12,9 @@
     aws_module_inventory_description: "{{item.description}}"
     aws_module_inventory_group: "{{item.group}}"
   with_items:
-    - { description: "Bastion group", group: "[{{kops_bastion_inventory_group}}]"}        
-    - { description: "Node group", group: "[{{kops_node_inventory_group}}]"}
-    - { description: "Master group", group: "[{{kops_master_inventory_group}}]"}
+    - { description: "Bastion group", group: "{{kops_bastion_inventory_group}}"}        
+    - { description: "Node group", group: "{{kops_node_inventory_group}}"}
+    - { description: "Master group", group: "{{kops_master_inventory_group}}"}
   tags:
     - test_env
 

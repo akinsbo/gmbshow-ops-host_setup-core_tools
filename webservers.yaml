@@ -24,11 +24,6 @@
         - { description: "Master group", group: "[{{kops_master_inventory_group}}]"}
       tags:
         - test_env
-    
-    - include: script
-      script: /
-      
-    - meta: end_play
 
     # Set environmental variable
     - include_tasks: roles/terraform/tasks/mng_env/set.yml
