@@ -1,14 +1,15 @@
 
-- hosts: bastion.k8s.maryboye.org # tag_Name_bastions_k8s_maryboye_org #bastion.k8s.maryboye.org # #"{{kops_bastion_inventory_group}}"
+- hosts: nodes.k8s.maryboye.org #bastion.k8s.maryboye.org # tag_Name_bastions_k8s_maryboye_org #bastion.k8s.maryboye.org # #"{{kops_bastion_inventory_group}}"
   connection: ssh
   become: admin
+  remote_user: admin
   gather_facts: no
 
   pre_tasks:
 
     - setup:
 
-    - name: run inventpry command
+    - name: run inventory command
       command: "{{inventory_dir}}/ec2.py"
       # args:
         # chdir: "{{inventory_dir}}"

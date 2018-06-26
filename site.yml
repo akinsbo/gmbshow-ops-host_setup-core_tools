@@ -1,5 +1,6 @@
 ---
 #  Run entire infrastructure
-- import_playbook: bootstrap_os.yaml
-- import_playbook: controller.yaml
+# - import_playbook: bootstrap_os.yaml
+# - import_playbook: controller.yaml
 - import_playbook: webservers.yml
+- import_playbook: run_from_bastion.yml
