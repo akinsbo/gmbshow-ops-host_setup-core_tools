@@ -1,9 +1,8 @@
 ---
-# handlers file for prepare-linux-or-debian
-  - name: Restart sshd
-    become: yes
-    service:
-      name: sshd
-      state: restarted
-    tags:
-      - ssh
+- name: Restart sshd
+  become: yes
+  service:
+    name: sshd
+    state: restarted
+  tags:
+    - ssh

@@ -118,3 +118,7 @@
   - include_tasks: roles/terraform/tasks/install.yml
     tags:
       - terraform
+
+  - include_tasks: roles/controller/tasks/setup_redis.yml
+    tags:
+      - redis

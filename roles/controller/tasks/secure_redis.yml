@@ -1,0 +1,24 @@
+# Secure redis (edit conf)
+- name: Firewall- Ensure access to redis port 6379 is denied
+  become: yes
+  ufw:
+    rule: deny
+    port: "{{item}}"  
+    proto: any
+    log: yes
+  with_items:
+    - 6379
+    - 16379 # for if redis is used cluster mode
+    - 26379 # for Sentinel
+  tags:
+    - ufw
+    - redis
+
+- name: Ensure bind-to-localhost is enabled
+  become: yes
+  lineinfile:
+      path: /etc/redis/6379.conf
+      create: no 
+      state: present
+      regex: '^#bind 127\.0\.0\.1'
+      line: 'bind 127.0.0.1'

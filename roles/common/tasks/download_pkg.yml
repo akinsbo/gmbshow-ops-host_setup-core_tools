@@ -43,7 +43,7 @@
       # TODO Add hash check
     when: ansible_os_family == 'Darwin'
 
-  - name: "Download and install {{module_package}} for linux and others"
+  - name: "Download and install {{module_package}} for linux and others when download is not archive"
     get_url:
       url: "{{ module_linux_url }}"
       dest: "/usr/local/bin/{{module_package}}"

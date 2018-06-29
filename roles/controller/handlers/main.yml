@@ -1,1 +1,6 @@
 ---
+- name: Start redis
+  become: yes
+  service:
+    name: redis_6379
+    state: restarted

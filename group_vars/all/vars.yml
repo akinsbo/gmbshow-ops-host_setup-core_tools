@@ -41,6 +41,7 @@ controller_python_virtenv: "/usr/local/bin/{{app_name}}/python/venv"
 controller_python3_virtenv: "/usr/local/bin/{{app_name}}/python3/venv"
 
 common_os_environ_file: /etc/environment
+download_location: "{{lookup('env', 'HOME')}}/Downloads"
 
 local_ansible_user: olaolu
 local_ansible_group: olaolu
