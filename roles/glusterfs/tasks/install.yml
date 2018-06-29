@@ -1,6 +1,7 @@
 ---
 #  Load kernel modules
-- include: roles/glusterfs/tasks/setup/load_kernel_modules
+- include: roles/glusterfs/tasks/setup/load_kernel_modules.yml
+  become: yes
   vars:
     gluster_module_kernel: "{{item}}"
   with_items:

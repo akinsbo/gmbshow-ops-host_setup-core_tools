@@ -1,12 +1,32 @@
 ---
-- name: "Insert {{aws_module_inventory_insert_description}} into inventory"
-  lineinfile:
+- name: "Insert {{aws_module_inventory_insert_host_name}} into inventory"
+  blockinfile:
     path: "{{inventory_file}}"
-    line: "{{aws_module_inventory_insert_group}}"
+    insertafter: EOF
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{aws_module_inventory_insert_group}}"
     state: present 
+    content: |
+
+      [{{aws_module_inventory_insert_group}}]
+      {{aws_module_inventory_insert_host_name}}.{{cluster.name}}
+
+- include_tasks: roles/common/tasks/create_file.yml
+  vars:
+    common_file_module_become: yes
+    common_file_module_path: "{{playbook_dir}}/group_vars/all/{{aws_module_inventory_insert_group}}"
+
+- name: "Insert {{aws_module_inventory_insert_host_name}} into inventory"
+  blockinfile:
+    path: "{{playbook_dir}}/group_vars/all/{{aws_module_inventory_insert_group}}"
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{aws_module_inventory_insert_group}}"
+    state: present 
+    content: |
+      ansible_connection: ssh
+      ansible_ssh_private_key_file: {{cluster.ssh_private_key}}
+      ansible_ssh_common_args: '-o IdentitiesOnly=yes'
+      ansible_user: admin
   tags:
     - gluster-create
-
 # vars:
 #   aws_module_inventory_insert_group:
 #   aws_module_inventory_insert_description: 

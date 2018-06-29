@@ -13,23 +13,7 @@
     - include_tasks: roles/terraform/tasks/update_tf/update_creds_profile.yml
         
     - setup:
-
-    - include_tasks: roles/aws/tasks/mng_inventory/dynamically_populate.yml
-      vars:
-        aws_module_inventory_description: "{{item.description}}"
-        aws_module_inventory_group: "{{item.group}}"
-      with_items:
-        - { description: "Bastion group", group: "[{{kops_bastion_inventory_group}}]"}        
-        - { description: "Node group", group: "[{{kops_node_inventory_group}}]"}
-        - { description: "Master group", group: "[{{kops_master_inventory_group}}]"}
-      tags:
-        - test_env
     
-    - include: script
-      script: /
-      
-    - meta: end_play
-
     # Set environmental variable
     - include_tasks: roles/terraform/tasks/mng_env/set.yml
 
