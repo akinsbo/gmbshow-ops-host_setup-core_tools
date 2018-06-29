@@ -8,11 +8,11 @@ echo
 echo "Regex to run: $regex_to_run"
 echo
 echo 'replacing string'
-find . -type f -exec sed -i "$regex_to_run" {} \;
-# # Another and probably faster way is:
+grep -rl "$old_string" . | xargs sed -i "s/$old_string/$new_string/g"
+# # This way is:
 # grep -rl "$old_string" /dir_to_search_under | xargs sed -i "s/$old_string/$new_string/g"
-# # For our case,
-# grep -rl "$old_string" . | xargs sed -i "s/$old_string/$new_string/g"
+# # Another way is,
+# find . -type f -exec sed -i "$regex_to_run" {} \;
 # # For more speed and limiting to git repo items, if in a git repo, run:
 # git grep -rl "$old_string" . | xargs sed -i "s/$old_string/$new_string/g"
 echo 
