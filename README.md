@@ -5,7 +5,7 @@
 Install the latest version of kubectl on Linux or MacOS:
 
 ```sh
-ansible-playbook -i hosts.ini install-kubectl.yaml
+ansible-playbook -i hosts install-kubectl.yaml
 ```
 
 You may need either --ask-become-pass or ansible_become_pass
@@ -13,31 +13,31 @@ You may need either --ask-become-pass or ansible_become_pass
 ## To create cluster infrastructure, run
 
 ```sh
-ansible-playbook -i hosts.ini webservers.yaml --tags="create"
+ansible-playbook -i hosts webservers.yaml --tags="create"
 ```
 
 ## To destroy cluster infrastructure, run
 
 ```sh
-ansible-playbook -i hosts.ini webservers.yaml --tags="destroy"
+ansible-playbook -i hosts webservers.yaml --tags="destroy"
 ```
 
 ## To perform checks on cluster
 
 ```sh
-ansible-playbook -i hosts.ini webservers.yaml --tags="cluster-checks"
+ansible-playbook -i hosts webservers.yaml --tags="cluster-checks"
 ```
 
 To create cluster from terraform file, run
 
 ```sh
-ansible-playbook -i hosts.ini webservers.yaml --tags="terraform-create"
+ansible-playbook -i hosts webservers.yaml --tags="terraform-create"
 ```
 
 To create the hyperconverged glusterfs distributed storage, run
 
 ```sh
-ansible-playbook -i hosts.ini webservers.yaml --tags="gluster-create
+ansible-playbook -i hosts webservers.yaml --tags="gluster-create
 ```
 
 

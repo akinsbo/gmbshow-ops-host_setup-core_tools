@@ -9,7 +9,7 @@
 - name: insert group into host file
   become: yes
   blockinfile:
-    path: "{{inventory_dir}}/hosts.ini"
+    path: "{{inventory_dir}}/hosts"
     state: present
     insertafter: EOF
     marker: "# {mark} ANSIBLE MANAGED BLOCK dynamic_inventory.yml"
