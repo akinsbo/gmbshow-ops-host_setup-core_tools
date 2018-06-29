@@ -1,26 +1,20 @@
 
-- hosts: nodes.k8s.maryboye.org #bastion.k8s.maryboye.org # tag_Name_bastions_k8s_maryboye_org #bastion.k8s.maryboye.org # #"{{kops_bastion_inventory_group}}"
+- hosts: master # bastion.k8s.maryboye.org # tag_Name_bastions_k8s_maryboye_org #bastion.k8s.maryboye.org # #"{{bastion.inventory_group}}"
   connection: ssh
   become: admin
-  remote_user: admin
   gather_facts: no
 
   pre_tasks:
 
     - setup:
+    
+    - name: Ping
+      ping: ~
 
-    - name: run inventory command
-      command: "{{inventory_dir}}/ec2.py"
-      # args:
-        # chdir: "{{inventory_dir}}"
-
-    - include_tasks: roles/aws/tasks/mng_inventory/dynamically_populate.yml
-      vars:
-        aws_module_inventory_host_name: "{{item.host_name}}"
-        aws_module_inventory_group: "{{item.group}}"
-      with_items:
-        - { host_name: "bastion",  group: "{{kops_bastion_inventory_group}}"}        
-      #   - { description: "Node group", group: "{{kops_node_inventory_group}}"}
-      #   - { description: "Master group", group: "{{kops_master_inventory_group}}"}
-      # tags:
-      #   - test_env
+  roles:
+    - k8s
+    - glusterfs
+    # - name: run inventory command
+    #   command: "{{inventory_dir}}/ec2.py"
+    #   # args:
+    #     # chdir: "{{inventory_dir}}"

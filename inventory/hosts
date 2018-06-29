@@ -1,0 +1,34 @@
+[localhost]
+127.0.0.1 ansible_connection=local
+
+[controllers]
+127.0.0.1 ansible_connection=local
+
+[tag_Name_bastions_k8s_maryboye_org]
+bastion.k8s.maryboye.org
+
+# BEGIN ANSIBLE MANAGED BLOCK master
+
+[mysetfact_master_instance_ips]
+ip-172-20-115-37.eu-west-1.compute.internal
+ip-172-20-48-65.eu-west-1.compute.internal
+ip-172-20-94-236.eu-west-1.compute.internal
+# END ANSIBLE MANAGED BLOCK master
+# BEGIN ANSIBLE MANAGED BLOCK node
+
+[mysetfact_node_instance_ips]
+ip-172-20-123-226.eu-west-1.compute.internal
+ip-172-20-59-197.eu-west-1.compute.internal
+ip-172-20-66-243.eu-west-1.compute.internal
+# END ANSIBLE MANAGED BLOCK node
+# BEGIN ANSIBLE MANAGED BLOCK dynamic_inventory.yml
+
+# make supplemental group
+[insecuressh:children]
+master
+node
+tag_Name_bastions_k8s_maryboye_org
+
+[insecuressh:vars]
+ansible_ssh_common_args='-o StrictHostKeyChecking=no'
+# END ANSIBLE MANAGED BLOCK dynamic_inventory.yml

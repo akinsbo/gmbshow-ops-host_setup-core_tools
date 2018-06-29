@@ -1,0 +1,34 @@
+---
+- name: Download redis for ansible fact caching
+  unarchive:
+    src: "http://download.redis.io/redis-stable.tar.gz"
+    dest: "{{download_location}}"
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
+    remote_src: yes
+    mode: 0755
+  tags:
+    - redis
+
+- name: Install redis and copy redis-server and cli
+  become: yes
+  command: "{{item.command}}"
+  args:
+    chdir: "{{item.directory}}"
+  with_items:
+    - {directory: "{{download_location}}/redis-stable", command: make}
+    - {directory: "{{download_location}}/redis-stable", command: make install}
+    - {directory: "{{download_location}}/redis-stable/utils", command: ./install_server.sh}
+  tags:
+    - redis
+  notify:
+    - Start redis
+
+- meta: flush_handlers
+
+- name: Install redis python module needed by ansible, via pip
+  become: yes
+  pip:
+    name: redis
+  tags:
+    - redis

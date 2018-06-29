@@ -13,6 +13,8 @@
   vars:
     aws_module_inventory_list_group: "{{aws_module_inventory_group}}"
 
+- include_tasks: roles/aws/tasks/mng_inventory/ssh_config.yml
+
 #################################
 # vars:
 #   aws_module_inventory_description:

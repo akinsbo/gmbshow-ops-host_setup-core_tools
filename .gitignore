@@ -81,6 +81,9 @@ nbdist/
 # Security files
 .pem
 
+# Sshd config
+ssh.cfg*
+
 # Test artifacts produced by Jenkins jobs
 /_artifacts/
 
@@ -111,6 +114,9 @@ data
 .kubeconfig
 
 .tags*
+
+# Utility scripts e.g. for find and replace
+utility.sh
 
 # Vagrant
 .vagrant
