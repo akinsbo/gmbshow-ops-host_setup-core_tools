@@ -21,8 +21,6 @@
   template:
     src: "{{playbook_dir}}/roles/aws/templates/ssh.cfg.j2"
     dest: "{{playbook_dir}}/ssh.cfg"
-    # validate: /usr/sbin/sshd -t -f %s
-    owner: 0
-    group: 0
+    validate: /usr/sbin/sshd -t -f %s
     mode: 0775
     backup: yes

@@ -1,0 +1,15 @@
+Host *
+    SendEnv LANG LC_*
+    HashKnownHosts yes
+    GSSAPIAuthentication yes
+
+Host bastion.*
+    IdentityFile {{cluster.ssh_private_key}}
+    IdentitiesOnly yes
+    user {{bastion.user}}
+
+Host 172.*
+    IdentityFile {{cluster.ssh_private_key}}
+    user {{node.user}}
+    IdentitiesOnly yes
+    ProxyCommand ssh {{bastion.name}} -W %h:%p

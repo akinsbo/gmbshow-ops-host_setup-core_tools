@@ -82,7 +82,7 @@ nbdist/
 .pem
 
 # Sshd config
-ssh.cfg*
+ssh.cfg
 
 # Test artifacts produced by Jenkins jobs
 /_artifacts/
@@ -122,6 +122,7 @@ utility.sh
 .vagrant
 *.swap
 network_closure.sh
+test-vms
 
 
 # Version file for dockerized build
