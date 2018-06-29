@@ -152,11 +152,20 @@ cluster:
 # kubernetes kops generated-defaults
 kops_sec_group_suffix: "{{cluster.name | regex_replace ('\\.','-')}}"
 kops_group_tagname: "{{cluster.name | regex_replace ('\\.','_')}}"
-kops_bastion_inventory_group: "tag_Name_bastions_{{kops_group_tagname}}"
-kops_node_inventory_group: "tag_Name_nodes_{{kops_group_tagname}}"
-kops_master_inventory_group: "tag_Name_master_{{kops_group_tagname}}"
-kops_bastion_vars_location: "{{playbook_dir}}/group_vars/all/{{aws_module_inventory_insert_group}}.yml"
-kops_bastion_name: "bastion.{{cluster.name}}"
+
+bastion:
+  user: admin
+  name: "bastion.{{cluster.name}}"
+  # vars_location: "{{playbook_dir}}/group_vars/all/{{aws_module_inventory_insert_group}}.yml"
+  inventory_group: "tag_Name_bastions_{{kops_group_tagname}}"
+  
+master:
+  user: admin
+  inventory_group: "tag_Name_master_{{kops_group_tagname}}"
+
+node:
+  user: admin
+  inventory_group: "tag_Name_nodes_{{kops_group_tagname}}"
 
 iam:
   user:

@@ -144,7 +144,7 @@ Options:
 
 output() {
   opts="-e"
-  if [[ "${1}" == "-n" ]]; then
+  if [[ "${2}" == "-n" ]]; then
     opts+="n"
     shift
   fi
@@ -175,7 +175,7 @@ debug() {
 #   Return the evaluated command's return code.
 
 eval_output() {
-  cmd="${1}"
+  cmd="${2}"
   while read -r line; do
     if [[ "${line}" == return\ [0-9]* ]]; then
       eval "${line}"
@@ -246,7 +246,7 @@ abort() {
 #     VARIABLE=$(assign "${key}" "${2}")
 
 assign() {
-  key="${1}"
+  key="${2}"
   value="${key#*=}"
   if [[ "${value}" != "${key}" ]]; then
     # key was of the form 'key=value'
@@ -296,7 +296,7 @@ check() {
   local rc=1
   local wait_limit=${WAIT}
   local number_re='^[0-9]+$'
-  local resource="${1}"
+  local resource="${2}"
   local select="${2}"
   local cond="${3}"
 
@@ -366,7 +366,7 @@ check() {
 }
 
 while [[ $# -ge 1 ]]; do
-  key="${1}"
+  key="${2}"
 
   case $key in
     -*)
@@ -777,7 +777,7 @@ if [[ ${EXISTS_DEPLOY_HEKETI} -eq 1 ]] && [[ ${EXISTS_HEKETI} -eq 0 ]]; then
     heketi_service=$(${CLI} describe svc/deploy-heketi | grep "Endpoints:" | awk '{print $2}')
   done
 
-  heketi_pod=$(${CLI} get pod --no-headers --show-all --selector="deploy-heketi" | awk '{print $1}')
+  heketi_pod=$(${CLI} get pod --no-headers --show-all --selector="deploy-heketi" | awk '{print $2}')
 
   if [[ "${CLI}" == *oc\ * ]]; then
     heketi_service=$(${CLI} describe routes/deploy-heketi | grep "Requested Host:" | awk '{print $3}')
@@ -885,7 +885,7 @@ while [[ "x${heketi_service}" == "x" ]] || [[ "${heketi_service}" == "<none>" ]]
   heketi_service=$(${CLI} describe svc/heketi | grep "Endpoints:" | awk '{print $2}')
 done
 
-heketi_pod=$(${CLI} get pod --no-headers --show-all --selector="heketi" | awk '{print $1}')
+heketi_pod=$(${CLI} get pod --no-headers --show-all --selector="heketi" | awk '{print $2}')
 
 if [[ "${CLI}" == *oc\ * ]]; then
   heketi_service=$(${CLI} describe routes/heketi | grep "Requested Host:" | awk '{print $3}')

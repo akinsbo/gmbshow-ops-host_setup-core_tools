@@ -10,24 +10,35 @@
   gather_facts: no
 
   pre_tasks:
-    - include_tasks: roles/terraform/tasks/update_tf/update_creds_profile.yml
-        
+
+    # - include_tasks: roles/terraform/tasks/update_tf/update_creds_profile.yml
+
     - setup:
-    
+
     # Set environmental variable
-    - include_tasks: roles/terraform/tasks/mng_env/set.yml
+    # - include_tasks: roles/terraform/tasks/mng_env/set.yml
 
-    - include_tasks: roles/aws/tasks/get_availability_zone/main.yml
-      tags:
-        - avail
-        - create
+  #   - include_tasks: roles/aws/tasks/get_availability_zone/main.yml
+  #     tags:
+  #       - avail
+  #       - create
         
-    # - name: number_of_zones
-    #   pause:
-    #     prompt: "There are {{mysetfact_num_aws_avail_zone}} zones in this region, namely: {{mysetfact_aws_avail_zone}}. Set vars for zones to deploy in else [ALL] zones would be used?" 
+  #   # - name: number_of_zones
+  #   #   pause:
+  #   #     prompt: "There are {{mysetfact_num_aws_avail_zone}} zones in this region, namely: {{mysetfact_aws_avail_zone}}. Set vars for zones to deploy in else [ALL] zones would be used?" 
 
-  roles:
-    - kops
-    - terraform
-    - glusterfs
-    - k8s
+  # roles:
+  #   - kops
+  #   - terraform
+
+  post_tasks:
+    - include_tasks: roles/aws/tasks/mng_inventory/ssh_config.yml
+
+    - name: Wait for cluster to finish building and be ready...
+      command: kubectl get nodes
+      register: myreg_cmd
+      until: "myreg_cmd.rc == 0 and not myreg_cmd.stdout=='' and not myreg_cmd.stdout | regex_search('Not Ready' )"
+      retries: 200
+      delay: 5
+        
+    - include_tasks: roles/k8s/tasks/checks/insert_inventory.yml

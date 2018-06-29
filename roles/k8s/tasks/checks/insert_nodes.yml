@@ -1,0 +1,26 @@
+---
+- name: Get nodes
+  shell: "kubectl get nodes | grep {{k8s_module_inventory_group}} | grep -o 'ip-.\\S*'"
+  register: myregistered_list
+  tags:
+    - get_nodes
+  
+- debug: 
+    var: myregistered_list.stdout
+ 
+- set_fact:
+    "mysetfact_{{k8s_module_inventory_group}}_instance_ips": "{{myregistered_list.stdout | regex_replace('^ip-(((\\d+-){3})\\d+).{{cluster.region}}.compute.internal$', '\\1')}}"
+
+- name: insert group into host file
+  become: yes
+  blockinfile:
+    path: "{{inventory_dir}}/hosts.ini"
+    state: present
+    insertafter: EOF
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{k8s_module_inventory_group}}"
+    owner: 0
+    group: 0
+    block: |
+
+      [mysetfact_{{k8s_module_inventory_group}}_instance_ips]
+      {{myregistered_list.stdout}}

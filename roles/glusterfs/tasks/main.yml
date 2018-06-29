@@ -14,7 +14,7 @@
 
 #  Install gluster-server in node group using ansible command
 - include_tasks: install.yml
-  delegate_to: "{{kops_node_inventory_group}}"
+  delegate_to: "{{node.inventory_group}}"
   tags: 
     - install-gluster
 
