@@ -16,8 +16,8 @@
       src: "{{item}}"
       dest: "{{SSH_CONFIG}}"
       validate: /usr/sbin/sshd -t -f %s
-      owner: 0
-      group: 0
+      owner: root
+      group: root
       mode: 0600
       backup: yes
     with_first_found:

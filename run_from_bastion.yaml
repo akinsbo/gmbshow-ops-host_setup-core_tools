@@ -12,7 +12,6 @@
       ping: ~
 
   roles:
-    - k8s
     - glusterfs
     # - name: run inventory command
     #   command: "{{inventory_dir}}/ec2.py"

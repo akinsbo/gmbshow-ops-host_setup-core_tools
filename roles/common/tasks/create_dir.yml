@@ -1,7 +1,7 @@
 ---
 - name: Check if directory exists
   stat: 
-      path: "{{ common_dir_module_path | dirname}}"
+    path: "{{ common_dir_module_path | dirname}}"
   register: myregistered_dir
   tags:
     - cluster-checks
@@ -9,6 +9,7 @@
     - test_env
     
 - name: Ensure directory is created
+  become: "{{common_dir_become | default('no')| bool}}"
   file:
     path: "{{ common_dir_module_path | dirname}}"
     state: directory
@@ -20,8 +21,10 @@
     - cluster-checks
     - gluster-create
     - test_env
-  when: myregistered_dir.stat.exists == false
+  when: myregistered_dir.stat.exists == false or myregistered_dir.stat.isdir == False
 
+################################
 # vars:
   # common_dir_module_path:
   # common_dir_mode: #(optional)
+  # common_dir_become: 

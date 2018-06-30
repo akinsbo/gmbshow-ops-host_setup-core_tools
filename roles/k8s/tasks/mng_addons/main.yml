@@ -2,7 +2,8 @@
 # Ensure a temp directory is created to place temp files
 - include_tasks: roles/common/tasks/create_dir.yml
   vars:
-    command_dir_module_path: "{{role_path}}/files/tmp"
+    common_dir_module_path: "{{role_path}}/files/tmp"
+    common_dir_become: yes
 
 #  Deploy addons
 - include_tasks: roles/k8s/tasks/deploy.yml
@@ -13,3 +14,4 @@
     - grafana
     - heapster
     - influxdb-grafana
+

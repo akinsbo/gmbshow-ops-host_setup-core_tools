@@ -52,24 +52,6 @@ log_path: "{{playbook_dir}}/log"
 ec2_py_path: "{{playbook_dir}}/inventory/ec2.py"
 
 # ssh users
-my_ssh_users:
-  - name: kilo
-    # key: "{{ (lookup'file', 'vivek.pub') }}"
-    uid: 000101
-    comment: Name- Kilo Geti
-  - name: bran
-    # key: "{{ lookup('file', 'tom.pub') }}"
-    uid: 000102    
-    comment: Name- Bran Valvedi
-  - name: sydney
-    # key: "{{ lookup('file', 'wendy.pub') }}"
-    uid: 000103
-    comment: Name- Sydney Smith
-  - name: tyler
-    # key: "{{ lookup('file', 'jerry.pub') }}"
-    uid: 000104
-    comment: Name- Tyler Cappelo
-# ...
 my_ssh_previous_user:
   name: kelly
   # key: "{{ (lookup'file', 'bob.pub') }}"
@@ -206,3 +188,8 @@ heapster_url: https://github.com/kubernetes/heapster/tree/master/deploy/kube-con
 # gluster
 # gk-deploy_path: https://github.com/gluster/gluster-kubernetes/blob/master/deploy/gk-deploy
 
+text:
+  color:
+    blue: "\e[34m"
+    bluebg: "\e[44m"
+    redbg: "\e[41m"

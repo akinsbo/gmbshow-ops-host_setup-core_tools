@@ -13,8 +13,6 @@
     state: present
     insertafter: EOF
     marker: "# {mark} ANSIBLE MANAGED BLOCK dynamic_inventory.yml"
-    owner: 0
-    group: 0
     block: |
 
       # make supplemental group
