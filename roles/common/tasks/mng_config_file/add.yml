@@ -3,6 +3,7 @@
 - include_tasks: roles/common/tasks/create_file.yml
   vars:
     common_file_module_path: "{{common_module_config_file}}"
+    common_file_module_become: yes
 
 # Ensure setting exists
 - include_tasks: roles/common/tasks/mng_config_file/settings/create.yml
@@ -11,10 +12,6 @@
     common_module_config_setting_become: "{{common_module_config_add_become}}"
     common_module_config_setting_section: "{{common_module_config_add_section}}"
     common_module_config_settings: "{{common_module_config_add_settings}}"
-
-- name: Debug override
-  debug:
-    msg: "common_module_config_override = {{common_module_config_override}}"
 
 # Override setting (if set to override or if setting has no value)
 - include_tasks: roles/common/tasks/mng_config_file/settings/override.yml
