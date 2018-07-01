@@ -66,4 +66,24 @@ If you specify a 4-node cluster while working in a region with 5 AZ thenthe play
 
 #### Autogeneration of AWS credentials for profile
 
-If ~/.aws/credentials, ~/.boto.profile or ~/boto.cfg do not exist, 
+If ~/.aws/credentials, ~/.boto.profile or ~/boto.cfg do not exist, the current aws config
+is persisted into the first file in your group_var-specified order of precedence.
+
+### Collaboration
+
+#### Sharing Cluster Config file
+
+To share the cluster configuration, just share your KOPS_STATE_STORE with your colleague.
+They can generate it by:
+
+```sh
+export KOPS_STATE_STORE=s3://<somes3bucket>
+# NAME=<kubernetes.mydomain.com>
+${GOPATH}/bin/kops export kubecfg ${NAME}
+```
+
+They can now use kubernetes on the cluster e.g.
+
+```sh
+kubectl get nodes
+```

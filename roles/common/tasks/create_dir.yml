@@ -1,13 +1,4 @@
 ---
-- name: Check if directory exists
-  stat: 
-    path: "{{ common_dir_module_path | dirname}}"
-  register: myregistered_dir
-  tags:
-    - cluster-checks
-    - gluster-create
-    - test_env
-    
 - name: Ensure directory is created
   become: "{{common_dir_become | default('no')| bool}}"
   file:
@@ -16,12 +7,7 @@
     owner: "{{local_ansible_user}}"
     group: "{{local_ansible_group}}"
     mode: "{{ common_dir_mode | default(0775)}}"
-    recurse: yes
-  tags:
-    - cluster-checks
-    - gluster-create
-    - test_env
-  when: myregistered_dir.stat.exists == false or myregistered_dir.stat.isdir == False
+    recurse: yes 
 
 ################################
 # vars:

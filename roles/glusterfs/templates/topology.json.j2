@@ -39,3 +39,39 @@
         }]
     }]
 }
+
+{
+  "clusters": [
+    {
+    {% for host in groups['node'] %}
+      "nodes": [
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "gluster23.rhs"
+              ],
+              "storage": [
+                "192.168.1.200"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "/dev/sde",
+            "/dev/sdf"
+          ]
+        },
+    {% end_for %}
+      ]
+    }
+  ]
+}
+
+start = "{\"clusters\":[{\"nodes\":["
+end = "]}]}"
+for i in is
+do
+    "{\"node\":{\"hostnames\":{\"manage\":\"${NODE}\",\"storage\":[\"${STORAGE_IP_ADDRESS}\"]},\"zone\":1},\"devices\":[\"/dev/vdb\",\"/dev/vdc\",\"/dev/vdd\"]}"
+done
+

@@ -9,12 +9,12 @@
     - addons
     - dashboard
 
-- name: Run proxy command to serve dashboard
-  command: kubectl proxy
-  tags:
-    - k8s
-    - addons
-    - dashboard
+# - name: Run proxy command to serve dashboard
+#   command: kubectl proxy
+#   tags:
+#     - k8s
+#     - addons
+#     - dashboard
 
 # Ensure checks are run
 - include_tasks: roles/k8s/tasks/checks/main.yml

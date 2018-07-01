@@ -8,8 +8,8 @@
     shell: kubectl get nodes | grep master
     register: myreg_master_check
     until: "myreg_master_check.stdout_lines| length == cluster.num_of_master and not myreg_master_check.stdout | regex_search('NotReady')"
-    retries: 200
-    delay: 5
+    retries: 100
+    delay: 10
 
   - name: Warn if there are more nodes than should be in the group
     pause:
@@ -23,8 +23,8 @@
     shell: kubectl get nodes | grep node
     register: myreg_node_check
     until: "myreg_node_check.stdout_lines| length == cluster.num_of_nodes and not myreg_node_check.stdout | regex_search('NotReady')"
-    retries: 200
-    delay: 5
+    retries: 100
+    delay: 10
 
   - name: Warn if there are more nodes than should be in the group
     pause:

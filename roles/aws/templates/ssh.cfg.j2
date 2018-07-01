@@ -2,6 +2,11 @@ Host *
     SendEnv LANG LC_*
     HashKnownHosts yes
     GSSAPIAuthentication yes
+    ServerAliveInterval 60
+    TCPKeepAlive yes
+    ProxyCommand ssh -q -A {{bastion.user}}@{{bastion.name}} nc %h %p
+    LogLevel QUIET
+    StrictHostKeyChecking no
 
 Host {{bastion.name}}
     IdentityFile {{cluster.ssh_private_key}}
@@ -23,13 +28,13 @@ Host 172.*
     ProxyCommand ssh {{bastion.name}} -W %h:%p
 
 Host master
-    IdentityFile /home/olaolu/ec2_keys/eu-west-1/mbshow_testi.pem
+    IdentityFile {{cluster.ssh_private_key}}
     user admin
     IdentitiesOnly yes
     ProxyCommand ssh {{bastion.name}} -W %h:%p
 
 Host node
-    IdentityFile /home/olaolu/ec2_keys/eu-west-1/mbshow_testi.pem
+    IdentityFile {{cluster.ssh_private_key}}
     user admin
     IdentitiesOnly yes
     ProxyCommand ssh {{bastion.name}} -W %h:%p

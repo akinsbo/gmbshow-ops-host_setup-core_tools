@@ -8,7 +8,8 @@
 #  Deploy addons
 - include_tasks: roles/k8s/tasks/deploy.yml
   vars:
-    deployment: "{{item}}"
+    k8s_addons_deployment: "{{item}}"
+    k8s_addons_deployment_namespace: kube-system
   with_items: 
     - kubernetes-dashboard
     - grafana

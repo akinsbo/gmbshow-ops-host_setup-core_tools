@@ -120,6 +120,8 @@ cluster:
   ec2_master_type: t2.micro
   num_of_nodes: 3
   num_of_master: 3
+  master_vol_size: 64 # in GB
+  node_vol_size: 32 # in GB
   region: eu-west-1
   bastion: true
   master_zones: "" # e.g. "{{region}}a,{{region}}b,{{region}}c"
@@ -131,7 +133,7 @@ cluster:
   # ssh keys
   ssh_public_key: "{{ec2_keys_dir}}/{{ ec2_region }}/{{ ec2_key_name }}.pub"
   ssh_private_key: "{{ec2_keys_dir}}/{{ ec2_region }}/{{ ec2_key_name }}.pem"
-
+  
 # kubernetes kops generated-defaults
 kops_sec_group_suffix: "{{cluster.name | regex_replace ('\\.','-')}}"
 kops_group_tagname: "{{cluster.name | regex_replace ('\\.','_')}}"

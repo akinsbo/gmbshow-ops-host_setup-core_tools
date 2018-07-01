@@ -1,0 +1,12 @@
+---
+- hosts: all
+  tasks:
+  - name: Dump fact on remote host
+    template:
+      src: templates/dump_variables
+      dest: /tmp/ansible_variables
+
+  - name: Dump facts on local host
+    fetch:
+      src: /tmp/ansible_variables
+      dest: "{{log_path}}/ansible_facts/{{inventory_hostname}}_ansible_variables"

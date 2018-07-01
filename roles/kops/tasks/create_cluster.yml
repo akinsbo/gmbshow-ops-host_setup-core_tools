@@ -11,6 +11,8 @@
                                 --master-zones {{ cluster.master_zones | default(mysetfact_aws_avail_zone, true) }} \
                                 --node-size {{ cluster.ec2_node_type }} \
                                 --master-size {{ cluster.ec2_master_type }} \
+                                --master-volume-size {{cluster.master_vol_size | default(64)}} \
+                                --node-volume-size {{cluster.node_vol_size | default(128)}}  \
                                 --state {{ state_store }} \
                                 --cloud-labels 'Team=Dev,Owner={{iam.user.name}}' \
                                 {% if cluster.bastion == True %}
@@ -20,7 +22,9 @@
                                  {% endif %}
                                 --out {{cluster.output_location}} \
                                 --target {{cluster.output_file_type}}"
-
+                                # TODO: Add the following
+                                # --admin-access {{cluster.restricted_API_CIDR}}
+                                # --ssh-access {{cluster.restricted_SSH_CIDR}}                              
 
 - block:
     - name: "Build cluster configuration in zone {{ mysetfact_aws_avail_zone }}"

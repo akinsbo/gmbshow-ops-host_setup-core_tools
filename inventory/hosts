@@ -10,15 +10,16 @@ bastion.k8s.maryboye.org    ansible_ssh_common_args='-o StrictHostKeyChecking=no
 # BEGIN ANSIBLE MANAGED BLOCK master
 
 [master]
-172.20.127.233
-172.20.76.172
+172.20.119.15
+172.20.36.255
+172.20.85.150
 # END ANSIBLE MANAGED BLOCK master
 # BEGIN ANSIBLE MANAGED BLOCK node
 
 [node]
-172.20.112.235
-172.20.32.31
-172.20.70.221
+172.20.119.45
+172.20.47.143
+172.20.73.151
 # END ANSIBLE MANAGED BLOCK node
 # BEGIN ANSIBLE MANAGED BLOCK dynamic_inventory.yml
 
