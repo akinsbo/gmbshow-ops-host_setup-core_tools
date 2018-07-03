@@ -5,5 +5,4 @@ ansible_ssh_private_key_file: /home/olaolu/ec2_keys/eu-west-1/mbshow_testi.pem
 
 ansible_ssh_common_args: '-o IdentitiesOnly=yes -o StrictHostKeyChecking=no'
 
-ansible_user: admin
-
+ansible_user: ubuntu

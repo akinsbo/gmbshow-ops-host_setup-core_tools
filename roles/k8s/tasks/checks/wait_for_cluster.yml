@@ -1,7 +1,5 @@
 ---
 #  master
-
-
 - name: Wait for master nodes to finish building and be ready...
   block:
   - name: Ensure complete number of master nodes are ready

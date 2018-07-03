@@ -1,0 +1,8 @@
+---
+# Ensure group is added to known hosts
+- include_tasks: roles/inventory/tasks/insert/known_hosts.yml
+  vars:
+    inventory_module_insert_group_known_hosts: "{{inventory_insert_item}}"
+  with_items: "{{groups['tag_Name_bastions_k8s_maryboye_org']}}"
+  loop_control:
+    loop_var: inventory_insert_item

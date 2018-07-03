@@ -70,6 +70,8 @@ my_ssh_user_groups:
   - admin
   - developer
 
+ssh_known_hosts_file: "{{ lookup('env','HOME') + '/.ssh/known_hosts' }}"
+
 ############################
 # Tags
 ############################
@@ -115,6 +117,8 @@ ec2_keys_dir: "{{ lookup('env', 'HOME')}}/ec2_keys"
 ec2_region: eu-west-1
 
 cluster:
+  ami: ami-58d7e821
+  image_root_user: ubuntu
   name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}"
   ec2_node_type: t2.micro
   ec2_master_type: t2.micro
@@ -139,23 +143,28 @@ kops_sec_group_suffix: "{{cluster.name | regex_replace ('\\.','-')}}"
 kops_group_tagname: "{{cluster.name | regex_replace ('\\.','_')}}"
 
 bastion:
-  user: admin
+  user: "{{cluster.image_root_user}}"
   name: "bastion.{{cluster.name}}"
   # vars_location: "{{playbook_dir}}/group_vars/all/{{aws_module_inventory_insert_group}}.yml"
   inventory_group: "tag_Name_bastions_{{kops_group_tagname}}"
   
 master:
-  user: admin
+  user: "{{cluster.image_root_user}}"
   inventory_group: "tag_Name_master_{{kops_group_tagname}}"
 
 node:
-  user: admin
+  user: "{{cluster.image_root_user}}"
   inventory_group: "tag_Name_nodes_{{kops_group_tagname}}"
 
 iam:
   user:
     name: olaoluak
     groups: admin
+
+inventory_to_use: "{{inventory_dir}}/hosts"
+
+log:
+  public_inventory: "{{log_path}}/temp/inventory_list"
 
 # #################### 
 # s3_bucket 

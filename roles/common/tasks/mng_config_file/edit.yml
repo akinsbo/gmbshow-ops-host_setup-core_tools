@@ -9,24 +9,26 @@
 - include_tasks: roles/common/tasks/mng_config_file/settings/create.yml
   vars:
     common_module_config_setting_file: "{{common_module_config_file}}"
-    common_module_config_setting_become: "{{common_module_config_add_become}}"
-    common_module_config_setting_section: "{{common_module_config_add_section}}"
-    common_module_config_settings: "{{common_module_config_add_settings}}"
+    common_module_config_setting_become: "{{common_module_config_edit_become}}"
+    common_module_config_setting_section: "{{common_module_config_edit_section}}"
+    common_module_config_settings: "{{common_module_config_edit_settings}}"
 
 # Override setting (if set to override or if setting has no value)
 - include_tasks: roles/common/tasks/mng_config_file/settings/override.yml
   vars:
     common_module_config_override_file: "{{common_module_config_file}}"
-    common_module_config_override_become:  "{{common_module_config_add_become}}"
-    common_module_config_override_section: "{{common_module_config_add_section}}"
-    common_module_config_override_settings:  "{{common_module_config_add_settings}}"
+    common_module_config_override_become:  "{{common_module_config_edit_become}}"
+    common_module_config_override_section: "{{common_module_config_edit_section}}"
+    common_module_config_override_settings:  "{{common_module_config_edit_settings}}"
     common_module_config_override_state: present
   when: common_module_config_override == yes
 # ===================================vars=================================================
 # vars:
 #   common_module_config_file:
-#   common_module_config_add_become:
-#   common_module_config_add_section:
+#   common_module_config_edit_become:
+#   common_module_config_edit_section:
 #   common_module_config_override: yes
-#   common_module_config_add_settings:
+#   common_module_config_edit_settings:
 #     - {option: abc, value: xyz}
+#     - {option: def, value: 123}
+

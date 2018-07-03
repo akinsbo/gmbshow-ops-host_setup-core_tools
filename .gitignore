@@ -58,6 +58,9 @@ data/
 /log/
 /logs/
 logs
+log
+*/tmp
+*.log.html
 
 # Downloaded kubernetes binary release tar ball
 kubernetes.tar.gz

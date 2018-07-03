@@ -1,7 +1,7 @@
 ---
 - name: Ensure option exists
   block:
-  - name: "Check if env var exists in {{common_module_config_setting_file}}"
+  - name: "Check if var exists in {{common_module_config_setting_file}}"
     command: "grep '^[{{common_module_config_setting_section | default(common_module_config_settings[0].option)}}]' {{common_module_config_setting_file}}"
     ignore_errors: yes
     register: myregistered_grep_output

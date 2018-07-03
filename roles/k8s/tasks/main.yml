@@ -1,8 +1,6 @@
 ---
 - include_tasks: roles/k8s/tasks/checks/wait_for_cluster.yml
 
-- include_tasks: roles/k8s/tasks/checks/insert_inventory.yml
-
 - include_tasks: roles/k8s/tasks/mng_addons/main.yml
   tags:
     - k8s

@@ -13,24 +13,24 @@
       skip: true
 
   # Ensure aws.config exists and contains desired profile (don't override profile)
-- include: roles/common/tasks/mng_config_file/add.yml
+- include: roles/common/tasks/mng_config_file/edit.yml
   vars:
     common_module_config_file: "{{mysetfact_aws_credentials_file | default(aws.credentials.file_precedence[0])}}"
-    common_module_config_add_become: no
-    common_module_config_add_section: "{{my_env}}"
+    common_module_config_edit_become: no
+    common_module_config_edit_section: "{{my_env}}"
     common_module_config_override: no # 'no': only sets option IFF blank or not existing
-    common_module_config_add_settings:
+    common_module_config_edit_settings:
       - { option: aws_access_key_id, value: "{{mysetfact_AWS_ACCESS_KEY_ID}}"}
       - { option: aws_secret_access_key, value: "{{mysetfact_AWS_SECRET_ACCESS_KEY}}"}
      
 #  -----------------------------------aws.config--------------------------------------------
 #  Ensure aws.config exists and contains desired profile (don't override profile)
-- include: roles/common/tasks/mng_config_file/add.yml
+- include: roles/common/tasks/mng_config_file/edit.yml
   vars:
     common_module_config_file: "{{aws.config.file}}"
-    common_module_config_add_become: no
-    common_module_config_add_section: "{{my_env}}"
+    common_module_config_edit_become: no
+    common_module_config_edit_section: "{{my_env}}"
     common_module_config_override: no # 'no': only sets option IFF blank or not existing
-    common_module_config_add_settings:
+    common_module_config_edit_settings:
       - { option: region, value: "{{mysetfact_REGION}}"}
       - { option: output, value: "{{mysetfact_OUTPUT}}"}

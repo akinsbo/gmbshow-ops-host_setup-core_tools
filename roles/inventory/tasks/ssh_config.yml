@@ -7,7 +7,7 @@
 - name: Insert ssh configuration into playbook
   become: "{{local_ansible_user}}"
   template:
-    src: "{{playbook_dir}}/roles/aws/templates/ssh.cfg.j2"
+    src: "{{playbook_dir}}/roles/inventory/templates/ssh.cfg.j2"
     dest: "{{playbook_dir}}/ssh.cfg"
     # validate: /usr/sbin/sshd -t -f %s
     mode: 0775

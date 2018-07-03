@@ -1,0 +1,92 @@
+---
+# create credentials profile if not created
+- include_tasks: roles/aws/tasks/mng_credentials/create_profile.yml
+  run_once: true
+  
+# Ec2.ini is already updated 
+# - name: Update ec2.ini
+#   block:
+#   - include_tasks: roles/common/tasks/mng_config_file/edit.yml
+#     vars:
+#       common_module_config_file: "{{ec2_py_path | dir}}/ec2.ini"
+#       common_module_config_edit_become:
+#       common_module_config_edit_section: ec2
+#       common_module_config_override: yes
+#       common_module_config_edit_settings:
+#         - {regions: region, value: "{{cluster.region}}"}
+#         - {regions: elasticache, value: "{{ec2ini.elasticache}}"}
+#         - {regions: rds, value: "{{ec2ini.rds}}"}
+#         - {option: destination_variable, value: public_dns_name}
+    
+#   - name: Comment lines
+#     lineinfile:
+#         path: "{{ec2_py_path | dir}}/ec2.ini"
+#         regexp: "{{item.line}}"
+#         backup: yes 
+#         state: present 
+#         line: "{{item.replacement}}"
+#     with_items:
+        # - {line:"^group_by_" , replacement:"#group_by_" }
+        # - {line:"#group_by_tag" , replacement:"group_by_" }
+
+- name: Make dynamic script and private key executable
+  file: 
+    path: "{{item}}"
+    mode: "ugo+x"
+  with_items:
+    - "{{ec2_py_path}}"
+    - "{{cluster.ssh_private_key}}"
+
+- name: "Insert group name {{common_module_inventory_insert_group}} into static inventory"
+  blockinfile:
+    path: "{{inventory_to_use}}"
+    insertafter: EOF
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{common_module_inventory_insert_group}}"
+    state: present
+    content: |
+
+      [{{common_module_inventory_insert_group}}]
+
+      [{{common_module_inventory_insert_group}}:vars]
+      ansible_connection=ssh
+      ansible_ssh_private_key_file={{cluster.ssh_private_key}}
+      ansible_ssh_common_args='-o IdentitiesOnly=yes'
+      ansible_user="{{cluster.image_root_user}}"
+
+# Ensure dynamic inventory group is extracted into static host
+- include_tasks: roles/common/tasks/cmd_log/main.yml
+  vars:
+    common_module_cmd_log_command_become: no
+    common_module_cmd_log_file: "{{log.public_inventory}}"
+    common_module_cmd_log_command_array:
+      - {command: "{{playbook_dir}}/inventory/ec2.py --profile {{aws.credentials.profile.name}}", aim: "List out dynamic inventory"}
+  delegate_to: 127.0.0.1
+
+- include_tasks: roles/inventory/tasks/insert/nodes.yml
+  vars:
+    inventory_module_insert_group: "{{item}}"
+  with_items:
+    - master
+    - node
+
+- name: Ensure group is inserted into inventory file
+  become: yes
+  blockinfile:
+    path: "{{inventory_dir}}/hosts"
+    state: present
+    insertafter: EOF
+    marker: "# {mark} ANSIBLE MANAGED BLOCK dynamic_inventory.yml"
+    block: |
+
+      # make supplemental group
+      [{{app_name}}_cluster:children]
+      master
+      node
+      {{bastion.inventory_group}}
+      
+      [{{app_name}}_cluster:vars]
+      ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q {{bastion.name}}"'
+
+############################################
+# vars:
+#   common_module_inventory_insert_group: #e.g{{bastion.inventory_group}}

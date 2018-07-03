@@ -7,7 +7,7 @@ green_color="\e[32m"
 white_color="\e[97m"
 magenta_color="\e[95m"
 echo
-echo -e "$yellow_color search for string to replace"
+echo -e "$yellow_color searching for string to replace..."
 grep -r $old_string
 echo
 echo -e "$blue_color Regex to run: $green_color $regex_to_run"
@@ -21,12 +21,12 @@ grep -rl "$old_string" . | xargs sed -i "$regex_to_run"
 # # For more speed and limiting to git repo items, if in a git repo, run:
 # git grep -rl "$old_string" . | xargs sed -i "s/$old_string/$new_string/g"
 echo 
-echo -e "$green_color search for new string"
+echo -e "$green_color searching for NEW string..."
 grep -r $new_string
 echo
-echo -e "$yellow_color search for old string"
+echo -e "$yellow_color searching for OLD string..."
 grep -r $old_string
-
+echo -e "$green_color Finshed. Thanks!"
 # Example:
 ## to change the file reference to /add.yml
 echo

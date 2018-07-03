@@ -5,6 +5,7 @@
     mysetfact_create_command: "kops create cluster {{ cluster.name }} \
                                 --cloud aws \
                                 --ssh-public-key {{cluster.ssh_public_key}} \
+                                --image {{cluster.ami}}
                                 --master-count {{cluster.num_of_master}} \
                                 --node-count {{ cluster.num_of_nodes }} \
                                 --zones {{ cluster.zones | default(mysetfact_aws_avail_zone, true) }} \

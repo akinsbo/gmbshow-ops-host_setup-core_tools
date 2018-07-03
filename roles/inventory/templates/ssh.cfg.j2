@@ -29,12 +29,12 @@ Host 172.*
 
 Host master
     IdentityFile {{cluster.ssh_private_key}}
-    user admin
+    user {{master.user}}
     IdentitiesOnly yes
     ProxyCommand ssh {{bastion.name}} -W %h:%p
 
 Host node
     IdentityFile {{cluster.ssh_private_key}}
-    user admin
+    user {{node.user}}
     IdentitiesOnly yes
     ProxyCommand ssh {{bastion.name}} -W %h:%p

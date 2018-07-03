@@ -1,0 +1,19 @@
+---
+- name: "Get nodes in {{inventory_module_insert_group}} group"
+  shell: "kubectl get nodes | grep {{inventory_module_insert_group}} | grep -oP 'ip-\\K(\\S*)(?=.eu-west-1.compute.internal)'"
+  register: myregistered_list
+  
+# - debug: 
+#     var: myregistered_list.stdout
+
+- name: "Insert nodes for group {{inventory_module_insert_group}} into host file"
+  become: yes
+  blockinfile:
+    path: "{{inventory_dir}}/hosts"
+    state: present
+    insertafter: EOF
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{inventory_module_insert_group}}"
+    block: |
+
+      [{{inventory_module_insert_group}}]
+      {{myregistered_list.stdout | regex_replace('-', '.')}}

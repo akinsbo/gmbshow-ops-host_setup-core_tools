@@ -1,7 +1,7 @@
 
 - hosts: master # bastion.k8s.maryboye.org # tag_Name_bastions_k8s_maryboye_org #bastion.k8s.maryboye.org # #"{{bastion.inventory_group}}"
   connection: ssh
-  become: admin
+  become: "{{cluster.image_root_user}}"
   gather_facts: no
 
   pre_tasks:
