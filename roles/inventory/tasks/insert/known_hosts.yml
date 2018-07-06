@@ -1,45 +1,46 @@
 ---
-- name: Get key 
-  shell: ssh-keyscan {{ inventory_module_insert_group_known_hosts }} 2>/dev/null
-  register: myregistered_host_key
+- name: Display host address to add to known_host for bastion host {{inventory_module_insert_known_hosts}}
+  debug:
+    msg: "{{bastion.name}}"
+  verbosity: 4
+  when: inventory_module_insert_known_hosts == bastion.inventory_hostname
 
-- name: Check if known_hosts file already contains the key
-  shell: "grep '{{myregistered_host_key.stdout}}' {{ ssh_known_hosts_file }} > /dev/null"
-  register: myregistered_duplicate_host_key
-  Ignore_errors: yes
-  when: not myregistered_host_key.stdout == ""
-
-- debug:
-    var: "{{myregistered_duplicate_host_key}}"
+- name: Display host address to add to known_host for non-bastion host {{inventory_module_insert_known_hosts}}
+  debug:
+    msg: "{{inventory_module_insert_known_hosts}}"
+  verbosity: 4
+  when: inventory_module_insert_known_hosts != bastion.inventory_hostname
   
-- name: For each host, scan for its ssh public key
-  shell: "ssh-keyscan {{ inventory_module_insert_group_known_hosts }},`dig +short {{ inventory_module_insert_group_known_hosts }}`"
-  register: myregistered_ssh_known_host_results
-  ignore_errors: yes
-
-- name: Add key if not present (i.e. would not be duplicated)
+- name: Create remove and set Host Key insert command for a bastion group host
   block:
-  - name: Add/update the public key in the '{{ ssh_known_hosts_file }}'
-    known_hosts:
-      name: "{{ myregistered_ssh_known_host_results.stdout}}.{{myregistered_ssh_known_host_results.stdout}}"
-      key: "{{ myregistered_ssh_known_host_results.stdout }}"
-      path: "{{ ssh_known_hosts_file }}"
-      state: present
-  rescue:
-  - name: Remove the public key in the '{{ ssh_known_hosts_file }}'
-    known_hosts:
-      name: "{{ myregistered_ssh_known_host_results.stdout}}.{{myregistered_ssh_known_host_results.stdout}}"
-      key: "{{ myregistered_ssh_known_host_results.stdout }}"
-      path: "{{ ssh_known_hosts_file }}"
-      state: absent
-  - name: Try again to Add/update the public key in the '{{ ssh_known_hosts_file }}'
-    known_hosts:
-      name: "{{ myregistered_ssh_known_host_results.stdout}}.{{myregistered_ssh_known_host_results.stdout}}"
-      key: "{{ myregistered_ssh_known_host_results.stdout }}"
-      path: "{{ ssh_known_hosts_file }}"
-      state: present
-  when: myregistered_duplicate_host_key is not defined #or myregistered_duplicate_host_key|length < 1
+  - name: Set Host Key insert command for a bastion host
+    set_fact:
+      mysetfact_keyscan_cmd: "ssh-keyscan -H {{bastion.name}}, \
+      `dig +short {{bastion.name}}` \
+      >> {{ ssh_known_hosts_file }}"
+  - name: Set key remove command for a bastion host
+    set_fact:
+      mysetfact_remove_key_cmd: ssh-keygen -f "{{ ssh_known_hosts_file }}" -R "{{bastion.name}}"
+  when: inventory_module_insert_known_hosts == bastion.inventory_hostname
+
+- name: Create remove and set Host Key insert command for a non-bastion group host
+  block:
+  - name: Set Host Key insert command for a non-bastion group hosts e.g. master, nodes...
+    set_fact:
+      mysetfact_keyscan_cmd: "ssh-keyscan -H {{inventory_module_insert_known_hosts}}, \
+      `dig +short {{inventory_module_insert_known_hosts}}` \
+      >> {{ ssh_known_hosts_file }}"
+  - name: Set key remove command for a bastion host
+    set_fact:
+      mysetfact_remove_key_cmd: ssh-keygen -f "{{ssh_known_hosts_file}}" -R "{{inventory_module_insert_known_hosts}}"
+  when: inventory_module_insert_known_hosts != bastion.inventory_hostname
+
+- name: Ensure the current host key is removed
+  shell: "{{mysetfact_remove_key_cmd}}"
+
+- name: Enure host key is hashed and inserted in the host key file 
+  shell: "{{mysetfact_keyscan_cmd}}"
 
 ###########################################
 # vars:
-#   inventory_module_insert_group_known_hosts: "{{item}}"
+#   inventory_module_insert_known_hosts: "{{item}}"

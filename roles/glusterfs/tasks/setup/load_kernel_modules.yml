@@ -1,9 +1,11 @@
 ---
 - name: Check for loaded lsmod
+  become: yes
   command: "lsmod | grep {{gluster_module_kernel}}"
   ignore_errors: yes
   register: myregistered_search
 
 - name: Load it
+  become: yes
   command: "modprobe {{gluster_module_kernel}}"
   when: myregistered_search.rc == 1

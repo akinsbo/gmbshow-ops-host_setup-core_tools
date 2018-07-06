@@ -1,0 +1,5 @@
+---
+#  Run entire infrastructure
+- import_playbook: webservers.yaml
+# - import_playbook: gather_facts.yaml
+- import_playbook: storage.yaml

@@ -8,14 +8,12 @@
 - hosts: localhost
   connection: local
   gather_facts: no
-
+  
   pre_tasks:
 
-    # - include_tasks: roles/terraform/tasks/update_tf/update_creds_profile.yml
+    - setup:
 
-    # - setup:
-
-  #   # Set environmental variable
+    # Set environmental variable
     # - include_tasks: roles/terraform/tasks/mng_env/set.yml
 
     # - include_tasks: roles/aws/tasks/get_availability_zone/main.yml
@@ -31,11 +29,4 @@
     # - kops
     # - terraform
     # - k8s
-    # - inventory
-
-  post_tasks:
-    - include_tasks: roles/inventory/tasks/main.yml
-
-    - name: prepare key for connection
-      command: chmod 0400 "{{ssh_private_key}}"
-
+    - inventory

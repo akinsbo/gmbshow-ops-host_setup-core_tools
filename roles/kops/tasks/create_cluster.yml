@@ -1,6 +1,14 @@
 ---
 # set aws_avail_zone variable (for use in kops-create zone and master-zone args)
 
+- name: Ensure public and private keys have correct permissions
+  file:
+    path: "{{item}}"
+    mode: 0400
+  with_items:
+    - "{{cluster.ssh_private_key}}"
+    - "{{cluster.ssh_public_key}}"
+
 - set_fact:
     mysetfact_create_command: "kops create cluster {{ cluster.name }} \
                                 --cloud aws \

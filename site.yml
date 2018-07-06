@@ -1,5 +1,0 @@
----
-#  Run entire infrastructure
-- import_playbook: webservers.yaml
-- import_playbook: gather_facts.yaml
-- import_playbook: run_from_bastion.yaml

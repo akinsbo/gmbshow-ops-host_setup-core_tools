@@ -1,8 +1,21 @@
 ---
+# ! Have "hostname=tag_Name" uncommented in ec2.ini to return the 
+#! bastion as "bastion.{{cluster.name}}" instead of the ipaddress. 
+#! The name is static while the ipaddress may be ephemereal
+- debug:
+    msg: "groups[inventory_module_insert_group_known_hosts] = {{groups[inventory_module_insert_group_known_hosts]}} "
+
+- name: "Get the hosts in the group {{inventory_module_insert_group_known_hosts}}"
+  set_fact:
+    mysetfact_group_host: "{{groups[inventory_module_insert_group_known_hosts]}}"
+
 # Ensure group is added to known hosts
 - include_tasks: roles/inventory/tasks/insert/known_hosts.yml
   vars:
-    inventory_module_insert_group_known_hosts: "{{inventory_insert_item}}"
-  with_items: "{{groups['tag_Name_bastions_k8s_maryboye_org']}}"
+    inventory_module_insert_known_hosts: "{{host_item}}"
+  with_items: "{{mysetfact_group_host}}"
   loop_control:
-    loop_var: inventory_insert_item
+    loop_var: host_item
+########################################
+# vars:
+#   inventory_module_insert_group_known_hosts: #tag_Name_bastions_k8s_maryboye_org

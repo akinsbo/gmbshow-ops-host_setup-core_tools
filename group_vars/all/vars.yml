@@ -18,10 +18,15 @@ aws:
   config:
     file: "{{ lookup('env', 'HOME')}}/.aws/config"
 
-# gluster
-gluster_version: "3.10"
-gluster_apt_key: http://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/rsa.pub
-gluster_repo_source: deb [arch=amd64] http://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/LATEST/Debian/jessie/apt jessie main
+# glusterfs
+glusterfs_version: 4.1
+glusterfs:
+  debian:
+    apt_key: http://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/rsa.pub
+    repo_source: deb [arch=amd64] http://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/LATEST/Debian/stretch/apt stretch main
+  ubuntu:
+    ppa: "ppa:gluster/glusterfs-{{glusterfs_version}}"
+
 # kubectl
 kubectl_version: "v1.10.3"
 kubectl_download_path: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version }}/bin/linux/amd64/kubectl"
@@ -138,6 +143,8 @@ cluster:
   ssh_public_key: "{{ec2_keys_dir}}/{{ ec2_region }}/{{ ec2_key_name }}.pub"
   ssh_private_key: "{{ec2_keys_dir}}/{{ ec2_region }}/{{ ec2_key_name }}.pem"
   
+cluster_supplemental_group: "cluster_servers" # for hosts inventory file
+
 # kubernetes kops generated-defaults
 kops_sec_group_suffix: "{{cluster.name | regex_replace ('\\.','-')}}"
 kops_group_tagname: "{{cluster.name | regex_replace ('\\.','_')}}"
@@ -147,14 +154,15 @@ bastion:
   name: "bastion.{{cluster.name}}"
   # vars_location: "{{playbook_dir}}/group_vars/all/{{aws_module_inventory_insert_group}}.yml"
   inventory_group: "tag_Name_bastions_{{kops_group_tagname}}"
-  
+  inventory_hostname: "bastions_{{kops_group_tagname}}" # name generated for bastion by ec2.py
+
 master:
   user: "{{cluster.image_root_user}}"
-  inventory_group: "tag_Name_master_{{kops_group_tagname}}"
+  inventory_group: "master"
 
 node:
   user: "{{cluster.image_root_user}}"
-  inventory_group: "tag_Name_nodes_{{kops_group_tagname}}"
+  inventory_group: "node"
 
 iam:
   user:

@@ -1,13 +1,24 @@
 ---
-# Insert groups and their instances into host
+- name: Ensure public and private keys have correct permissions
+  file:
+    path: "{{item}}"
+    mode: 0400
+  with_items:
+    - "{{cluster.ssh_private_key}}"
+    - "{{cluster.ssh_public_key}}"
+
+# Insert groups and their instances into host (run this before group_into_known_hosts.yml)
 - include_tasks: roles/inventory/tasks/insert/group.yml
   vars:
     common_module_inventory_insert_group: "{{bastion.inventory_group}}"
-    
-# Add all public host addresses to known_hosts
-- include_tasks: roles/inventory/tasks/insert/group_into_known_hosts.yml
 
 - include_tasks: roles/inventory/tasks/ssh_config.yml
 
-- name: Ensure private key is prepared for connection
-      command: chmod 0400 "{{ssh_private_key}}"
+# Add all public host addresses to known_hosts
+- include_tasks: roles/inventory/tasks/insert/group_into_known_hosts.yml
+  vars:
+    inventory_module_insert_group_known_hosts: "{{item}}"
+  with_items: 
+    - "{{bastion.inventory_group}}" # the only publicly accessible one(with a route-to)
+    # - "{{master.inventory_group}}"
+    # - "{{node.inventory_group}}"

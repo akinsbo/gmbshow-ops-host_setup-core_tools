@@ -1,46 +1,4 @@
 {
-    "clusters": [{
-        "nodes": [{
-            "node": {
-                "hostnames": {
-                    "manage": "ip-172-20-122-137.eu-west-1.compute.internal",
-                    "storage": ["172.20.122.137"]
-                },
-                "zone": 1
-            },
-            "devices": ["/dev/vdb", "/dev/vdc", "/dev/vdd"]
-        } {
-            "node": {
-                "hostnames": {
-                    "manage": "ip-172-20-47-48.eu-west-1.compute.internal",
-                    "storage": ["172.20.47.48"]
-                },
-                "zone": 1
-            },
-            "devices": ["/dev/vdb", "/dev/vdc", "/dev/vdd"]
-        } {
-            "node": {
-                "hostnames": {
-                    "manage": "ip-172-20-95-172.eu-west-1.compute.internal",
-                    "storage": ["172.20.95.172"]
-                },
-                "zone": 1
-            },
-            "devices": ["/dev/vdb", "/dev/vdc", "/dev/vdd"]
-        } {
-            "node": {
-                "hostnames": {
-                    "manage": "",
-                    "storage": [""]
-                },
-                "zone": 1
-            },
-            "devices": ["/dev/vdb", "/dev/vdc", "/dev/vdd"]
-        }]
-    }]
-}
-
-{
   "clusters": [
     {
     {% for host in groups['node'] %}
@@ -49,10 +7,10 @@
           "node": {
             "hostnames": {
               "manage": [
-                "gluster23.rhs"
+                "{{hostvars[host].ec2_private_dns_name]}}"
               ],
               "storage": [
-                "192.168.1.200"
+                "{{hostvars[host].ec2_private_ip_address]}}"
               ]
             },
             "zone": 1
@@ -60,6 +18,7 @@
           "devices": [
             "/dev/sde",
             "/dev/sdf"
+            "{{hostvars[host].ec2_block_devices]}}"
           ]
         },
     {% end_for %}
@@ -67,11 +26,3 @@
     }
   ]
 }
-
-start = "{\"clusters\":[{\"nodes\":["
-end = "]}]}"
-for i in is
-do
-    "{\"node\":{\"hostnames\":{\"manage\":\"${NODE}\",\"storage\":[\"${STORAGE_IP_ADDRESS}\"]},\"zone\":1},\"devices\":[\"/dev/vdb\",\"/dev/vdc\",\"/dev/vdd\"]}"
-done
-

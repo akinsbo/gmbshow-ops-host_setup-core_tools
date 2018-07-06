@@ -29,14 +29,13 @@
         # - {line:"^group_by_" , replacement:"#group_by_" }
         # - {line:"#group_by_tag" , replacement:"group_by_" }
 
-- name: Make dynamic script and private key executable
+- name: Make dynamic script executable
   file: 
     path: "{{item}}"
     mode: "ugo+x"
   with_items:
     - "{{ec2_py_path}}"
-    - "{{cluster.ssh_private_key}}"
-
+  
 - name: "Insert group name {{common_module_inventory_insert_group}} into static inventory"
   blockinfile:
     path: "{{inventory_to_use}}"
@@ -66,8 +65,8 @@
   vars:
     inventory_module_insert_group: "{{item}}"
   with_items:
-    - master
-    - node
+    - "{{master.inventory_group}}"
+    - "{{node.inventory_group}}"
 
 - name: Ensure group is inserted into inventory file
   become: yes
@@ -79,13 +78,12 @@
     block: |
 
       # make supplemental group
-      [{{app_name}}_cluster:children]
-      master
-      node
-      {{bastion.inventory_group}}
+      [{{cluster_supplemental_group}}:children]
+      {{master.inventory_group}}
+      {{node.inventory_group}}
       
-      [{{app_name}}_cluster:vars]
-      ansible_ssh_common_args='-o ProxyCommand="ssh -W %h:%p -q {{bastion.name}}"'
+      [{{cluster_supplemental_group}}:vars]
+      ansible_ssh_common_args='-o ProxyCommand="ssh -o StrictHostKeyChecking=no -i {{cluster.ssh_private_key}} -W %h:%p -q {{bastion.user}}@{{bastion.name}}"'
 
 ############################################
 # vars:

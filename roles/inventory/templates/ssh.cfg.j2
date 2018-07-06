@@ -17,23 +17,11 @@ Host {{bastion.name}}
     ServerAliveInterval 60
     TCPKeepAlive yes
     ProxyCommand none
-    ControlMaster   auto
-    ControlPath     ~/.ssh/ansible-%r@%h:%p
-    ControlPersist  15m
+    ControlMaster auto
+    ControlPath ~/.ssh/ansible-%r@%h:%p
+    ControlPersist 15m
     
 Host 172.*
-    IdentityFile {{cluster.ssh_private_key}}
-    user {{node.user}}
-    IdentitiesOnly yes
-    ProxyCommand ssh {{bastion.name}} -W %h:%p
-
-Host master
-    IdentityFile {{cluster.ssh_private_key}}
-    user {{master.user}}
-    IdentitiesOnly yes
-    ProxyCommand ssh {{bastion.name}} -W %h:%p
-
-Host node
     IdentityFile {{cluster.ssh_private_key}}
     user {{node.user}}
     IdentitiesOnly yes

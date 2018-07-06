@@ -1,22 +1,24 @@
 ---
-# A role for installing packages from an array
-- name: Add {{module_pkg}} gpg key to apt
-  apt_key:
-    url: "{{module_apt_key}}"
-    state: present
-  when: module_apt_key is defined
+- name: Installing packages from an array
+  block:
+  - name: Ensure {{module_pkg}} gpg key is added to apt
+    apt_key:
+      url: "{{module_apt_key}}"
+      state: present
+    when: module_apt_key is defined
 
-- name: Add package source
-  apt_repository:
-    repo: "{{module_repo_source}}"
-    state: present
-    # filename: /etc/apt/sources.list.d/{{module_pkg]}}.list
-    update_cache: yes
-  when: module_repo_source is defined
+  - name: Ensure addition of package source
+    apt_repository:
+      repo: "{{module_repo_source}}"
+      state: present
+      # filename: /etc/apt/sources.list.d/{{module_pkg}}.list
+      update_cache: yes
+    when: module_repo_source is defined
 
-- name: Install {{module_pkg}}
-  apt:
-    name: "{{ module_pkg }}"
-    force: yes
-    state: latest
-    update_cache: yes
+  - name: Ensure installation of {{module_pkg}}
+    apt:
+      name: "{{ module_pkg }}"
+      force: yes
+      state: latest
+      update_cache: yes
+  become: "{{common_module_install_become | default(no)}}"

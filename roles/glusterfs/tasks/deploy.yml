@@ -1,4 +1,7 @@
 ---
-# specify nodes to deploy on
-- name: Deploy glusterfs with gk-deploy
-  script:  "{{ lookup('file', 'gk-deploy') }}
+# specify nodes to deploy on from topology.json
+
+# If you already have a pre-existing GlusterFS cluster, you do not need the -g option.
+- name: Deploy glusterfs pods on cluster using gk-deploy
+  shell:  "{{ lookup('file', 'gk-deploy') }} -g"
+  delegate_to: localhost
