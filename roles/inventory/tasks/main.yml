@@ -22,3 +22,5 @@
     - "{{bastion.inventory_group}}" # the only publicly accessible one(with a route-to)
     # - "{{master.inventory_group}}"
     # - "{{node.inventory_group}}"
+
+- include_tasks: roles/inventory/tasks/gather_facts.yml

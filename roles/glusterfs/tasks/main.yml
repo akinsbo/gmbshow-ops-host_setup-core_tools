@@ -1,22 +1,10 @@
 ---
-# - name: set gluster install command to run on nodes
-#   set_fact:
-#     mysetfact_gluster_install_cmd: "ansible-playbook -i {{ec2_py_path}} \
-#             tag_Name_nodes_maryboyecluster_maryboye_org \
-#              webservers.yml \
-#             -u admin \
-#             --private-key={{cluster.ssh_private_key}} \
-#             --tags=glusterfs, install-glusterfs"
-
-# #  Run gluster install in node group using ansible command
-# - name: Run gluster install in node group using ansible command
-#   command: "{{mysetfact_gluster_install_cmd}}"
-
 #  Install gluster-server in node group using ansible command
-- include_tasks: install.yml
-  delegate_to: "{{node.inventory_group}}"
+- include_tasks: roles/glusterfs/tasks/install.yml
   tags: 
     - install-gluster
+
+- include_tasks: roles/glusterfs/tasks/deploy.yml
 
 #  Other setup
 #  Create bricks

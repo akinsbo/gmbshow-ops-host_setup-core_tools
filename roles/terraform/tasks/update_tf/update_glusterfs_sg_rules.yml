@@ -1,4 +1,5 @@
 ---
+# Default cluster rules already cover thesee
 - name: Add the security group rules for gluster to the nodes in the terraform
   blockinfile:
     path: roles/terraform/files/kubernetes.tf

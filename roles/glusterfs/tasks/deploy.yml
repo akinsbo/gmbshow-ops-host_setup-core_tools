@@ -1,7 +1,17 @@
 ---
 # specify nodes to deploy on from topology.json
+- name: Deply glusterfs pods
+  block:
+  - name: Ensure node topology file is generated
+    template:
+      src: "{{playbook_dir}}/roles/glusterfs/templates/topology.json.j2"
+      dest: "{{playbook_dir}}/roles/glusterfs/files/topology.json"
+      mode: 0775
+      backup: yes
 
-# If you already have a pre-existing GlusterFS cluster, you do not need the -g option.
-- name: Deploy glusterfs pods on cluster using gk-deploy
-  shell:  "{{ lookup('file', 'gk-deploy') }} -g"
+  # If you already have a pre-existing GlusterFS cluster, you do not need the -g option.
+  - name: Deploy glusterfs pods on cluster using gk-deploy
+    shell: "{{playbook_dir}}/roles/glusterfs/files/gk-deploy {{playbook_dir}}/roles/glusterfs/files/topology.json -g"
+    run_once: true
+  
   delegate_to: localhost

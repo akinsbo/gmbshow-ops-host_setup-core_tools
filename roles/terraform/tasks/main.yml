@@ -1,16 +1,19 @@
 ---
 #  update credentials profile in provider section
-- include_tasks: update_tf/update_creds_profile.yml
+- include_tasks: roles/terraform/tasks/update_tf/update_creds_profile.yml
 
 #  update the tf file
-- include_tasks: update_tf/add_ebs.yml
+- include_tasks: roles/terraform/tasks/update_tf/add_ebs.yml
   tags:
     - update-terraform
     - update-tf
     - create
     - terraform-create
 
-- include_tasks: mng_env/set.yml
+# make bastions highly available
+- include_tasks: roles/terraform/tasks/update_tf/multiple_bastions.yml
+
+- include_tasks: roles/terraform/tasks/mng_env/set.yml
   tags:
     - update-terraform
     - update-tf
@@ -27,13 +30,13 @@
 #     - terraform-create
 
 # plan and create
-- include_tasks: plan.yml
+- include_tasks: roles/terraform/tasks/plan.yml
   tags:
     - create
     - terraform
     - terraform-create
 
-- include_tasks: apply.yml
+- include_tasks: roles/terraform/tasks/apply.yml
   tags:
     - create
     - terraform
@@ -47,13 +50,13 @@
     - destroy-terraform
     - never
 
-- include_tasks: destroy.yml
+- include_tasks: roles/terraform/tasks/destroy.yml
   tags: 
     - destroy
     - destroy-terraform
     - never
 
 # Prevent other terraform plans from logging in this project's logs
-# - include_tasks: mng_env/reset.yml
+# - include_tasks: roles/terraform/tasks/mng_env/reset.yml
 #   tags:
 #     - always

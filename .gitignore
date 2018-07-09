@@ -16,6 +16,7 @@
 vault.yml
 vault.yaml
 /tmp/
+tasks_ran
 
 # cloud formation
 # ignore kops generated file
@@ -51,6 +52,9 @@ data/
 
 # direnv .envrc files
 .envrc
+
+# gluster
+topology.json
 
 # Log files (for created logs in debug mode)
 *.logs
@@ -118,15 +122,12 @@ data
 
 .tags*
 
-# Utility scripts e.g. for find and replace
-utility.sh
-
 # Vagrant
 .vagrant
+vagrant
 *.swap
 network_closure.sh
 test-vms
-
 
 # Version file for dockerized build
 .dockerized-kube-version-defs

@@ -60,7 +60,11 @@
     common_module_cmd_log_command_array:
       - {command: "{{playbook_dir}}/inventory/ec2.py --profile {{aws.credentials.profile.name}}", aim: "List out dynamic inventory"}
   delegate_to: 127.0.0.1
+  register: myregistered_output_of_ec2py
 
+- debug:
+    msg: "myregistered_output_of_ec2py = {{myregistered_output_of_ec2py}}"
+     
 - include_tasks: roles/inventory/tasks/insert/nodes.yml
   vars:
     inventory_module_insert_group: "{{item}}"

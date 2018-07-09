@@ -36,7 +36,7 @@
   when: "'node.inventory_group' in group_names"
 
 #  Load kernel modules
-- include: roles/glusterfs/tasks/setup/load_kernel_modules.yml
+- include: roles/glusterfs/tasks/load_kernel_modules.yml
   become: yes
   vars:
     gluster_module_kernel: "{{item}}"

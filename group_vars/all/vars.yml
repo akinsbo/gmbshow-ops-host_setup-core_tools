@@ -52,6 +52,7 @@ local_ansible_user: olaolu
 local_ansible_group: olaolu
 
 log_path: "{{playbook_dir}}/log"
+task_ran_check_path: "{{playbook_dir}}/tasks_ran"
 
 # Dynamic Inventory
 ec2_py_path: "{{playbook_dir}}/inventory/ec2.py"
@@ -127,12 +128,13 @@ cluster:
   name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}"
   ec2_node_type: t2.micro
   ec2_master_type: t2.micro
-  num_of_nodes: 3
-  num_of_master: 3
+  bastion: true
+  bastion_count: 3
+  node_count: 3
+  master_count: 3
   master_vol_size: 64 # in GB
   node_vol_size: 32 # in GB
   region: eu-west-1
-  bastion: true
   master_zones: "" # e.g. "{{region}}a,{{region}}b,{{region}}c"
   zones: "" # e.g. "{{region}}a,{{region}}b,{{region}}c"
   networking: calico
@@ -144,6 +146,13 @@ cluster:
   ssh_private_key: "{{ec2_keys_dir}}/{{ ec2_region }}/{{ ec2_key_name }}.pem"
   
 cluster_supplemental_group: "cluster_servers" # for hosts inventory file
+
+cluster_accessories:
+  spare_device1:
+    device_fullname: "/dev/xvdb" # for multiple devices, use a comma separated list e.g. /dev/xvda,/dev/xvdb
+    volume_size: 128
+    volume_type: "gp2"
+    delete_on_termination: true
 
 # kubernetes kops generated-defaults
 kops_sec_group_suffix: "{{cluster.name | regex_replace ('\\.','-')}}"
@@ -170,6 +179,7 @@ iam:
     groups: admin
 
 inventory_to_use: "{{inventory_dir}}/hosts"
+inventory_facts_path: "{{log_path}}/temp/facts"
 
 log:
   public_inventory: "{{log_path}}/temp/inventory_list"
@@ -195,6 +205,7 @@ terraform_download_path: "https://releases.hashicorp.com/terraform/{{terraform_v
 terraform_darwin_download_path: "https://releases.hashicorp.com/terraform/{{terraform_version}}/terraform_{{terraform_version}}_darwin_amd64.zip"
 terraform_log_path: "{{log_path}}/terraform.log"
 terraform_aws_provider_version: "1.23"
+terraform_task_ran_update_bastion_ha: "{{task_ran_check_path}}/update_bastion_HA"
 
 # K8s
 # add-ons

@@ -1,0 +1,40 @@
+---
+- name: Check if task has already been run
+  stat:
+    path: "{{terraform_task_ran_update_bastion_ha}}_{{cluster.bastion_count}}" 
+  register: myregistered_bastion_HA_check
+
+- name: Update Bastion count if not updated
+  block:
+  - name: Make bastions HA. Multiply instances
+    lineinfile:
+      path: "{{cluster.output_location}}/kubernetes.tf"
+      regexp: "{{item.regexp}}"
+      insertafter: "{{item.insertafter}}"
+      firstmatch: yes
+      state: present
+      line: "{{item.line}}"
+    with_items:
+      - {regexp: '\s*max_size\s*=\s*1',  line: '  max_size = {{cluster.bastion_count}}', insertafter: '\s*launch_configuration\s*=\s*\"\${aws_launch_configuration\.bastions-k8s-maryboye-org\.id}\"\s*' }
+      - {regexp: '\s*min_size\s*=\s*1',  line: '  min_size = {{cluster.bastion_count}}', insertafter: '\s*min_size\s*=\s*{{cluster.bastion_count}}' }
+
+  - name: Remove previous line for max_size= and min_size= duplicate from size block
+    lineinfile:
+      path: "{{cluster.output_location}}/kubernetes.tf"
+      firstmatch: yes
+      insertafter: '\s*min_size\s*=\s*{{cluster.bastion_count}}'
+      regexp: "{{item.regexp}}"
+      state: absent
+    with_items: 
+      - {regexp: '\s*max_size\s*=\s*!{{cluster.bastion_count}}' }
+      - {regexp: '\s*min_size\s*=\s*!{{cluster.bastion_count}}'}
+
+  # Create the update file
+  - include_tasks: roles/common/tasks/create_file.yml
+    vars:
+      common_file_module_path: "{{terraform_task_ran_update_bastion_ha}}_{{cluster.bastion_count}}"
+      common_file_content: |
+        do not manually delete this file!
+        The update_multiple_bastion task has been run
+
+  when: myregistered_bastion_HA_check.stat.exists == false

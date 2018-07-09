@@ -144,7 +144,7 @@ Options:
 
 output() {
   opts="-e"
-  if [[ "${2}" == "-n" ]]; then
+  if [[ "${1}" == "-n" ]]; then
     opts+="n"
     shift
   fi
@@ -175,7 +175,7 @@ debug() {
 #   Return the evaluated command's return code.
 
 eval_output() {
-  cmd="${2}"
+  cmd="${1}"
   while read -r line; do
     if [[ "${line}" == return\ [0-9]* ]]; then
       eval "${line}"
@@ -246,7 +246,7 @@ abort() {
 #     VARIABLE=$(assign "${key}" "${2}")
 
 assign() {
-  key="${2}"
+  key="${1}"
   value="${key#*=}"
   if [[ "${value}" != "${key}" ]]; then
     # key was of the form 'key=value'
@@ -296,7 +296,7 @@ check() {
   local rc=1
   local wait_limit=${WAIT}
   local number_re='^[0-9]+$'
-  local resource="${2}"
+  local resource="${1}"
   local select="${2}"
   local cond="${3}"
 
@@ -366,7 +366,7 @@ check() {
 }
 
 while [[ $# -ge 1 ]]; do
-  key="${2}"
+  key="${1}"
 
   case $key in
     -*)
@@ -726,6 +726,7 @@ if [[ ${GLUSTER} -eq 1 ]] && [[ ${EXISTS_GLUSTERFS} -eq 0 ]] && [[ ${EXISTS_HEKE
   done <<< "$(echo -e "${NODES}")"
   debug "Deploying GlusterFS pods."
   if [[ "${CLI}" == *oc\ * ]]; then
+    output "${CLI} process ${OC_PROCESS_VAL_SWITCH} NODE_LABEL=${DAEMONSET_LABEL} glusterfs | ${CLI} create -f - 2>&1"
     eval_output "${CLI} process ${OC_PROCESS_VAL_SWITCH} NODE_LABEL=${DAEMONSET_LABEL} glusterfs | ${CLI} create -f - 2>&1"
   else
     eval_output "sed -e 's/storagenode\: glusterfs/storagenode\: '${DAEMONSET_LABEL}'/g' ${TEMPLATES}/glusterfs-daemonset.yaml | ${CLI} create -f - 2>&1"
@@ -777,7 +778,7 @@ if [[ ${EXISTS_DEPLOY_HEKETI} -eq 1 ]] && [[ ${EXISTS_HEKETI} -eq 0 ]]; then
     heketi_service=$(${CLI} describe svc/deploy-heketi | grep "Endpoints:" | awk '{print $2}')
   done
 
-  heketi_pod=$(${CLI} get pod --no-headers --show-all --selector="deploy-heketi" | awk '{print $2}')
+  heketi_pod=$(${CLI} get pod --no-headers --show-all --selector="deploy-heketi" | awk '{print $1}')
 
   if [[ "${CLI}" == *oc\ * ]]; then
     heketi_service=$(${CLI} describe routes/deploy-heketi | grep "Requested Host:" | awk '{print $3}')
@@ -885,7 +886,7 @@ while [[ "x${heketi_service}" == "x" ]] || [[ "${heketi_service}" == "<none>" ]]
   heketi_service=$(${CLI} describe svc/heketi | grep "Endpoints:" | awk '{print $2}')
 done
 
-heketi_pod=$(${CLI} get pod --no-headers --show-all --selector="heketi" | awk '{print $2}')
+heketi_pod=$(${CLI} get pod --no-headers --show-all --selector="heketi" | awk '{print $1}')
 
 if [[ "${CLI}" == *oc\ * ]]; then
   heketi_service=$(${CLI} describe routes/heketi | grep "Requested Host:" | awk '{print $3}')

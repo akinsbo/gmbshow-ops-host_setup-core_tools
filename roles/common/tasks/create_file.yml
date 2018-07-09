@@ -14,7 +14,7 @@
   - name: Ensure file exists
     become: "{{common_file_module_become | default('no') | bool}}"
     copy:
-      content: ""
+      content: "{{common_file_content | default('')}}"
       dest: "{{common_file_module_path}}"
       force: no
       owner: "{{local_ansible_user}}"
@@ -28,3 +28,4 @@
 #   common_file_module_become: # optional
 #   common_file_module_path: 
 #   common_file_mode: # optional
+#   common_file_content: # optional

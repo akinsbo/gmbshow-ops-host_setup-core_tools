@@ -6,18 +6,19 @@
 
   pre_tasks:
 
-    - setup:
+    # - setup:
     
-    - name: Ping
-      ping: ~
+    # - name: Ping
+    #   ping: ~
 
     # - debug:
-    #     msg: "{{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
+    #     msg: "hostvars[inventory_hostname]['ansible_default_ipv4']['address']={{hostvars[inventory_hostname]['ansible_default_ipv4']['address']}}"
 
     # - debug:
-    #     msg: "{{hostvars[inventory_host].ec2_block_devices]}}"
-  
-    # - meta: end_play  
+    #     var: groups['node'] #"hostvars[inventory_hostname]"
+    #   delegate_to: 127.0.0.1
+    #   run_once: true
+
   roles:
     - glusterfs
     # - name: run inventory command

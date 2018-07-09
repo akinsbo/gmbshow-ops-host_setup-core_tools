@@ -1,0 +1,5 @@
+---
+- name: Gather facts into log file
+  command: "ansible all -m setup --tree {{inventory_facts_path}}"
+  args:
+    chdir: "{{playbook_dir}}"

@@ -7,8 +7,8 @@
     backup: yes
     content: |
           ebs_block_device {
-            device_name           = "/dev/xvdb"
-            volume_size           = 128
-            volume_type           = "gp2"
-            delete_on_termination = true
+            device_name           = "{{cluster_accessories.spare_device1.device_fullname}}"
+            volume_size           = "{{cluster_accessories.spare_device1.volume_size}}"
+            volume_type           = "{{cluster_accessories.spare_device1.volume_type}}"
+            delete_on_termination = "{{cluster_accessories.spare_device1.delete_on_termination}}"
           }

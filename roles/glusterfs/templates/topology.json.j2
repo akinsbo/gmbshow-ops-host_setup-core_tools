@@ -1,27 +1,25 @@
 {
   "clusters": [
     {
-    {% for host in groups['node'] %}
       "nodes": [
+        {% for machine in groups[node.inventory_group] %}
         {
           "node": {
             "hostnames": {
               "manage": [
-                "{{hostvars[host].ec2_private_dns_name]}}"
+                "{{ hostvars[machine]['ansible_fqdn'] }}"
               ],
               "storage": [
-                "{{hostvars[host].ec2_private_ip_address]}}"
+                "{{ hostvars[machine]['ansible_default_ipv4']['address'] }}"
               ]
             },
             "zone": 1
           },
           "devices": [
-            "/dev/sde",
-            "/dev/sdf"
-            "{{hostvars[host].ec2_block_devices]}}"
+            "{{cluster_accessories.spare_device1.device_fullname}}"
           ]
-        },
-    {% end_for %}
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
       ]
     }
   ]

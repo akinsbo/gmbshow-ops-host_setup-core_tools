@@ -4,7 +4,7 @@ Host *
     GSSAPIAuthentication yes
     ServerAliveInterval 60
     TCPKeepAlive yes
-    ProxyCommand ssh -q -A {{bastion.user}}@{{bastion.name}} nc %h %p
+    ProxyCommand ssh {{bastion.name}} -W %h:%p
     LogLevel QUIET
     StrictHostKeyChecking no
 
