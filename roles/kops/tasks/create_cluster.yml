@@ -38,18 +38,9 @@
 - block:
     - name: "Build cluster configuration in zone {{ mysetfact_aws_avail_zone }}"
       command: "{{ mysetfact_create_command }}"
-    
-    # indicate that bastion count has not been updated (since we are re-generating the terraform file)
-    - include_task: roles/common/tasks/delete_file.yml
-      vars:
-        common_module_delete_file_path: "{{terraform_task_ran_update_bastion_ha_dir}}"      
+
   rescue:
     - include_tasks: delete_cluster.yml
     
     - name: "Try to create the cluster again"
       command: "{{ mysetfact_create_command }}"
-
-    # indicate that bastion count has not been updated (since we are re-generating the terraform file)
-    - include_task: roles/common/tasks/delete_file.yml
-      vars:
-        common_module_delete_file_path: "{{terraform_task_ran_update_bastion_ha}}"

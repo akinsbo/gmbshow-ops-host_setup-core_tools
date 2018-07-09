@@ -128,7 +128,7 @@ cluster:
   ec2_node_type: t2.micro
   ec2_master_type: t2.micro
   bastion: true
-  bastion_count: 9
+  bastion_count: 3
   node_count: 3
   master_count: 3
   master_vol_size: 64 # in GB

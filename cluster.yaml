@@ -12,11 +12,6 @@
 
     - setup:
 
-    # make bastions highly available
-    - include_tasks: roles/terraform/tasks/update_tf/multiple_bastions.yml
-
-    - meta: end_play
-
     # Set environmental variable
     - include_tasks: roles/terraform/tasks/mng_env/set.yml
 
