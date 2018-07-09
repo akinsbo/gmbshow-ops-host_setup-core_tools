@@ -52,7 +52,6 @@ local_ansible_user: olaolu
 local_ansible_group: olaolu
 
 log_path: "{{playbook_dir}}/log"
-task_ran_check_path: "{{playbook_dir}}/tasks_ran"
 
 # Dynamic Inventory
 ec2_py_path: "{{playbook_dir}}/inventory/ec2.py"
@@ -129,7 +128,7 @@ cluster:
   ec2_node_type: t2.micro
   ec2_master_type: t2.micro
   bastion: true
-  bastion_count: 3
+  bastion_count: 9
   node_count: 3
   master_count: 3
   master_vol_size: 64 # in GB
@@ -205,7 +204,6 @@ terraform_download_path: "https://releases.hashicorp.com/terraform/{{terraform_v
 terraform_darwin_download_path: "https://releases.hashicorp.com/terraform/{{terraform_version}}/terraform_{{terraform_version}}_darwin_amd64.zip"
 terraform_log_path: "{{log_path}}/terraform.log"
 terraform_aws_provider_version: "1.23"
-terraform_task_ran_update_bastion_ha: "{{task_ran_check_path}}/update_bastion_HA"
 
 # K8s
 # add-ons
