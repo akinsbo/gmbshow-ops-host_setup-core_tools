@@ -12,7 +12,8 @@
 
 # make bastions highly available
 - include_tasks: roles/terraform/tasks/update_tf/multiple_bastions.yml
-
+  when: cluster.bastions == true
+  
 - include_tasks: roles/terraform/tasks/mng_env/set.yml
   tags:
     - update-terraform
