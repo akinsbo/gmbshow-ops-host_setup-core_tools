@@ -12,7 +12,10 @@
 
     - setup:
 
-    # Set environmental variable
+    - include_tasks: roles/terraform/tasks/update_tf/multiple_bastions.yml
+
+
+    # # Set environmental variable
     - include_tasks: roles/terraform/tasks/mng_env/set.yml
 
     - include_tasks: roles/aws/tasks/get_availability_zone/main.yml

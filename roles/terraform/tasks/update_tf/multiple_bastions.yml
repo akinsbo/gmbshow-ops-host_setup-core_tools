@@ -1,24 +1,9 @@
 ---
-- name: Remove previous line for max_size= and min_size= from size block for bastion
-  lineinfile:
-    path: "{{cluster.output_location}}/kubernetes.tf"
-    firstmatch: yes
-    insertafter: '\s*launch_configuration\s*=\s*\"\${aws_launch_configuration\.bastions-k8s-maryboye-org\.id}\"\s*'
-    regexp: "{{item.regexp}}"
-    state: absent
-  with_items: 
-    - {regexp: '\s*max_size\s*=\s*\d+'}
-    - {regexp: '\s*min_size\s*=\s*\d+'}
-
 - name: Update Bastion count in tf file if group_var is updated
   block:
   - name: Make bastions HA. Multiply instances
-    lineinfile:
+    replace:
       path: "{{cluster.output_location}}/kubernetes.tf"
-      insertafter: '\s*launch_configuration\s*=\s*\"\${aws_launch_configuration\.bastions-k8s-maryboye-org\.id}\"\s*'
-      firstmatch: yes
-      state: present
-      line: "{{item.line}}"
-    with_items:
-      - {line: '  max_size = {{cluster.bastion_count}}' }
-      - {line: '  min_size = {{cluster.bastion_count}}' }
+      regexp: '\n{0}launch_configuration\s*=\s*\"\${aws_launch_configuration\.bastions-{{kops_sec_group_suffix}}\.id}\"\s*\n\s*max_size\s*=\s*\d+\n\s*min_size\s*=\s*\d+'
+      replace: 'launch_configuration = "${aws_launch_configuration.bastions-{{kops_sec_group_suffix}}.id}"\n  max_size = {{cluster.bastion_count}}\n  min_size = {{cluster.bastion_count}}'
+      backup: yes
