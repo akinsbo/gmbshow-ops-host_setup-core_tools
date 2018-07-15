@@ -7,9 +7,6 @@
     - "{{cluster.ssh_private_key}}"
     - "{{cluster.ssh_public_key}}"
     
-- include_tasks: roles/inventory/tasks/insert/bastion.yml
-  when: cluster.bastion == true
-
 # Insert groups and their instances into host (run this before group_into_known_hosts.yml)
 - include_tasks: roles/inventory/tasks/insert/group.yml
   vars:

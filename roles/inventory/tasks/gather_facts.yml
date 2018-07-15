@@ -1,4 +1,19 @@
 ---
+- block:
+  - name: Gather facts into log file
+    command: "ansible all -m setup --tree {{inventory_facts_path}}"
+    args:
+      chdir: "{{playbook_dir}}"
+  rescue:
+  - name: Reset the host key
+    command: ssh-keygen -f "/home/olaolu/.ssh/known_hosts" -R "bastion.k8s.maryboye.org" 
+
+  # Add all public host addresses to known_hosts
+- include_tasks: roles/inventory/tasks/insert/group_into_known_hosts.yml
+  vars:
+    inventory_module_insert_group_known_hosts: "{{item}}"
+  with_items: 
+    - "{{bastion.inventory_group}}" # the only publicly accessible one(with a route-to)
 - name: Gather facts into log file
   command: "ansible all -m setup --tree {{inventory_facts_path}}"
   args:

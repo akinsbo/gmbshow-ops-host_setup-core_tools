@@ -1,0 +1,42 @@
+---
+- name: Create remove and set Host Key insert command for a bastion group host
+  block:
+  - name: Set Host Key insert command for a bastion host
+    set_fact:
+      mysetfact_keyscan_cmd: "ssh-keyscan -H {{bastion.name}}, \
+      `dig +short {{bastion.name}}` \
+      >> {{ ssh_known_hosts_file }}"
+  - name: Set key remove command for a bastion host
+    set_fact:
+      mysetfact_remove_key_cmd: ssh-keygen -f "{{ ssh_known_hosts_file }}" -R "{{bastion.name}}"
+  when: inventory_module_insert_known_hosts == bastion.inventory_hostname
+
+- name: Create remove and set Host Key insert command for a non-bastion group host
+  block:
+  - name: Set Host Key insert command for a non-bastion group hosts e.g. master, nodes...
+    set_fact:
+      mysetfact_keyscan_cmd: "ssh-keyscan -H {{inventory_module_insert_known_hosts}}, \
+      `dig +short {{inventory_module_insert_known_hosts}}` \
+      >> {{ ssh_known_hosts_file }}"
+  - name: Set key remove command for a bastion host
+    set_fact:
+      mysetfact_remove_key_cmd: ssh-keygen -f "{{ssh_known_hosts_file}}" -R "{{inventory_module_insert_known_hosts}}"
+  when: inventory_module_insert_known_hosts != bastion.inventory_hostname
+
+- name: Show command 1
+  debug:
+    msg: "mysetfact_remove_key_cmd= {{mysetfact_remove_key_cmd}}"
+
+- name: Show command 2
+  debug:
+    msg: "mysetfact_keyscan_cmd= {{mysetfact_keyscan_cmd}}"
+
+- name: Ensure the current host key is removed
+  shell: "{{mysetfact_remove_key_cmd}}"
+
+- name: Enure host key is hashed and inserted in the host key file 
+  shell: "{{mysetfact_keyscan_cmd}}"
+
+###########################################
+# vars:
+#   inventory_module_insert_known_hosts: "{{item}}"

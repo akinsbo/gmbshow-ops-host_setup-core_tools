@@ -1,45 +1,28 @@
 ---
-- name: Display host address to add to known_host for bastion host {{inventory_module_insert_known_hosts}}
-  debug:
-    msg: "{{bastion.name}}"
-  verbosity: 4
-  when: inventory_module_insert_known_hosts == bastion.inventory_hostname
-
-- name: Display host address to add to known_host for non-bastion host {{inventory_module_insert_known_hosts}}
-  debug:
-    msg: "{{inventory_module_insert_known_hosts}}"
-  verbosity: 4
-  when: inventory_module_insert_known_hosts != bastion.inventory_hostname
-  
 - name: Create remove and set Host Key insert command for a bastion group host
   block:
-  - name: Set Host Key insert command for a bastion host
+  - name: Determine that the host is a bastion
     set_fact:
-      mysetfact_keyscan_cmd: "ssh-keyscan -H {{bastion.name}}, \
-      `dig +short {{bastion.name}}` \
-      >> {{ ssh_known_hosts_file }}"
-  - name: Set key remove command for a bastion host
+      mysetfact_host_to_know: "{{bastion.name}}" 
+    when: inventory_module_insert_known_hosts == bastion.inventory_hostname
+  - name: Determine that the host is NOT a bastion 
     set_fact:
-      mysetfact_remove_key_cmd: ssh-keygen -f "{{ ssh_known_hosts_file }}" -R "{{bastion.name}}"
-  when: inventory_module_insert_known_hosts == bastion.inventory_hostname
-
-- name: Create remove and set Host Key insert command for a non-bastion group host
-  block:
-  - name: Set Host Key insert command for a non-bastion group hosts e.g. master, nodes...
-    set_fact:
-      mysetfact_keyscan_cmd: "ssh-keyscan -H {{inventory_module_insert_known_hosts}}, \
-      `dig +short {{inventory_module_insert_known_hosts}}` \
-      >> {{ ssh_known_hosts_file }}"
-  - name: Set key remove command for a bastion host
-    set_fact:
-      mysetfact_remove_key_cmd: ssh-keygen -f "{{ssh_known_hosts_file}}" -R "{{inventory_module_insert_known_hosts}}"
-  when: inventory_module_insert_known_hosts != bastion.inventory_hostname
+      mysetfact_host_to_know: "{{inventory_module_insert_known_hosts}}" 
+    when: inventory_module_insert_known_hosts != bastion.inventory_hostname
 
 - name: Ensure the current host key is removed
-  shell: "{{mysetfact_remove_key_cmd}}"
+  shell: ssh-keygen -f "{{ ssh_known_hosts_file }}" -R "{{mysetfact_host_to_know}}"
 
-- name: Enure host key is hashed and inserted in the host key file 
-  shell: "{{mysetfact_keyscan_cmd}}"
+- name: Get host key 
+  shell: "ssh-keyscan -t -rsa {{mysetfact_host_to_know}}"
+  register: myregistered_sshkey
+
+- name: Ensure hostkey is hashed and inserted in the host key file 
+  shell: "ssh-keygen {{myregistered_sshkey.stdout}}"
+  register: myregistered_hask_key
+  
+- name: Ensure hostkey is added to known host file
+  shell: "{{mysetfact_host_to_know}} ssh-rsa {{myregistered_hask_key.stdout}} >> {{ ssh_known_hosts_file }}"
 
 ###########################################
 # vars:
