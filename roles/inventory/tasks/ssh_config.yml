@@ -10,5 +10,5 @@
     src: "{{playbook_dir}}/roles/inventory/templates/ssh.cfg.j2"
     dest: "{{playbook_dir}}/ssh.cfg"
     # validate: /usr/sbin/sshd -t -f %s
-    mode: 0775
+    mode: 0400
     backup: yes

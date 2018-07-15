@@ -28,46 +28,43 @@
 #     with_items:
         # - {line:"^group_by_" , replacement:"#group_by_" }
         # - {line:"#group_by_tag" , replacement:"group_by_" }
+############################## run ec2.py for dynamic inventory
+############################## Not needed since kubectl is used to fetch nodes instead
+# - name: Make dynamic script executable
+#   file: 
+#     path: "{{item}}"
+#     mode: "ugo+x"
+#   with_items:
+#     - "{{ec2_py_path}}"
 
-- name: Make dynamic script executable
-  file: 
-    path: "{{item}}"
-    mode: "ugo+x"
-  with_items:
-    - "{{ec2_py_path}}"
+# # Ensure dynamic inventory group is extracted into static host
+# - include_tasks: roles/common/tasks/cmd_log/main.yml
+#   vars:
+#     common_module_cmd_log_command_become: no
+#     common_module_cmd_log_file: "{{log.public_inventory}}"
+#     common_module_cmd_log_command_array:
+#       - {command: "{{playbook_dir}}/inventory/ec2.py --profile {{aws.credentials.profile.name}}", aim: "List out dynamic inventory"}
+#   register: myregistered_ec2_py_output  
+#   delegate_to: 127.0.0.1
 
-# Ensure dynamic inventory group is extracted into static host
-- include_tasks: roles/common/tasks/cmd_log/main.yml
-  vars:
-    common_module_cmd_log_command_become: no
-    common_module_cmd_log_file: "{{log.public_inventory}}"
-    common_module_cmd_log_command_array:
-      - {command: "{{playbook_dir}}/inventory/ec2.py --profile {{aws.credentials.profile.name}}", aim: "List out dynamic inventory"}
-  register: myregistered_ec2_py_output  
-  delegate_to: 127.0.0.1
-     
-- name: Print ec2_py_output
-  debug:
-    msg: "myregistered_ec2_py_output={{myregistered_ec2_py_output}}"
+- name: "Insert group name for {{bastion.name}} into host file"
+  become: yes
+  blockinfile:
+    path: "{{inventory_dir}}/hosts"
+    state: present
+    insertafter:  
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{bastion.name}}"
+    block: |
 
-# - name: "Insert group name for {{bastion.name}} into host file"
-#   become: yes
-#   blockinfile:
-#     path: "{{inventory_dir}}/hosts"
-#     state: present
-#     insertafter:  
-#     marker: "# {mark} ANSIBLE MANAGED BLOCK {{bastion.name}}"
-#     block: |
+      [{{bastion.inventory_group}}]
+      {{bastion.name}}
 
-#       [{{bastion.inventory_group}}]
-#       {{groups['tag_Name_'~bastion.inventory_hostname] | to_nice_yaml | regex_replace('- ', '')}}
-      
-#       [{{bastion.inventory_group}}:vars]
-#       ansible_connection=ssh
-#       ansible_ssh_private_key_file={{cluster.ssh_private_key}}
-#       ansible_ssh_common_args='-o IdentitiesOnly=yes -o StrictHostkeyChecking=no'
-#       ansible_user={{bastion.user}}
-#   when: cluster.bastion == true
+      [{{bastion.inventory_group}}:vars]
+      ansible_connection=ssh
+      ansible_ssh_private_key_file={{cluster.ssh_private_key}}
+      ansible_ssh_common_args='-o IdentitiesOnly=yes -o StrictHostkeyChecking=no'
+      ansible_user={{bastion.user}}
+  when: cluster.bastion == true
 
 - include_tasks: roles/inventory/tasks/insert/nodes.yml
   vars:

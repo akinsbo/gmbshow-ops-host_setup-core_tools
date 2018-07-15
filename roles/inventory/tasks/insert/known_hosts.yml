@@ -1,29 +1,34 @@
 ---
-- name: Create remove and set Host Key insert command for a bastion group host
-  block:
-  - name: Determine that the host is a bastion
-    set_fact:
-      mysetfact_host_to_know: "{{bastion.name}}" 
-    when: inventory_module_insert_known_hosts == bastion.inventory_hostname
-  - name: Determine that the host is NOT a bastion 
-    set_fact:
-      mysetfact_host_to_know: "{{inventory_module_insert_known_hosts}}" 
-    when: inventory_module_insert_known_hosts != bastion.inventory_hostname
-
+# This tasks remove recreate and set Host Key insert command for a grouped host
 - name: Ensure the current host key is removed
-  shell: ssh-keygen -f "{{ ssh_known_hosts_file }}" -R "{{mysetfact_host_to_know}}"
+  shell: ssh-keygen -f "{{ ssh_known_hosts_file }}" -R "{{inventory_module_insert_known_hosts}}"
 
-- name: Get host key 
-  shell: "ssh-keyscan -t -rsa {{mysetfact_host_to_know}}"
-  register: myregistered_sshkey
+- name: Ensure ssh agent is added
+  shell: ssh-add -L
 
-- name: Ensure hostkey is hashed and inserted in the host key file 
-  shell: "ssh-keygen {{myregistered_sshkey.stdout}}"
-  register: myregistered_hask_key
+- name: Ensure ssh agent is added
+  shell: ssh-add {{cluster.ssh_private_key}}
+
+- name: Get rsa host key of remote host 
+  shell: "ssh-keyscan -H {{inventory_module_insert_known_hosts}} >>  {{ ssh_known_hosts_file }}"
+  # register: myregistered_sshkey
   
-- name: Ensure hostkey is added to known host file
-  shell: "{{mysetfact_host_to_know}} ssh-rsa {{myregistered_hask_key.stdout}} >> {{ ssh_known_hosts_file }}"
+# - name: Ensure hostkey is hashed 
+#   shell: "ssh-keygen -H {{myregistered_sshkey.stdout}}"
+#   register: myregistered_hask_key
 
+# - name:  Ensure hashed hostkey is inserted into Knownhost file
+#   blockinfile:
+#     path: "{{ ssh_known_hosts_file }}" 
+#     insertafter: EOF 
+#     backup: yes 
+#     marker_end: END 
+#     marker: "# {mark ANSIBLE MANAGED BLOCK } {{inventory_module_insert_known_hosts}}"
+#     marker_begin: BEGIN 
+#     state: present
+#     create: no 
+#     block:  |
+#       {{inventory_module_insert_known_hosts}} ssh-rsa {{myregistered_hask_key.stdout}} 
 ###########################################
 # vars:
 #   inventory_module_insert_known_hosts: "{{item}}"

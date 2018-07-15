@@ -1,0 +1,7 @@
+---
+- name: "Ensure service account k8s_addons_deployment configuration is added"
+  become: false
+  template:
+    src: "{{k8s_addons_deployment}}.yaml.j2"
+    dest: "{{role_path}}/files/tmp/{{k8s_addons_deployment}}.yaml"
+    mode: 0644

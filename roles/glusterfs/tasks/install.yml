@@ -15,7 +15,7 @@
       module_repo_source: "{{glusterfs.ubuntu.ppa}}"
       common_module_install_become: yes
     when: ansible_distribution == 'Ubuntu'
-  when: "'master' in group_names"
+  when: "'master.inventory_group' in group_names"
 
 - name: Ensure glusterfs-client is installed on worker nodes
   block:

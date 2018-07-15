@@ -13,7 +13,6 @@
     mysetfact_create_command: "kops create cluster {{ cluster.name }} \
                                 --cloud aws \
                                 --ssh-public-key {{cluster.ssh_public_key}} \
-                                --image {{cluster.ami}}
                                 --master-count {{cluster.master_count}} \
                                 --node-count {{ cluster.node_count }} \
                                 --zones {{ cluster.zones | default(mysetfact_aws_avail_zone, true) }} \

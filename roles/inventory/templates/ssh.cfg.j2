@@ -1,28 +1,17 @@
 Host *
-    SendEnv LANG LC_*
-    HashKnownHosts yes
-    GSSAPIAuthentication yes
     ServerAliveInterval 60
     TCPKeepAlive yes
-    ProxyCommand ssh {{bastion.name}} -W %h:%p
-    LogLevel QUIET
+    ProxyCommand ssh -W %h:%p {{bastion.name}} 
     StrictHostKeyChecking no
 
 Host {{bastion.name}}
     IdentityFile {{cluster.ssh_private_key}}
     IdentitiesOnly yes
-    user {{bastion.user}}
-    PasswordAuthentication no
-    ForwardAgent yes
-    ServerAliveInterval 60
-    TCPKeepAlive yes
-    ProxyCommand none
-    ControlMaster auto
-    ControlPath ~/.ssh/ansible-%r@%h:%p
-    ControlPersist 15m
-    
+    User {{bastion.user}}
+    Hostname {{bastion.name}}
+
 Host 172.*
     IdentityFile {{cluster.ssh_private_key}}
-    user {{node.user}}
+    User {{node.user}}
     IdentitiesOnly yes
-    ProxyCommand ssh {{bastion.name}} -W %h:%p
+    ProxyCommand ssh -q -W %h:%p {{bastion.name}}

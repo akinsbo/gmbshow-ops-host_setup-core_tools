@@ -18,4 +18,4 @@
     loop_var: host_item
 ########################################
 # vars:
-#   inventory_module_insert_group_known_hosts: #tag_Name_bastions_k8s_maryboye_org
+#   inventory_module_insert_group_known_hosts: #e.g. tag_Name_bastions_k8s_maryboye_org

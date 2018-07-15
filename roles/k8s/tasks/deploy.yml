@@ -1,44 +1,19 @@
----
 # Ensure a temp directory is created to place temp files
 - include_tasks: roles/common/tasks/create_dir.yml
   vars:
-    common_dir_module_path: "{{role_path}}/files/tmp/{{k8s_addons_deployment}}.yaml"
+    common_dir_module_path: "{{role_path}}/files/tmp/{{k8s_deployment}}.yaml"
 
-- name: "Ensure {{k8s_addons_deployment}} k8s_addons_deployment configuration is added"
+- name: "Ensure {{k8s_deployment}} k8s_deployment configuration is added"
   become: false
   template:
-    src: "{{k8s_addons_deployment}}.yaml.j2"
-    dest: "{{role_path}}/files/tmp/{{k8s_addons_deployment}}.yaml"
+    src: "{{k8s_deployment}}.yaml.j2"
+    dest: "{{role_path}}/files/tmp/{{k8s_deployment}}.yaml"
     mode: 0644
 
-- name: "Ensure {{k8s_addons_deployment}} is deployed"
-  command: "kubectl apply -f {{role_path}}/files/tmp/{{k8s_addons_deployment}}.yaml"
-
-# - name: |
-#       Ensure secure channel to K8s cluster is created from
-#       local workstation to access service locally
-#   command: kubectl proxy
-
-# - name: "Get {{k8s_addons_deployment}} address"
-#   command: "kubectl get services --namespace=kube-system {{k8s_addons_deployment}} -o go-template='{{(index .spec.clusterIP)}}'"
-#   register: myregistered_cluster_ip
-
-- debug:
-    msg: "{{'mysetfact_' ~ k8s_addons_deployment | regex_replace('-','_') ~ '_svc_in_' ~ k8s_addons_deployment_namespace | regex_replace('-','_') ~ '_namespace_address'}}"
-
-    # The default address is https://<master-ip>:<apiserver-port>/api/v1/namespaces/kube-system/services/https:kubernetes-dashboard:/proxy/, where <master-ip> is IP address or domain name of the Kubernetes master
-- name: "Get {{k8s_addons_deployment}} address"
-  set_fact:
-    "{{'mysetfact_' ~ k8s_addons_deployment | regex_replace('-','_') ~ '_svc_in_' ~ k8s_addons_deployment_namespace | regex_replace('-','_') ~ '_namespace_address'}}": "https://api.{{cluster.name}}:80/api/v1/namespaces/{{ k8s_addons_deployment_namespace | default('kube-system')}}/services/https:{{k8s_addons_deployment}}:/proxy"
-    cacheable: true
-
-# - name: "Ensure {{k8s_addons_deployment}} admin access"
-#   command: "kubectl apply -f {{role_path}}/files/tmp/{{k8s_addons_deployment}}-admin.yaml"
-
-# - name: "Ensure url exists if any"
-#   command: "google-chrome https://api.{{cluster.name}}/api/v1/namespaces/{{ k8s_addons_deployment_namespace | default('kube-system')}}/services/https:{{k8s_addons_deployment}}:/proxy"
+- name: "Ensure {{k8s_deployment}} is deployed"
+  command: "kubectl apply -f {{role_path}}/files/tmp/{{k8s_deployment}}.yaml"
 
 ####################################
 # vars:
-    # k8s_addons_deployment:
-    # k8s_addons_deployment_namespace: 
+    # k8s_deployment:
+    # k8s_deployment_namespace: 

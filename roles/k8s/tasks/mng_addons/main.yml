@@ -6,12 +6,12 @@
     common_dir_become: yes
 
 #  Deploy addons
-- include_tasks: roles/k8s/tasks/deploy.yml
+- include_tasks: roles/k8s/tasks/deploy_addons.yml
   vars:
     k8s_addons_deployment: "{{item}}"
     k8s_addons_deployment_namespace: kube-system
   with_items: 
     - kubernetes-dashboard
-    - grafana
-    - heapster
-    - influxdb-grafana
+    # - grafana
+    # - heapster
+    # - influxdb-grafana
