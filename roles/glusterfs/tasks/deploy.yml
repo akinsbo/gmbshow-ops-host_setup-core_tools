@@ -11,8 +11,7 @@
 
   # If you already have a pre-existing GlusterFS cluster, you do not need the -g option.
   - name: Deploy glusterfs pods on cluster using gk-deploy
-    become: yes
     shell: "{{playbook_dir}}/roles/glusterfs/files/gk-deploy {{playbook_dir}}/roles/glusterfs/files/topology.json -g"
-    run_once: true
   
-  delegate_to: 127.0.0.1
+  delegate_to: localhost
+  run_once: true

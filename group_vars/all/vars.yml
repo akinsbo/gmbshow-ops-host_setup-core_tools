@@ -22,8 +22,8 @@ aws:
 glusterfs_version: 4.1
 glusterfs:
   debian:
-    apt_key: http://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/rsa.pub
-    repo_source: deb [arch=amd64] http://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/LATEST/Debian/stretch/apt stretch main
+    apt_key: https://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/rsa.pub
+    repo_source: deb [arch=amd64] https://download.gluster.org/pub/gluster/glusterfs/{{glusterfs_version}}/LATEST/Debian/stretch/amd64/apt/ stretch main
   ubuntu:
     ppa: "ppa:gluster/glusterfs-{{glusterfs_version}}"
 
@@ -126,8 +126,8 @@ ec2_keys_dir: "{{ lookup('env', 'HOME')}}/ec2_keys"
 ec2_region: eu-west-1
 
 cluster:
-  ami: #ami-58d7e821 #for ubuntu-xenial
-  image_root_user: admin #ubuntu #for ubuntu-xenial
+  ami: ami-58d7e821 #for ubuntu-xenial
+  image_root_user: ubuntu #ubuntu #for ubuntu-xenial
   name: "{{route53.record.subDNS}}.{{route53.zone.DNS}}"
   ec2_node_type: t2.micro
   ec2_master_type: t2.micro

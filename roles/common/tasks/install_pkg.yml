@@ -1,4 +1,12 @@
 ---
+# - name: Configure dpkg
+#   become: yes
+#   command: dpkg –configure -a
+
+# - name: Fix broken packages
+#   become: yes
+#   command: apt-get install -f
+
 - name: Installing packages from an array
   block:
   - name: Ensure {{module_pkg}} gpg key is added to apt
@@ -11,8 +19,8 @@
     apt_repository:
       repo: "{{module_repo_source}}"
       state: present
-      # filename: /etc/apt/sources.list.d/{{module_pkg}}.list
-      update_cache: yes
+      filename: /etc/apt/sources.list.d/{{module_pkg}}.list
+      # update_cache: yes
     when: module_repo_source is defined
 
   - name: Ensure installation of {{module_pkg}}
@@ -20,5 +28,17 @@
       name: "{{ module_pkg }}"
       force: yes
       state: latest
-      update_cache: yes
+      install_recommends: yes
+    #   cache_valid_time: 3600
+    #   update_cache: yes
+    # register: apt_result
+    # until: apt_result|success
+    # retries: 3
+    # delay: 1
+    # ignore_errors: yes
+
+  # - name: retry if needed using command apt-get update
+  #   command: apt-get update
+  #   when: apt_result|failed
   become: "{{common_module_install_become | default(no)}}"
+

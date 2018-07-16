@@ -28,4 +28,5 @@
     - kops
     - terraform
     - k8s
-    - inventory
+    - role: inventory
+      tags: ['inventory']
