@@ -1,0 +1,28 @@
+- include_tasks: roles/tasks/generate_cert.yml
+  vars:
+    openssl_module_cert: "{{item}}"
+  with_items:
+    - tiller
+    - helm
+
+- name: Set Helm init command 
+  set_fact:
+    mysetfact_helm_init_cmd: "helm init \
+                              --tiller-tls \
+                              --tiller-tls-verify \
+                              --tiller-tls-cert=./tiller.cert.pem \
+                              --tiller-tls-key=./tiller.key.pem \
+                              --tls-ca-cert={{ca.cert}} \
+                              --service-account={{helm_tiller_team_sa}} \
+                              --tiller-namespace {{helm_tiller_namespace}}"
+- name: Run Helm init
+  command: "{{mysetfact_helm_init_cmd}}"
+
+- name: Run test helm command
+  command: >
+    helm ls 
+    --tls 
+    --tls-cert helm.cert.pem 
+    --tls-key helm.key.pem
+    --tls-ca-cert {{ca.cert}}
+

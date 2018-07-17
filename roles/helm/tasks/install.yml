@@ -1,14 +1,6 @@
-- name: Set Helm init command 
-  set_fact:
-    mysetfact_helm_init_cmd: "helm init \
-                              --tiller-tls \
-                              --tiller-tls-verify \
-                              --tiller-tls-cert=cert.pem \
-                              --tiller-tls-key=key.pem \
-                              --tls-ca-cert=ca.pem \
-                              --service-account=accountname"
-  
-- name: Run 
-
-- name: Run Helm init
-  command: "{{mysetfact_helm_init_cmd}}"
+---
+#  Ensure Helm is installed
+- include_tasks: roles/common/tasks/download_pkg.yml
+  vars:
+    module_linux_url: "{{helm_download_path}}"
+    module_darwin_url: "{{helm_darwin_download_path}}"

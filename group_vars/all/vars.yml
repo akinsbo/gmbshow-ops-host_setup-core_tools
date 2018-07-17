@@ -18,6 +18,21 @@ aws:
   config:
     file: "{{ lookup('env', 'HOME')}}/.aws/config"
 
+ca_certs_dir: /etc/letsencrypt/live
+ca_privkey_dir: /etc/ssl/private
+ca:
+  country: NG
+  state: LA
+  locality: LA
+  organization: Maryboye.org
+  organizationalunit: Lifestyle
+  email: akinsbo@gmail.com
+  key: "{{ca_certs_dir}}/ca.key.pem"
+  cert: "{{ca_certs_dir}}/ca.cert.pem"
+  rootca_password: mary1000boye
+  extensions: v3_ca
+  csr_path: "{{ca_certs_dir}}/ca.key.pem"
+
 # glusterfs
 glusterfs_version: 4.1
 glusterfs:
@@ -40,6 +55,13 @@ kops_darwin_download_path: "https://github.com/kubernetes/kops/releases/download
 helm_version: "2.9.1"
 helm_download_path: https://storage.googleapis.com/kubernetes-helm/helm-v{{helm_version}}-linux-amd64.tar.gz
 helm_darwin_download_path: https://storage.googleapis.com/kubernetes-helm/helm-v{{helm_version}}-darwin-amd64.tar.gz
+helm_security_plugin_path: https://github.com/michelleN/helm-secure-tiller
+
+helm_tiller_namespace: dev
+helm_tiller_team: video_dev_team
+helm_tiller_team_sa: tiller-{{helm_tiller_team}}
+helm_tiller_namespace: tiller
+helm_deployment_path: "{{playbook_dir}}/roles/helm/tasks/files/tmp"
 
 # controller-user
 remote_controller_root_user: olaolu

@@ -1,0 +1,28 @@
+---
+- include_tasks: roles/tasks/setup.yml
+
+- name: Ensure directory exists for local self-signed TLS certs.
+  file:
+    path: "{{ca_certs_dir}}"
+    state: directory
+
+- name: Generate an OpenSSL private key.
+  openssl_privatekey:
+    path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}.privkey.pem"
+
+- name: Generate an OpenSSL CSR.
+  openssl_csr:
+    path: "{{ca_privkey_dir}}/{{openssl_module_cert_resource}}.csr"
+    privatekey_path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}.privkey.pem"
+    common_name: "{{openssl_module_cert_resource}}"
+
+- name: Generate a Self Signed OpenSSL certificate.
+  openssl_certificate:
+    path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}.key.pem"
+    privatekey_path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}.privkey.pem"
+    csr_path: "{{ca.csr_dir}}/{{openssl_module_cert_resource}}.csr"
+    provider: selfsigned
+
+########################################
+vars:
+  openssl_module_cert_resource: # e.g {{ansible_hostname}}, tiller, helm
