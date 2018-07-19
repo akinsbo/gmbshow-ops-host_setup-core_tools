@@ -7,4 +7,4 @@
   gather_facts: true
   
   roles:
-    - ci_cd
+    - jenkins

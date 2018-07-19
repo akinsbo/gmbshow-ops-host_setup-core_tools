@@ -21,7 +21,7 @@
 - name: "Insert group name for {{inventory_module_insert_group}} into host file"
   become: yes
   blockinfile:
-    path: "{{inventory_dir}}/hosts"
+    path: "{{inventory_to_use}}"
     state: present
     insertafter:  
     marker: "# {mark} ANSIBLE MANAGED BLOCK {{inventory_module_insert_group}}"

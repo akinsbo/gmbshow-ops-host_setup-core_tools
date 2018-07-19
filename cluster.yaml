@@ -30,4 +30,5 @@
     - k8s
     - role: inventory
       tags: ['inventory']
-    - ssl
+    - role: ssl
+      tags: ['inventory']

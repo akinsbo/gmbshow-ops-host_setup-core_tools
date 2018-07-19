@@ -214,7 +214,7 @@ iam:
     name: olaoluak
     groups: admin
 
-inventory_to_use: "{{inventory_dir}}/hosts"
+inventory_to_use: "{{playbook_dir}}/inventory/hosts"
 inventory_facts_path: "{{log_path}}/temp/facts"
 
 log:

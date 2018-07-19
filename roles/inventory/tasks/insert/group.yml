@@ -50,7 +50,7 @@
 - name: "Insert group name for {{bastion.name}} into host file"
   become: yes
   blockinfile:
-    path: "{{inventory_dir}}/hosts"
+    path: "{{inventory_to_use}}"
     state: present
     insertafter:  
     marker: "# {mark} ANSIBLE MANAGED BLOCK {{bastion.name}}"
@@ -76,7 +76,7 @@
 - name: Ensure group is inserted into inventory file
   become: yes
   blockinfile:
-    path: "{{inventory_dir}}/hosts"
+    path: "{{inventory_to_use}}"
     state: present
     insertafter: EOF
     marker: "# {mark} ANSIBLE MANAGED BLOCK dynamic_inventory.yml"
