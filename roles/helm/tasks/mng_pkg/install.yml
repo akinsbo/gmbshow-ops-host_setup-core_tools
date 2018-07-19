@@ -1,20 +1,35 @@
 ---
+- name: Set helm command
+  set_fact:
+    mysetfact_helm_init_cmd: "helm install \
+                              --name {{helm_module_pkg_name}} \
+                              {{helm_module_pkg_repo | default('stable')}}/{{helm_module_install_pkg}} \
+                              {% if helm_module_pkg_version is defined || helm_module_pkg_version != '' %}
+                              -- version {{helm_module_pkg_values_file}} \
+                              {% endif %}
+                              -- namespace {{helm_module_pkg_namespace | default('default')}} \
+                              {% if helm_module_pkg_values_file is defined || helm_module_pkg_values_file != '' %}
+                              -- file {{helm_module_pkg_values_file}} \
+                              {% endif %}
+                              {% if helm_module_pkg_settings is defined || helm_module_pkg_settings != '' %}
+                              --set {{helm_module_pkg_settings}} \
+                              {% endif %}
+                              --tls \
+                              --tls-cert helm.cert.pem \
+                              --tls-key helm.key.pem \
+                              --tls-ca-cert {{ca.cert}}"
 - name: | 
       Install package {{helm_module_install_pkg}}
       from {{helm_module_pkg_repo | default('stable')}} repo
       with settings {{helm_module_pkg_settings | default('')}}
-  command: >
-  "helm install 
-  --name {{helm_module_pkg_name}} {{helm_module_pkg_repo | default('stable')}}/{{helm_module_install_pkg}}
-  --set {{helm_module_pkg_settings | default('')}}
-  --tls 
-  --tls-cert helm.cert.pem 
-  --tls-key helm.key.pem
-  --tls-ca-cert {{ca.cert}}"
-  -- namespace {{helm_module_pkg_namespace | default('default')}}
+  command: "{{mysetfact_helm_init_cmd}}"
+
+
 ####################################################
 # vars:
 #     helm_module_pkg_name:
 #     helm_module_pkg_repo:
-#     helm_module_pkg_settings:
+#     helm_module_pkg_settings: #optional
 #     helm_module_pkg_namespace: # optional
+#     helm_module_pkg_values_file: #optional
+#     helm_module_pkg_version: # optional

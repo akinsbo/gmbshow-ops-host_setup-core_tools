@@ -27,7 +27,7 @@
                                 {% if cluster.bastion == True %}
                                 --bastion \
                                 --topology {{cluster.topology}} \
-                                --networking {{cluster.networking}}
+                                --networking {{cluster.networking}} \
                                  {% endif %}
                                 --out {{cluster.output_location}} \
                                 --target {{cluster.output_file_type}}"
