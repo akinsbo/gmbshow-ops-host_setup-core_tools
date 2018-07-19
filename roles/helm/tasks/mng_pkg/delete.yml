@@ -1,0 +1,12 @@
+---
+- name: Delete package {{helm_module_install_pkg}}
+  command: >
+  "helm delete 
+  --purge {{helm_module_pkg_name}}
+  --tls 
+  --tls-cert helm.cert.pem 
+  --tls-key helm.key.pem
+  --tls-ca-cert {{ca.cert}}"
+####################################################
+# vars:
+#   helm_module_pkg_delete_name:

@@ -1,0 +1,34 @@
+---
+- name: Ensure directory exists
+  file:
+    path: "{{role_path}}/files"
+    state: directory
+
+- name: Ensure Istio gateway file is generated
+  template:
+      dest: "{{role_path}}/files/istio_gateway.yml" 
+      src: "{{role_path}}/templates/istio_gateway.yml.j2" 
+
+- name: Ensure Istio gateway is created to manage mesh-peripheral ingress
+  command: istioctl create -f {{role_path}}/files/istio_gateway.yml
+
+- name: |
+  Get Ingress values
+  INGRESS_HOST
+  INGRESS_PORT
+  SECURE_INGRESS_PORT
+  command: "{{item}}"
+  with_items:
+    - kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.status.loadBalancer.ingress[0].ip}'
+    - kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="http")].port}'
+    - kubectl -n istio-system get service istio-ingressgateway -o jsonpath='{.spec.ports[?(@.name=="https")].port}'
+  register: myregistered_ingress_host_port
+
+- name: Get the gateway address
+  set_fact:
+    mysetfact_gateway_url: "{{myregistered_ingress_host_port.stdout.results[0]:myregistered_ingress_host_port.stdout.results[1]}}"
+
+- name: Check if url gives 200 status code
+  command: curl -o /dev/null -s -w "%{http_code}\n" http://{{mysetfact_gateway_url}}
+  register: myregistered_url_check
+  failed_when: myregistered_url_check != 200

@@ -134,7 +134,7 @@ route53:
     comment: The MaryBoye show
 
   record:
-    subDNS: k8s
+    subDNS: k8s # You can have multiple clusters defined by multiple subDNS
     type: A
     value: 127.0.0.1
 
