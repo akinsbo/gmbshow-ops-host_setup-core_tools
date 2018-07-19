@@ -2,3 +2,5 @@
 #  Run entire infrastructure
 - import_playbook: cluster.yaml
 - import_playbook: storage.yaml
+- import_playbook: network.yaml
+- import_playbook: secure.yaml
