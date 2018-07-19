@@ -122,6 +122,10 @@ data
 
 .tags*
 
+# ssl
+letsencrypt
+letsencrypt/live
+
 # Vagrant
 .vagrant
 vagrant
