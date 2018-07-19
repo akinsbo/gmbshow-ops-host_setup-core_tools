@@ -1,10 +1,4 @@
-- include_tasks: roles/tasks/generate_cert.yml
-  vars:
-    openssl_module_cert: "{{item}}"
-  with_items:
-    - tiller
-    - helm
-
+---
 - name: Set Helm init command 
   set_fact:
     mysetfact_helm_init_cmd: "helm init \
@@ -25,4 +19,14 @@
     --tls-cert helm.cert.pem 
     --tls-key helm.key.pem
     --tls-ca-cert {{ca.cert}}
+
+
+- name: Add incubator Helm repo
+  command: >
+    helm repo add incubator {{helm_incubator_repo}}
+    --tls 
+    --tls-cert helm.cert.pem 
+    --tls-key helm.key.pem
+    --tls-ca-cert {{ca.cert}}
+
 

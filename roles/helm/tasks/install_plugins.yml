@@ -1,3 +1,0 @@
----
-- name: Install helm security plugin
-  command: helm plugin install {{helm_security_plugin_path}}

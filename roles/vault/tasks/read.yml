@@ -1,0 +1,5 @@
+---
+- name: Read from -format json
+  command: >
+    vault read -format json {{vault.database.path}}/creds/{{vault.database.role}}
+  register: myregistered_vault_read

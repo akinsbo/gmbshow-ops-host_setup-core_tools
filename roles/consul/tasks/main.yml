@@ -1,0 +1,2 @@
+---
+- include_tasks: roles/consul/tasks/install.yml

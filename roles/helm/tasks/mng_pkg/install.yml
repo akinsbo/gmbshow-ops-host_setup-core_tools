@@ -1,0 +1,20 @@
+---
+- name: | 
+      Install package {{helm_module_install_pkg}}
+      from {{helm_module_pkg_repo | default('stable')}} repo
+      with settings {{helm_module_pkg_settings | default('')}}
+  command: >
+  "helm install 
+  --name {{helm_module_pkg_name}} {{helm_module_pkg_repo | default('stable')}}/{{helm_module_install_pkg}}
+  --set {{helm_module_pkg_settings | default('')}}
+  --tls 
+  --tls-cert helm.cert.pem 
+  --tls-key helm.key.pem
+  --tls-ca-cert {{ca.cert}}"
+  -- namespace {{helm_module_pkg_namespace | default('default')}}
+####################################################
+# vars:
+#     helm_module_pkg_name:
+#     helm_module_pkg_repo:
+#     helm_module_pkg_settings:
+#     helm_module_pkg_namespace: # optional

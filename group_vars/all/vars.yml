@@ -33,6 +33,11 @@ ca:
   extensions: v3_ca
   csr_path: "{{ca_certs_dir}}/ca.key.pem"
 
+# consul
+consul_version: 1.2.1
+consul_download_path: "https://releases.hashicorp.com/consul/{{consul_version}}/consul_{{consul_version}}_linux_amd64.zip"
+consul_darwin_download_path: "https://releases.hashicorp.com/vault/0.10.3/vault_0.10.3_darwin_amd64.zip"
+
 # glusterfs
 glusterfs_version: 4.1
 glusterfs:
@@ -56,12 +61,18 @@ helm_version: "2.9.1"
 helm_download_path: https://storage.googleapis.com/kubernetes-helm/helm-v{{helm_version}}-linux-amd64.tar.gz
 helm_darwin_download_path: https://storage.googleapis.com/kubernetes-helm/helm-v{{helm_version}}-darwin-amd64.tar.gz
 helm_security_plugin_path: https://github.com/michelleN/helm-secure-tiller
+helm_incubator_repo: http://storage.googleapis.com/kubernetes-charts-incubator
 
 helm_tiller_namespace: dev
 helm_tiller_team: video_dev_team
 helm_tiller_team_sa: tiller-{{helm_tiller_team}}
 helm_tiller_namespace: tiller
 helm_deployment_path: "{{playbook_dir}}/roles/helm/tasks/files/tmp"
+
+# vault
+vault_version: 0.10.3
+vault_download_path: "https://releases.hashicorp.com/vault/{{vault_version}}/vault_{{vault_version}}_linux_amd64.zip"
+vault_darwin_download_path: "https://releases.hashicorp.com/vault/{{vault_version}}/vault_{{vault_version}}_darwin_amd64.zip"
 
 # controller-user
 remote_controller_root_user: olaolu
@@ -247,3 +258,17 @@ text:
     blue: "\e[34m"
     bluebg: "\e[44m"
     redbg: "\e[41m"
+
+vault: 
+  database:
+    name: postgres
+    path: database
+    type: postgres
+    role: postgres-role
+    plugin: postgresql-database-plugin
+    connection_url: postgresql://root:root@intended-moth-postgresql.default.svc.cluster.local:5342/rails_development?sslmode=disable
+    default_ttl: "1h"
+    max_ttl: "24h"
+
+vault_creds: "{{vault.database.path}}/creds/{{vault.database.role}}"
+vault_policy: "{{vault.database.name}}-policy"

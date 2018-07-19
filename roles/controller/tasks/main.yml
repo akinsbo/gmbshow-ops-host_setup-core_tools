@@ -103,7 +103,7 @@
       - { python_bin_and_virtenv_to_Use: python3, package: awscli}
       - { python_bin_and_virtenv_to_Use: python3, package: ansible}
     when: 
-      - "{{  pyversion.results[0].stdout | regex_replace('Python\\s(\\d+)\\.(\\d+)\\.(\\d+)', '\\1.\\2') | float >= 3.5}}"
+      - "{{pyversion.results[0].stdout | regex_replace('Python\\s(\\d+)\\.(\\d+)\\.(\\d+)', '\\1.\\2') | float >= 3.5}}"
     tags:
       - virtualenv
       - ansible

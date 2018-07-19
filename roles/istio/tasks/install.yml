@@ -1,0 +1,7 @@
+---
+# helm install install/kubernetes/helm/istio --name istio --namespace istio-system
+- include_tasks: roles/tasks/helm/mng_pkg/install.yml
+vars:
+    helm_module_install_pkg: istio
+    helm_module_pkg_repo: install/kubernetes/helm/
+    helm_module_pkg_namespace: istio-system

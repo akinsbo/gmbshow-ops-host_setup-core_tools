@@ -8,7 +8,7 @@
     log: yes
   with_items:
     - 6379
-    - 16379 # for if redis is used cluster mode
+    - 16379 # for if redis is used in cluster mode
     - 26379 # for Sentinel
   tags:
     - ufw

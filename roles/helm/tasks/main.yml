@@ -1,7 +1,6 @@
 ---
-# tasks file for helm
-- include_tasks: roles/helm/tasks/install.yml
+- include_tasks: roles/helm/tasks/setup/install.yml
 
-- include_tasks: roles/helm/tasks/secure.yml
+- include_tasks: roles/helm/tasks/setup/secure.yml
 
-- include_tasks: roles/helm/tasks/initialize.yml
+- include_tasks: roles/helm/tasks/setup/initialize.yml

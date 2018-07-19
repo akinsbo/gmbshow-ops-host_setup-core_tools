@@ -1,0 +1,25 @@
+---
+# tasks to install vault
+
+#  Ensure Vault is installed on machine
+- include_tasks: roles/common/tasks/download_pkg.yml
+  vars:
+    module_linux_url: "{{vault_download_path}}"
+    module_darwin_url: "{{vault_darwin_download_path}}"
+
+- name: install vault auto-complete
+  command: vault -autocomplete-install
+
+# install vault into avi_cluster
+- include_tasks: roles/helm/tasks/mng_pkg/install.yml
+  vars:
+    helm_module_install_pkg: vault
+    helm_module_pkg_repo: incubator
+    helm_module_pkg_settings: vault.dev=true --set vault.config.storage.consul.address="consul-consul:8500",vault.config.storage.consul.path="vault"
+
+# install vault into avi_cluster
+- include_tasks: roles/helm/tasks/mng_pkg/install.yml
+  vars:
+    helm_module_install_pkg: postgresql
+    helm_module_pkg_repo: stable
+    helm_module_pkg_settings: postgresUser=root,postgresPassword=root,postgresDatabase=rails_development

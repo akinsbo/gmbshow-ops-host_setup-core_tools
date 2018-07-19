@@ -1,0 +1,6 @@
+---
+- name: Revoke lease
+  command: vault lease revoke {{vault_module_lease_revoke_id}}
+#####################################
+# vars:
+#   vault_module_lease_revoke_id: 
