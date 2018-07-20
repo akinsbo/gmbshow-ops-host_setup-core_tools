@@ -4,14 +4,15 @@
 
 This playbook:
 
-* Creates a RBAC enabled kubernetes cluster with bastion on AWS(using Kops)
-* Generates a terraform file which it updates for HA bastion and additional ebs volumes for glusterfs
+* Generates a RBAC enabled kubernetes cluster config with bastion on AWS(using Kops)
+* Generates a Terraform file which Ansible updates for HA bastion, adds additional ebs volumes for glusterfs, generates a tfstate file used to spin the kubernetes cluster.
 * Generates SSL certificates with Letsencrypt for your domain name and subdomain names
-* Creates Glusterfs distributed storage for true StatefulSets development
+* Creates Glusterfs distributed storage for true StatefulSets development for your database of choice.
 * Generates OpenSSL self-signed certificates to manage Helm
 * Provisions Helm secured with a service account and tls
 * Provisions Istio service mesh on the gluster storage
-* Provisions HashiVault (with POSTGRESQL) to manage secrets
+* Provisions and enables Kubernetes Auth in HashiVault (with POSTGRESQL) to manage service accounts
+* Provides automation of HashiVault lease revoke and renew, write policy, read, write and get vault tokens
 * Provisions Jenkins on the cluster on the gluster storage on ssl encrypted endpoint
 * Provisions Kubernetes Dashboard and other addons (Including Heapster, infludb-grafana,  prometheus-operator)
 
@@ -72,7 +73,11 @@ To create the hyperconverged glusterfs distributed storage, run
 ansible-playbook storage.yaml
 ```
 
+Remember to adjust the gluster ebs volume (named cluster_accessories.spare_device1) in group_vars/all/vars.yml to your desired size.
+
 ### Create Service Mesh
+
+To create istio service mesh, run:
 
 ```sh
 ansible-playbook network.yaml
@@ -124,7 +129,7 @@ It does the following:
 
 ### Install Ansible, Kops and dependencies
 
-To install virtual environments for Python2 an Python3, ansible, redis cache(for ansible), Kubernetes, kops and their dependencies in both *Debian 8* and *Ubuntu 16* or *MacOS*:
+To install virtual environments for Python2 and Python3, ansible, redis cache(for ansible), Kubernetes, kops and their dependencies in both *Debian 8* and *Ubuntu 16* or *MacOS*:
 
 ```sh
 ansible-playbook controllers.yaml
