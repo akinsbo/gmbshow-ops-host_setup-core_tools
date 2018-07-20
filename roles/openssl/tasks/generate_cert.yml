@@ -1,7 +1,5 @@
 ---
 - block:
-  - include_tasks: roles/openssl/tasks/setup.yml
-
   - name: Ensure directory exists for local self-signed TLS certs.
     file:
       path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}"
