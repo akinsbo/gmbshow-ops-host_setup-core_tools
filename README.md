@@ -5,9 +5,9 @@
 This playbook:
 
 * Creates a RBAC enabled kubernetes cluster with bastion on AWS(using Kops)
-* Generates a terraform file which it updates for HA bastion and additional ebs volumes for gluster
-* Generates SSL certificates with letsencrypt for your domain name and subdomain names
-* Creates Gluster distributed storage for true StatefulSets development
+* Generates a terraform file which it updates for HA bastion and additional ebs volumes for glusterfs
+* Generates SSL certificates with Letsencrypt for your domain name and subdomain names
+* Creates Glusterfs distributed storage for true StatefulSets development
 * Generates OpenSSL self-signed certificates to manage Helm
 * Provisions Helm secured with a service account and tls
 * Provisions Istio service mesh on the gluster storage
@@ -34,44 +34,6 @@ To run the entire infrastructure play, use:
 
 ```sh
 ansible-playbook site.yml
-```
-
-### Bootstrap a Linux or Debian OS
-
-```sh
-ansible-playbook bootstrap_os.yaml
-```
-
-It does the following:
-
-* Root signin
-* ------------create-user----------------------
-
-* Create new user
-
-** If Debian8, install sudo
-
-* Root privileges: Add user to sudo group
-
-* ------------setup ssh-key-------------------
-
-* Add Public Key Authentication
-
-** Generate key pair
-** Copy the public key
-
-* Disable Password Authentication
-
-* Test Log in
-* ------------firewall-------------------
-* Setup a Basic firewall
-
-### Install virtual env, ansible, redis cache(for ansible), Kubernetes, kops and their dependencies
-
-Install the latest version of kubectl on Linux or MacOS:
-
-```sh
-ansible-playbook controllers.yaml
 ```
 
 ### Create Cluster
@@ -102,7 +64,7 @@ To create cluster from terraform file, run
 ansible-playbook cluster.yaml --tags="terraform-create"
 ```
 
-### Distributed Storage
+### Create Distributed Storage
 
 To create the hyperconverged glusterfs distributed storage, run
 
@@ -110,13 +72,13 @@ To create the hyperconverged glusterfs distributed storage, run
 ansible-playbook storage.yaml
 ```
 
-### Service Mesh
+### Create Service Mesh
 
 ```sh
 ansible-playbook network.yaml
 ```
 
-### Vault
+### Create Vault
 
 ```sh
 ansible-playbook security.yaml
@@ -126,6 +88,46 @@ ansible-playbook security.yaml
 
 ```sh
 ansible-playbook ci_cd.yaml
+```
+
+### Bootstrap a secure Linux or Debian OS
+
+Cleanly bootstrap a secure Linux or Deian OS
+
+```sh
+ansible-playbook bootstrap_os.yaml
+```
+
+It does the following:
+
+* Root signing
+* ------------create-user----------------------
+
+* Create new user
+
+** If Debian8, install sudo
+
+* Root privileges: Add user to sudo group
+
+* ------------setup ssh-key-------------------
+
+* Add Public Key Authentication
+
+** Generate key pair
+** Copy the public key
+
+* Disable Password Authentication
+
+* Test Log in
+* ------------firewall-------------------
+* Setup a Basic firewall
+
+### Install Ansible, Kops and dependencies
+
+To install virtual environments for Python2 an Python3, ansible, redis cache(for ansible), Kubernetes, kops and their dependencies in both *Debian 8* and *Ubuntu 16* or *MacOS*:
+
+```sh
+ansible-playbook controllers.yaml
 ```
 
 ### Autogeneration of AWS credentials for profile
