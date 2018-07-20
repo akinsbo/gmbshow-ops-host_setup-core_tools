@@ -20,7 +20,7 @@
         - avail
         - create
         
-    # - name: Confirm how many AZ to spin nodes in
+    # - name: Prompt to confirm how many AZ to spin nodes in
     #   pause:
     #     prompt: "There are {{mysetfact_num_aws_avail_zone}} zones in this region, namely: {{mysetfact_aws_avail_zone}}. Set vars for zones to deploy in else [ALL] zones would be used?" 
 
