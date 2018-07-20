@@ -1,1 +1,0 @@
-ssh -i /home/olaolu/ec2_keys/eu-west-1/mbshow_testi.pem -o IdentitiesOnly=yes -o ProxyCommand='ssh -i  /home/olaolu/ec2_keys/eu-west-1/mbshow_testi.pem -W %h:%p admin@bastion.k8s.maryboye.org' admin@172.20.70.130

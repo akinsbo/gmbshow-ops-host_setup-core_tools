@@ -1,0 +1,8 @@
+# Sample vault.yml
+# Fill in and encrypt with ansible-vault. You copy into adjacent vars.yml and delete or retain it.
+# my_temp_password: #
+# vault:
+#   role:
+#     name: #
+#     password: #
+#     expiration: #
