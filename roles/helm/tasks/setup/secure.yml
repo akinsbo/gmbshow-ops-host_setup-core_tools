@@ -16,12 +16,15 @@
   - name: "Ensure tiller service account is deployed"
     command: "kubectl apply -f {{helm_deployment_path}}/tiller_namespace_sa.yaml"
 
-# setup tls
-- include_tasks: roles/openssl/tasks/generate_cert.yml
-  vars:
-    openssl_module_cert_resource: "{{resource_item}}"
-  with_items:
-    - tiller
-    - helm
-  loop_control:
-    loop_var: resource_item
+- name: Ensure tls certs and keys are created
+  block:
+  - include_tasks: roles/openssl/tasks/generate_ca.yml
+
+  - include_tasks: roles/openssl/tasks/generate_cert.yml
+    vars:
+      openssl_module_cert_resource: "{{helm_item}}"
+    with_items:
+      - tiller
+      - helm
+    loop_control:
+      loop_var: helm_item

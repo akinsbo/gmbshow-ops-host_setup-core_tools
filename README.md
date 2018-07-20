@@ -15,6 +15,9 @@ This playbook:
 * Provides automation of HashiVault lease revoke and renew, write policy, read, write and get vault tokens
 * Provisions Jenkins on the cluster on the gluster storage on ssl encrypted endpoint
 * Provisions Kubernetes Dashboard and other addons (Including Heapster, infludb-grafana,  prometheus-operator)
+* Also:
+  * Bootstraps a secure Linux or Debian OS
+  * Turns a localhost into a controller by install Ansible, Kops and their dependencies
 
 ### Autosearch and use Availability Zones
 
@@ -119,7 +122,7 @@ It does the following:
   * Setup openssh rules
   * Setup a Basic ufw firewall
 
-### Install Ansible, Kops and dependencies
+### Create a controller (Install Ansible, Kops and dependencies)
 
 To install virtual environments for Python2 and Python3, ansible, redis cache(for ansible), Kubernetes, kops and their dependencies in both *Debian 8* and *Ubuntu 16* or *MacOS*:
 
@@ -164,3 +167,48 @@ The following are ansible preview modules used:
     - blockinfile Module
 
 Perform ```grep -r <module>``` to find them.sign
+
+## Security Group Rules of Cluster
+
+| master-in                                         |
+|---------------------------------------------------|
+| all-master-to-master(00)                          |
+| bastion-to-master-ssh(22,22)                      |
+| https-elb-to-master(443,443)                      |
+| node-to-master-protocol-ipip(0, 65535)@protocol:4 |
+| node-to-master-tcp-1-2379(1, 2379)                |
+| node-to-master-tcp-2382-4001                      |
+| node-to-master-tcp-4003-65535                     |
+| node-to-master-udp-1-65535                        |
+
+| master-out        |
+|-------------------|
+| master-egress(00) |
+
+| node-in                    |
+|----------------------------|
+| all-master-to-node(00)     |
+| all-node-to-node(00)       |
+| bastion-to-node-ssh(22,22) |
+
+| node-out        |
+|-----------------|
+| node-egress(00) |
+
+| cluster-in                        |
+|-----------------------------------|
+| https-api-elb-0-0-0-0--0(443,443) |
+
+| cluster-out                        |
+|------------------------------------|
+| api-elb-egress(00): Cluster to elb |
+
+| bastion-in                                                                             |
+|----------------------------------------------------------------------------------------|
+| ssh-external-to-bastion-elb-0-0-0-0--0(22,22)(i.e from my engine to bastion's own elb) |
+| ssh-bastion-elb-to-bastion(22,22)                                                      |
+
+| bastion-out            |
+|------------------------|
+| bastion-egress(00)     |
+| bastion-elb-egress(00) |
