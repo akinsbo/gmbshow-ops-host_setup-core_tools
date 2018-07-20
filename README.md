@@ -72,7 +72,11 @@ To create the hyperconverged glusterfs distributed storage, run
 ansible-playbook storage.yaml
 ```
 
+Remember to adjust the gluster ebs volume (named cluster_accessories.spare_device1) in group_vars/all/vars.yml to your desired size.
+
 ### Create Service Mesh
+
+To create istio service mesh, run:
 
 ```sh
 ansible-playbook network.yaml
@@ -124,7 +128,7 @@ It does the following:
 
 ### Install Ansible, Kops and dependencies
 
-To install virtual environments for Python2 an Python3, ansible, redis cache(for ansible), Kubernetes, kops and their dependencies in both *Debian 8* and *Ubuntu 16* or *MacOS*:
+To install virtual environments for Python2 and Python3, ansible, redis cache(for ansible), Kubernetes, kops and their dependencies in both *Debian 8* and *Ubuntu 16* or *MacOS*:
 
 ```sh
 ansible-playbook controllers.yaml
