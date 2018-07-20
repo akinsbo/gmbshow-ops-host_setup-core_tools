@@ -1,6 +1,4 @@
 ---
-# tasks to setup consul
-
 #  Ensure Consul is installed
 - include_tasks: roles/common/tasks/download_pkg.yml
   vars:

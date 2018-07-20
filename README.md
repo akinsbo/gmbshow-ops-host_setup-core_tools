@@ -1,7 +1,34 @@
 # Core-Tools Setup
 
-Update the group_vars/all/vars.yml with your route53DNS and subdomains. 
-Also, update other variables as necessary.
+## Features
+
+This playbook:
+
+* Creates a RBAC enabled kubernetes cluster with bastion on AWS(using Kops)
+* Generates a terraform file which it updates for HA bastion and additional ebs volumes for gluster
+* Generates SSL certificates with letsencrypt for your domain name and subdomain names
+* Creates Gluster distributed storage for true StatefulSets development
+* Generates OpenSSL self-signed certificates to manage Helm
+* Provisions Helm secured with a service account and tls
+* Provisions Istio service mesh on the gluster storage
+* Provisions HashiVault (with POSTGRESQL) to manage secrets
+* Provisions Jenkins on the cluster on the gluster storage on ssl encrypted endpoint
+* Provisions Kubernetes Dashboard and other addons (Including Heapster, infludb-grafana,  prometheus-operator)
+
+### Autosearch and use Availability Zones
+
+If you specify a 4-node cluster while working in a region with 5 AZ thenthe playbook automatically creates a node in AZs:
+
+    - regiona
+    - regionb
+    - regionc
+    - regiond
+
+## Usage
+
+Update the group_vars/all/vars.yml with your route53DNS and subdomains.
+Also, update **group_vars/all/vault.yml** and encrypt with ansible-vault.
+Update other variables as necessary.
 
 To run the entire infrastructure play, use:
 
@@ -9,29 +36,61 @@ To run the entire infrastructure play, use:
 ansible-playbook site.yml
 ```
 
-## Install Kubernetes
+### Bootstrap a Linux or Debian OS
+
+```sh
+ansible-playbook bootstrap_os.yaml
+```
+
+It does the following:
+
+* Root signin
+* ------------create-user----------------------
+
+* Create new user
+
+** If Debian8, install sudo
+
+* Root privileges: Add user to sudo group
+
+* ------------setup ssh-key-------------------
+
+* Add Public Key Authentication
+
+** Generate key pair
+** Copy the public key
+
+* Disable Password Authentication
+
+* Test Log in
+* ------------firewall-------------------
+* Setup a Basic firewall
+
+### Install virtual env, ansible, redis cache(for ansible), Kubernetes, kops and their dependencies
 
 Install the latest version of kubectl on Linux or MacOS:
 
 ```sh
-ansible-playbook cluster.yaml
+ansible-playbook controllers.yaml
 ```
+
+### Create Cluster
 
 You may need either --ask-become-pass or ansible_become_pass
 
-## To create cluster infrastructure, run
+To create cluster infrastructure (with HA bastion), run
 
 ```sh
 ansible-playbook cluster.yaml --tags="create"
 ```
 
-## To destroy cluster infrastructure, run
+To destroy cluster infrastructure, run
 
 ```sh
 ansible-playbook cluster.yaml --tags="destroy"
 ```
 
-## To perform checks on cluster
+To perform checks on cluster
 
 ```sh
 ansible-playbook cluster.yaml --tags="cluster-checks"
@@ -40,40 +99,36 @@ ansible-playbook cluster.yaml --tags="cluster-checks"
 To create cluster from terraform file, run
 
 ```sh
-ansible-playbook -i hosts cluster.yaml --tags="terraform-create"
+ansible-playbook cluster.yaml --tags="terraform-create"
 ```
+
+### Distributed Storage
 
 To create the hyperconverged glusterfs distributed storage, run
 
 ```sh
-ansible-playbook -i hosts cluster.yaml --tags="gluster-create
+ansible-playbook storage.yaml
 ```
 
-### Maintenance
+### Service Mesh
 
-#### Ansible Preview Modules used
+```sh
+ansible-playbook network.yaml
+```
 
-Periodically update preview modules until at least stableinterface.
-The preview modules may also be downloaded into a library directory.
-The following are ansible preview modules used:
+### Vault
 
-    - Modules: apt-key & apt_repository
-    - lineinfile Module
-    - blockinfile Module
+```sh
+ansible-playbook security.yaml
+```
 
-Perform ```grep -r <module>``` to find them.
+### Jenkins
 
-### Features
+```sh
+ansible-playbook ci_cd.yaml
+```
 
-#### Autosearch and use Availability Zones
-
-If you specify a 4-node cluster while working in a region with 5 AZ thenthe playbook automatically creates a node in AZs:
-    - regiona
-    - regionb
-    - regionc
-    - regiond
-
-#### Autogeneration of AWS credentials for profile
+### Autogeneration of AWS credentials for profile
 
 If ~/.aws/credentials, ~/.boto.profile or ~/boto.cfg do not exist, the current aws config
 is persisted into the first file in your group_var-specified order of precedence.
@@ -96,3 +151,17 @@ They can now use kubernetes on the cluster e.g.
 ```sh
 kubectl get nodes
 ```
+
+### Maintenance
+
+#### Ansible Preview Modules used
+
+Periodically update preview modules until at least stableinterface.
+The preview modules may also be downloaded into a library directory.
+The following are ansible preview modules used:
+
+    - Modules: apt-key & apt_repository
+    - lineinfile Module
+    - blockinfile Module
+
+Perform ```grep -r <module>``` to find them.
