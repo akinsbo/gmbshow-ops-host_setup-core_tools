@@ -1,0 +1,21 @@
+---
+- name:  Run terraform init
+  command: "terraform init"
+  args:
+    chdir: "{{ role_path }}/files"
+  tags:
+    - terraform
+  
+- name: Ensure plan location var is set
+  set_fact:
+    mysetfact_terraform_saved_plan: "{{role_path}}/files/terraform_saved_plan"
+
+- name: Run terraform plan
+  command: "terraform plan -out={{mysetfact_terraform_saved_plan}}"
+  args:
+    chdir: "{{role_path}}/files"
+  environment:
+    TF_LOG: Trace
+    TF_LOG_PATH: "{{terraform_log_path}}"
+  tags:
+    - terraform

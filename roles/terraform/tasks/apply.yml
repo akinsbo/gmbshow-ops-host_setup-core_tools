@@ -1,0 +1,5 @@
+---
+- name: Apply terraform plan
+  command: "terraform apply {{mysetfact_terraform_saved_plan}}"
+  args:
+    chdir: "{{ role_path }}/files"

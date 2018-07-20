@@ -1,0 +1,23 @@
+---
+#! No 'become:' placed in this file, so user does not mistakenly 
+#! change owner of sensive directories like /etc for instance,
+#! to local_ansible_user (especially since recurse is included)
+- name: Check if directory exists
+  stat: 
+    path: "{{ common_dir_module_path | dirname}}"
+  register: myregistered_dir
+    
+- name: Ensure directory is created
+  file:
+    path: "{{ common_dir_module_path | dirname}}"
+    state: directory
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
+    mode: "{{ common_dir_mode | default(0775)}}"
+    recurse: yes
+  when: myregistered_dir.stat.exists == false
+
+################################
+# vars:
+  # common_dir_module_path:
+  # common_dir_mode: #optional

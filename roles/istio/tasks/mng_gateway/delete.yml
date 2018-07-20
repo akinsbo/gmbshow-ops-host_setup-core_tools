@@ -1,0 +1,11 @@
+---
+- name: Ensure Istio gateway file is generated
+  template:
+      dest: "{{role_path}}/files/cleanup.sh.yml" 
+      src: "{{role_path}}/templates/cleanup.sh.j2" 
+
+- name: Ensure gateway is deleted
+  command: bash {{role_path}}/files/cleanup.sh.j2
+#################################################
+# vars:
+#   istio_module_delete_yaml:

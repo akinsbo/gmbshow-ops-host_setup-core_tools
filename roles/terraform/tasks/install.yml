@@ -2,7 +2,7 @@
 ##############
 # Install Terraform
 ##############
-- include: roles/common/tasks/download_pkg.yml
+- include_tasks: roles/common/tasks/download_pkg.yml
   vars:
     module_package: terraform
     module_darwin_url: "{{ terraform_darwin_download_path }}"

@@ -1,0 +1,20 @@
+---
+- name: Ensure certbot is installed (certbot depends on awscli) 
+  pip:
+    name: certbot
+
+- name: Ensure certbot has proper permissions
+  file:
+    path: "{{role_path}}/files/certbot-route53.sh"
+    mode: "u+x,g+x,o+x"
+
+- name: Ensure letsencrypt certificate is generated
+  shell: >
+    bash certbot-route53.sh
+    --agree-tos
+    --manual-public-ip-logging-ok
+    --domains api.{{route53.zone.DNS}} --domains www.{{route53.zone.DNS}}
+    --email akinsbo@gmail.com
+  args:
+    chdir: "{{role_path}}/files"
+    creates: "{{role_path}}/files/letsencrypt/live"

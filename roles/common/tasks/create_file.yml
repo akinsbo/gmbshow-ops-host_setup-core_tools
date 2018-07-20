@@ -1,0 +1,31 @@
+---
+#  Ensure directory exists
+- name: Check if file exists
+  stat: 
+    path: "{{ common_file_module_path}}"
+  register: myregistered_file
+
+- name: Create file
+  block:
+  - include_tasks: roles/common/tasks/create_dir.yml
+    vars:
+      common_dir_module_path: "{{common_file_module_path}}"
+
+  - name: Ensure file exists
+    become: "{{common_file_module_become | default('no') | bool}}"
+    copy:
+      content: "{{common_file_content | default('')}}"
+      dest: "{{common_file_module_path}}"
+      force: no
+      owner: "{{local_ansible_user}}"
+      group: "{{local_ansible_group}}"
+      backup: yes
+      mode: 0775
+  when: myregistered_file.stat.exists == false
+
+##############################################
+# vars:
+#   common_file_module_become: # optional
+#   common_file_module_path: 
+#   common_file_mode: # optional
+#   common_file_content: # optional

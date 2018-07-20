@@ -1,0 +1,6 @@
+---
+- name: Renew lease
+  command: vault lease renew {{vault_module_lease_renew_id}}
+#####################################
+# vars:
+#   vault_module_lease_renew_id: 

@@ -1,0 +1,26 @@
+{
+  "clusters": [
+    {
+      "nodes": [
+        {% for machine in groups[node.inventory_group] %}
+        {
+          "node": {
+            "hostnames": {
+              "manage": [
+                "{{ hostvars[machine]['ansible_fqdn'] }}"
+              ],
+              "storage": [
+                "{{ hostvars[machine]['ansible_default_ipv4']['address'] }}"
+              ]
+            },
+            "zone": 1
+          },
+          "devices": [
+            "{{cluster_accessories.spare_device1.device_fullname}}"
+          ]
+        }{% if not loop.last %},{% endif %}
+        {% endfor %}
+      ]
+    }
+  ]
+}

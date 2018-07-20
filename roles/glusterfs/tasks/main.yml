@@ -1,0 +1,17 @@
+---
+# - name: Update all packages to the latest version
+#   become: yes
+#   apt:
+#     upgrade: safe
+
+#  Install gluster-server in node group using ansible command
+- include_tasks: roles/glusterfs/tasks/install.yml
+  tags: 
+    - install-gluster
+
+- include_tasks: roles/glusterfs/tasks/deploy.yml
+
+#  Other setup
+#  Create bricks
+
+# start gluster daemon

@@ -1,0 +1,6 @@
+---
+#  kubeconfig generated to  ~/.kube/config
+- name: Ensure AWS cluster k8s config is created for cluster
+  command: "kops export kubecfg --name {{ cluster.name }}
+                                 --state={{state_store}}"
+                             

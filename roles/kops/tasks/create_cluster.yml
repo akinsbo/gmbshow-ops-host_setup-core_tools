@@ -1,33 +1,46 @@
 ---
 # set aws_avail_zone variable (for use in kops-create zone and master-zone args)
 
+- name: Ensure public and private keys have correct permissions
+  file:
+    path: "{{item}}"
+    mode: 0400
+  with_items:
+    - "{{cluster.ssh_private_key}}"
+    - "{{cluster.ssh_public_key}}"
+
 - set_fact:
     mysetfact_create_command: "kops create cluster {{ cluster.name }} \
                                 --cloud aws \
-                                --ssh-public-key {{ec2_keys_dir}}/{{ cluster.region }}/{{ ec2_key_name }}.pub \
-                                --master-count {{cluster.num_of_master}} \
-                                --node-count {{ cluster.num_of_nodes }} \
+                                --ssh-public-key {{cluster.ssh_public_key}} \
+                                --image {{cluster.ami}} \
+                                --master-count {{cluster.master_count}} \
+                                --node-count {{ cluster.node_count }} \
                                 --zones {{ cluster.zones | default(mysetfact_aws_avail_zone, true) }} \
                                 --master-zones {{ cluster.master_zones | default(mysetfact_aws_avail_zone, true) }} \
                                 --node-size {{ cluster.ec2_node_type }} \
                                 --master-size {{ cluster.ec2_master_type }} \
+                                --master-volume-size {{cluster.master_vol_size | default(64)}} \
+                                --node-volume-size {{cluster.node_vol_size | default(128)}}  \
                                 --state {{ state_store }} \
                                 --cloud-labels 'Team=Dev,Owner={{iam.user.name}}' \
                                 {% if cluster.bastion == True %}
                                 --bastion \
                                 --topology {{cluster.topology}} \
-                                --networking {{cluster.networking}}
+                                --networking {{cluster.networking}} \
                                  {% endif %}
                                 --out {{cluster.output_location}} \
                                 --target {{cluster.output_file_type}}"
-
+                                # TODO: Add the following
+                                # --admin-access {{cluster.restricted_API_CIDR}}
+                                # --ssh-access {{cluster.restricted_SSH_CIDR}}                              
 
 - block:
     - name: "Build cluster configuration in zone {{ mysetfact_aws_avail_zone }}"
       command: "{{ mysetfact_create_command }}"
-    # register: myregistered_cluster_cmd
+
   rescue:
-    - include: delete_cluster.yml
+    - include_tasks: delete_cluster.yml
     
     - name: "Try to create the cluster again"
       command: "{{ mysetfact_create_command }}"

@@ -1,0 +1,19 @@
+---
+# create credentials profile if not created
+- include_tasks: roles/aws/tasks/mng_credentials/create_profile.yml
+  tags:
+    - gluster-create
+
+- name: Add the aws profile
+  blockinfile:
+    path: roles/terraform/files/kubernetes.tf
+    insertafter: 'provider "aws" {'
+    marker: "##### {mark} ANSIBLE MANAGED BLOCK (CREDENTIAL PROFILE PROVISION)####"
+    backup: yes
+    content: |2 # Apply 2 spaces before text 
+        shared_credentials_file = "{{aws.credentials.file_precedence[0]}}"
+        profile = "{{aws.credentials.profile.name}}"
+        version = "~> {{terraform_aws_provider_version}}"
+  tags:
+    - test_task
+    - gluster-create

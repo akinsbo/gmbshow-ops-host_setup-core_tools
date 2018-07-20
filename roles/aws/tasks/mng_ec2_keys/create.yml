@@ -47,3 +47,9 @@
           {{module_keys_dir}}/{{module_region}}/{{module_key_name}}.pem \
           > {{module_keys_dir}}/{{module_region}}/{{module_key_name}}.pub"
   when: '"myregistered_ec2_keypair.changed" or "myregistered_pub_file.stat.exists == false"'
+
+
+- name: Ensure permissions are set on public key file
+  file:
+    path: "{{module_keys_dir}}/{{module_region}}/{{module_key_name}}.pub"
+    mode: 0400

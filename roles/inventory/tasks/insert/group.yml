@@ -1,0 +1,95 @@
+---
+# create credentials profile if not created
+- include_tasks: roles/aws/tasks/mng_credentials/create_profile.yml
+  run_once: true
+  
+# Ec2.ini is already updated 
+# - name: Update ec2.ini
+#   block:
+#   - include_tasks: roles/common/tasks/mng_config_file/edit.yml
+#     vars:
+#       common_module_config_file: "{{ec2_py_path | dir}}/ec2.ini"
+#       common_module_config_edit_become:
+#       common_module_config_edit_section: ec2
+#       common_module_config_override: yes
+#       common_module_config_edit_settings:
+#         - {regions: region, value: "{{cluster.region}}"}
+#         - {regions: elasticache, value: "{{ec2ini.elasticache}}"}
+#         - {regions: rds, value: "{{ec2ini.rds}}"}
+#         - {option: destination_variable, value: public_dns_name}
+    
+#   - name: Comment lines
+#     lineinfile:
+#         path: "{{ec2_py_path | dir}}/ec2.ini"
+#         regexp: "{{item.line}}"
+#         backup: yes 
+#         state: present 
+#         line: "{{item.replacement}}"
+#     with_items:
+        # - {line:"^group_by_" , replacement:"#group_by_" }
+        # - {line:"#group_by_tag" , replacement:"group_by_" }
+############################## run ec2.py for dynamic inventory
+############################## Not needed since kubectl is used to fetch nodes instead
+# - name: Make dynamic script executable
+#   file: 
+#     path: "{{item}}"
+#     mode: "ugo+x"
+#   with_items:
+#     - "{{ec2_py_path}}"
+
+# # Ensure dynamic inventory group is extracted into static host
+# - include_tasks: roles/common/tasks/cmd_log/main.yml
+#   vars:
+#     common_module_cmd_log_command_become: no
+#     common_module_cmd_log_file: "{{log.public_inventory}}"
+#     common_module_cmd_log_command_array:
+#       - {command: "{{playbook_dir}}/inventory/ec2.py --profile {{aws.credentials.profile.name}}", aim: "List out dynamic inventory"}
+#   register: myregistered_ec2_py_output  
+#   delegate_to: 127.0.0.1
+
+- name: "Insert group name for {{bastion.name}} into host file"
+  become: yes
+  blockinfile:
+    path: "{{inventory_to_use}}"
+    state: present
+    insertafter:  
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{bastion.name}}"
+    block: |
+
+      [{{bastion.inventory_group}}]
+      {{bastion.name}}
+
+      [{{bastion.inventory_group}}:vars]
+      ansible_connection=ssh
+      ansible_ssh_private_key_file={{cluster.ssh_private_key}}
+      ansible_ssh_common_args='-o IdentitiesOnly=yes -o StrictHostkeyChecking=no'
+      ansible_user={{bastion.user}}
+  when: cluster.bastion == true
+
+- include_tasks: roles/inventory/tasks/insert/nodes.yml
+  vars:
+    inventory_module_insert_group: "{{item}}"
+  with_items:
+    - "{{master.inventory_group}}"
+    - "{{node.inventory_group}}"
+
+- name: Ensure group is inserted into inventory file
+  become: yes
+  blockinfile:
+    path: "{{inventory_to_use}}"
+    state: present
+    insertafter: EOF
+    marker: "# {mark} ANSIBLE MANAGED BLOCK dynamic_inventory.yml"
+    block: |
+
+      # make supplemental group
+      [{{cluster_supplemental_group}}:children]
+      {{master.inventory_group}}
+      {{node.inventory_group}}
+      
+      [{{cluster_supplemental_group}}:vars]
+      ansible_ssh_common_args='-o ProxyCommand="ssh -o StrictHostKeyChecking=no -i {{cluster.ssh_private_key}} -W %h:%p -q {{bastion.user}}@{{bastion.name}}"'
+
+############################################
+# vars:
+#   common_module_inventory_insert_group: #e.g{{bastion.inventory_group}}

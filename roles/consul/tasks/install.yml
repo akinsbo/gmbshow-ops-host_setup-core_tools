@@ -1,0 +1,8 @@
+---
+# tasks to setup consul
+
+#  Ensure Consul is installed
+- include_tasks: roles/common/tasks/download_pkg.yml
+  vars:
+    module_linux_url: "{{consul_download_path}}"
+    module_darwin_url: "{{consul_darwin_download_path}}"

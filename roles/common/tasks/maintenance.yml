@@ -1,0 +1,7 @@
+---
+- name: Upgrade, Remove dependencies that are no longer required and useless cache packages
+  apt:
+    upgrade: safe
+    update_cache: yes
+    autoclean: yes
+    autoremove: yes

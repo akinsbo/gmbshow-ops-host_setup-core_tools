@@ -1,0 +1,33 @@
+---
+# Author: Olaolu Akinsete<akinsbo@gmail.com>
+# Date: May 16, 2018<3:46am>
+###########################
+## Create Cluster
+###########################
+- hosts: localhost
+  connection: local
+  gather_facts: no
+  
+  pre_tasks:
+
+    - setup:
+
+    # Set environmental variable
+    - include_tasks: roles/terraform/tasks/mng_env/set.yml
+
+    - include_tasks: roles/aws/tasks/get_availability_zone/main.yml
+      tags:
+        - avail
+        - create
+        
+    # - name: Confirm how many AZ to spin nodes in
+    #   pause:
+    #     prompt: "There are {{mysetfact_num_aws_avail_zone}} zones in this region, namely: {{mysetfact_aws_avail_zone}}. Set vars for zones to deploy in else [ALL] zones would be used?" 
+
+  roles:
+    - kops
+    - terraform
+    - k8s
+    - role: inventory
+      tags: ['inventory']
+    - ssl

@@ -1,0 +1,34 @@
+- name: Get Vault pad
+  command: kubectl get pods --namespace default -l "app=vault" -o jsonpath="{.items[0].metadata.name}"
+  register: myregistered_vault_pod
+
+- name: Get Vault token
+  command: "kubectl logs {{myregistered_vault_pod.stdout}} | grep 'Root Token' | cut -d' ' -f3"
+  register: myregister_vault_token
+
+- name: Run commands
+  command: "{{item}}"
+  with_items:
+    - "kubectl port-forward {{myregistered_vault_pod}} 8200"
+    - "echo {{myregister_vault_token}} | vault login -"
+    - "vault status"
+
+- name: "Enable database secrets engine at: {{vault.database.path}}/"
+  command: "vault secrets enable {{vault.database.path}}"
+
+- name: Setup database
+  block:
+  - name: Write into database config
+    command: >
+      vault write {{vault.database.path}}/config/{{vault.database.type}} 
+      plugin_name={{vault.database.plugin}} 
+      allowed_roles="{{vault.database.role}}" 
+      connection_url="{{vault.database.connection_url}}"
+
+  - name: Write into database role
+    command: >
+      vault write {{vault.database_path}}/roles/{{vault.database.role}} 
+      db_name={{vault.database.name}} 
+      creation_statements="CREATE ROLE \"{{vault.role.name}}\" WITH LOGIN PASSWORD '{{vault.role.password}}' VALID UNTIL '{{vault.role.expiration}}'; GRANT SELECT ON ALL TABLES IN SCHEMA public TO \"{{name}}\";"
+      default_ttl="{{vault.database.default_ttl}}"
+      max_ttl="{{vault.database.max_ttl}}"

@@ -1,0 +1,13 @@
+---
+#  Ensure directory exists
+- name: Ensure file is deleted
+  become: "{{common_module_delete_file_become | default('no') | bool}}"
+  file:
+    path: "{{common_module_delete_file_path}}"
+    state: absent
+    owner: "{{local_ansible_user}}"
+    group: "{{local_ansible_group}}"
+############################################
+# vars:
+#   common_module_delete_file_path:
+#   common_module_delete_file_become:

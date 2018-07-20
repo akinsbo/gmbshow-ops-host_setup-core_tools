@@ -1,0 +1,4 @@
+---
+- include_tasks: roles/vault/tasks/install.yml
+
+- include_tasks: roles/vault/tasks/setup.yml

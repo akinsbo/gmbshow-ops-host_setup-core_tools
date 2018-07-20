@@ -1,0 +1,24 @@
+---
+- name: Add the ebs block to the nodes in the terraform before end of .tf file
+  blockinfile:
+    path: roles/terraform/files/kubernetes.tf
+    insertbefore: 'terraform = {'
+    marker: "##### {mark} ANSIBLE MANAGED BLOCK (Bootstrap Ansible)####"
+    backup: yes
+    content: |
+          resource "null_resource" "ansible" {
+
+            triggers {
+              key = "${uuid()}"
+            }
+
+            provisioner "remote-exec" {
+            command = "ansible-playbook -i {{ec2_py_path}} \
+            tag_Name_nodes_maryboyecluster_maryboye_org \
+             webservers.yml \
+            -u admin \
+            --private-key={{cluster.ssh_private_key}}
+            --tags=glusterfs, install-glusterfs"
+            }
+          }
+

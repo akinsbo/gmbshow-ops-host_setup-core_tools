@@ -1,0 +1,3 @@
+---
+- name: Write policy
+  command: vault policy write {{vault_policy}} {{roles}}/vault/files/{{vault_policy}}.hcl

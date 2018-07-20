@@ -1,0 +1,63 @@
+---
+#  update credentials profile in provider section
+- include_tasks: roles/terraform/tasks/update_tf/update_creds_profile.yml
+
+#  update the tf file
+- include_tasks: roles/terraform/tasks/update_tf/add_ebs.yml
+  tags:
+    - update-terraform
+    - update-tf
+    - create
+    - terraform-create
+
+# make bastions highly available
+- include_tasks: roles/terraform/tasks/update_tf/multiple_bastions.yml
+  when: cluster.bastions == true
+  
+- include_tasks: roles/terraform/tasks/mng_env/set.yml
+  tags:
+    - update-terraform
+    - update-tf
+    - create
+    - terraform-create
+    - test_env
+
+# This is already covered by generated terraform
+# - include_tasks: update_tf/open_sg_ports.yml
+#   tags:
+#     - update-terraform
+#     - update-tf
+#     - create
+#     - terraform-create
+
+# plan and create
+- include_tasks: roles/terraform/tasks/plan.yml
+  tags:
+    - create
+    - terraform
+    - terraform-create
+
+- include_tasks: roles/terraform/tasks/apply.yml
+  tags:
+    - create
+    - terraform
+    - terraform-create
+
+- name: Ensure user wants to destroy
+  pause:
+    prompt: Are you sure you want to DESTROY?
+  tags:
+    - destroy
+    - destroy-terraform
+    - never
+
+- include_tasks: roles/terraform/tasks/destroy.yml
+  tags: 
+    - destroy
+    - destroy-terraform
+    - never
+
+# Prevent other terraform plans from logging in this project's logs
+# - include_tasks: roles/terraform/tasks/mng_env/reset.yml
+#   tags:
+#     - always

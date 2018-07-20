@@ -1,0 +1,19 @@
+# Ensure a temp directory is created to place temp files
+- include_tasks: roles/common/tasks/create_dir.yml
+  vars:
+    common_dir_module_path: "{{role_path}}/files/tmp/{{k8s_deployment}}.yaml"
+
+- name: "Ensure {{k8s_deployment}} k8s_deployment configuration is added"
+  become: false
+  template:
+    src: "{{k8s_deployment}}.yaml.j2"
+    dest: "{{role_path}}/files/tmp/{{k8s_deployment}}.yaml"
+    mode: 0644
+
+- name: "Ensure {{k8s_deployment}} is deployed"
+  command: "kubectl apply -f {{role_path}}/files/tmp/{{k8s_deployment}}.yaml"
+
+####################################
+# vars:
+    # k8s_deployment:
+    # k8s_deployment_namespace: 

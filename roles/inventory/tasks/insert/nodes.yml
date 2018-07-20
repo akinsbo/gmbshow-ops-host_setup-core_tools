@@ -1,0 +1,31 @@
+---
+- name: "Get nodes in {{inventory_module_insert_group}} group"
+  shell: "kubectl get nodes | grep {{inventory_module_insert_group}} | grep -o 'ip-.\\S*'"
+  register: myregistered_list
+  
+# - debug: 
+#     var: myregistered_list.stdout
+
+- name: Concactenate list of nodes
+  block:
+  - name: Declare node list as an array 
+    set_fact: 
+      mysetfact_node_list: []
+  - name: Concatenate each node name with its regex-generated private ip_address(for aws ec2 instances)
+    set_fact: 
+      mysetfact_node_list: "{{mysetfact_node_list + [node_item | regex_replace('(^ip-((\\d+(-?)){4})\\.((\\w+(-?)){3})\\.compute.internal\\b)','\\1') ~ '  ansible_host=' ~ node_item | regex_replace('^ip-((\\d+(-?)){4})\\.((\\w+(-?)){3})\\.compute.internal\\b','\\1') | regex_replace('-', '.')]}}"
+    with_items: "{{myregistered_list.stdout_lines}}"  
+    loop_control:
+      loop_var: node_item
+
+- name: "Insert group name for {{inventory_module_insert_group}} into host file"
+  become: yes
+  blockinfile:
+    path: "{{inventory_to_use}}"
+    state: present
+    insertafter:  
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{inventory_module_insert_group}}"
+    block: |
+
+      [{{inventory_module_insert_group}}]
+      {{mysetfact_node_list | to_nice_yaml | regex_replace('- ', '')}}

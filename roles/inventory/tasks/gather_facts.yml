@@ -1,0 +1,18 @@
+---
+- block:
+  - name: Gather facts into log file
+    shell: "ansible all -m setup --tree {{inventory_facts_path}}"
+    args:
+      chdir: "{{playbook_dir}}"
+  rescue:
+  - name: Reset the host key
+    command: ssh-keygen -f "{{ssh_known_hosts_file}}" -R "{{bastion.name}}"
+
+  # Add all public host addresses to known_hosts
+- name: Get rsa host key of remote host 
+  shell: "ssh-keyscan -H {{bastion.name}} >>  {{ ssh_known_hosts_file }}"
+ # the only publicly accessible one(with a route-to)
+- name: Gather facts into log file
+  shell: "ansible all -m setup --tree {{inventory_facts_path}}"
+  args:
+    chdir: "{{playbook_dir}}"
