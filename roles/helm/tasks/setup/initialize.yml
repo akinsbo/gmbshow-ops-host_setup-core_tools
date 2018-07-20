@@ -4,8 +4,8 @@
     mysetfact_helm_init_cmd: "helm init \
                               --tiller-tls \
                               --tiller-tls-verify \
-                              --tiller-tls-cert=./tiller.cert.pem \
-                              --tiller-tls-key=./tiller.key.pem \
+                              --tiller-tls-cert={{ca_certs_dir}}/tiller/tiller.cert.pem \
+                              --tiller-tls-key={{ca_certs_dir}}/tiller/tiller.key.pem \
                               --tls-ca-cert={{ca.cert}} \
                               --service-account={{helm_tiller_team_sa}} \
                               --tiller-namespace {{helm_tiller_namespace}}"
@@ -16,8 +16,8 @@
   command: >
     helm ls 
     --tls 
-    --tls-cert helm.cert.pem 
-    --tls-key helm.key.pem
+    --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
+    --tls-key {{ca_certs_dir}}/helm/helm.key.pem
     --tls-ca-cert {{ca.cert}}
 
 
@@ -25,8 +25,8 @@
   command: >
     helm repo add incubator {{helm_incubator_repo}}
     --tls 
-    --tls-cert helm.cert.pem 
-    --tls-key helm.key.pem
+    --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
+    --tls-key {{ca_certs_dir}}/helm/helm.key.pem
     --tls-ca-cert {{ca.cert}}
 
 

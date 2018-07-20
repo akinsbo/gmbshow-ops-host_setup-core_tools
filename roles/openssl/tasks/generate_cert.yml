@@ -4,29 +4,29 @@
 
   - name: Ensure directory exists for local self-signed TLS certs.
     file:
-      path: "{{ca_certs_dir}}"
+      path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}"
       state: directory
 
   - name: Ensure directory exists for csr
     file:
-      path: "{{ca_privkey_dir}}"
+      path: "{{ca_privkey_dir}}/{{openssl_module_cert_resource}}"
       state: directory
 
   - name: Generate an OpenSSL private key.
     openssl_privatekey:
-      path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}.privkey.pem"
+      path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}/{{openssl_module_cert_resource}}.key.pem"
 
   - name: Generate an OpenSSL CSR.
     openssl_csr:
-      path: "{{ca_privkey_dir}}/{{openssl_module_cert_resource}}.csr"
-      privatekey_path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}.privkey.pem"
+      path: "{{ca_privkey_dir}}/{{openssl_module_cert_resource}}/{{openssl_module_cert_resource}}.csr"
+      privatekey_path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}/{{openssl_module_cert_resource}}.key.pem"
       common_name: "{{openssl_module_cert_resource}}"
 
   - name: Generate a Self Signed OpenSSL certificate.
     openssl_certificate:
-      path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}.key.pem"
-      privatekey_path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}.privkey.pem"
-      csr_path: "{{ca_privkey_dir}}/{{openssl_module_cert_resource}}.csr"
+      path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}/{{openssl_module_cert_resource}}.cert.pem"
+      privatekey_path: "{{ca_certs_dir}}/{{openssl_module_cert_resource}}/{{openssl_module_cert_resource}}.key.pem"
+      csr_path: "{{ca_privkey_dir}}/{{openssl_module_cert_resource}}/{{openssl_module_cert_resource}}.csr"
       provider: selfsigned
   become: yes
 

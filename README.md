@@ -1,11 +1,20 @@
 # Core-Tools Setup
 
+Update the group_vars/all/vars.yml with your route53DNS and subdomains. 
+Also, update other variables as necessary.
+
+To run the entire infrastructure play, use:
+
+```sh
+ansible-playbook site.yml
+```
+
 ## Install Kubernetes
 
 Install the latest version of kubectl on Linux or MacOS:
 
 ```sh
-ansible-playbook -i hosts install-kubectl.yaml
+ansible-playbook cluster.yaml
 ```
 
 You may need either --ask-become-pass or ansible_become_pass
@@ -13,19 +22,19 @@ You may need either --ask-become-pass or ansible_become_pass
 ## To create cluster infrastructure, run
 
 ```sh
-ansible-playbook -i hosts cluster.yaml --tags="create"
+ansible-playbook cluster.yaml --tags="create"
 ```
 
 ## To destroy cluster infrastructure, run
 
 ```sh
-ansible-playbook -i hosts cluster.yaml --tags="destroy"
+ansible-playbook cluster.yaml --tags="destroy"
 ```
 
 ## To perform checks on cluster
 
 ```sh
-ansible-playbook -i hosts cluster.yaml --tags="cluster-checks"
+ansible-playbook cluster.yaml --tags="cluster-checks"
 ```
 
 To create cluster from terraform file, run

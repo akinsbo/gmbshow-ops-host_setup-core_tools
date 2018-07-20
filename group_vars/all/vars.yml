@@ -174,8 +174,8 @@ cluster_accessories:
     volume_type: "gp2"
     delete_on_termination: true
 
-ca_certs_dir: /etc/letsencrypt/live
-ca_privkey_dir: /etc/ssl/private
+ca_certs_dir: /etc/letsencrypt/live/{{cluster.name}}
+ca_privkey_dir: /etc/ssl/private/{{cluster.name}}
 ca:
   country: NG
   state: LA

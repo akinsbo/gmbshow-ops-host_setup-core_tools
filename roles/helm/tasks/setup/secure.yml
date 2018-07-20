@@ -19,7 +19,9 @@
 # setup tls
 - include_tasks: roles/openssl/tasks/generate_cert.yml
   vars:
-    openssl_module_cert_resource: "{{item}}"
+    openssl_module_cert_resource: "{{resource_item}}"
   with_items:
     - tiller
     - helm
+  loop_control:
+    loop_var: resource_item
