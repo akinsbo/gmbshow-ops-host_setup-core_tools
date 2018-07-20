@@ -105,27 +105,19 @@ ansible-playbook bootstrap_os.yaml
 
 It does the following:
 
-* Root signing
-* ------------create-user----------------------
-
+* Root sign in
 * Create new user
-
-** If Debian8, install sudo
-
-* Root privileges: Add user to sudo group
-
-* ------------setup ssh-key-------------------
-
-* Add Public Key Authentication
-
-** Generate key pair
-** Copy the public key
-
-* Disable Password Authentication
-
+  * If Debian8, install sudo
+  * Ensure root privileges: Add new user to sudo group
+* Setup ssh-key
+  * Add Public Key Authentication
+  * Generate key pair
+  * Copy the public key to authorized keys
+  * Disable Password Authentication in ssh config
 * Test Log in
-* ------------firewall-------------------
-* Setup a Basic firewall
+* Firewall
+  * Setup openssh rules
+  * Setup a Basic ufw firewall
 
 ### Install Ansible, Kops and dependencies
 
@@ -159,9 +151,9 @@ They can now use kubernetes on the cluster e.g.
 kubectl get nodes
 ```
 
-### Maintenance
+## Maintenance
 
-#### Ansible Preview Modules used
+### Ansible Preview Modules used
 
 Periodically update preview modules until at least stableinterface.
 The preview modules may also be downloaded into a library directory.
@@ -171,4 +163,4 @@ The following are ansible preview modules used:
     - lineinfile Module
     - blockinfile Module
 
-Perform ```grep -r <module>``` to find them.
+Perform ```grep -r <module>``` to find them.sign
