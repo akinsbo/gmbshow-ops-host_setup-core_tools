@@ -15,6 +15,9 @@ This playbook:
 * Provides automation of HashiVault lease revoke and renew, write policy, read, write and get vault tokens
 * Provisions Jenkins on the cluster on the gluster storage on ssl encrypted endpoint
 * Provisions Kubernetes Dashboard and other addons (Including Heapster, infludb-grafana,  prometheus-operator)
+* Also:
+  * Bootstraps a secure Linux or Debian OS
+  * Turns a localhost into a controller by install Ansible, Kops and their dependencies
 
 ### Autosearch and use Availability Zones
 
@@ -119,7 +122,7 @@ It does the following:
   * Setup openssh rules
   * Setup a Basic ufw firewall
 
-### Install Ansible, Kops and dependencies
+### Create a controller (Install Ansible, Kops and dependencies)
 
 To install virtual environments for Python2 and Python3, ansible, redis cache(for ansible), Kubernetes, kops and their dependencies in both *Debian 8* and *Ubuntu 16* or *MacOS*:
 
