@@ -1,0 +1,7 @@
+---
+# helm install install/kubernetes/helm/istio --name istio --namespace istio-system
+- include_tasks: roles/tasks/helm/mng_pkg/delete.yml
+  vars:
+    helm_module_pkg_delete_name: istio
+  tags:
+  - destroy

@@ -1,0 +1,17 @@
+Host *
+    ServerAliveInterval 60
+    TCPKeepAlive yes
+    ProxyCommand ssh -W %h:%p {{bastion.name}} 
+    StrictHostKeyChecking no
+
+Host {{bastion.name}}
+    IdentityFile {{cluster.ssh_private_key}}
+    IdentitiesOnly yes
+    User {{bastion.user}}
+    Hostname {{bastion.name}}
+
+Host 172.*
+    IdentityFile {{cluster.ssh_private_key}}
+    User {{node.user}}
+    IdentitiesOnly yes
+    ProxyCommand ssh -q -W %h:%p {{bastion.name}}

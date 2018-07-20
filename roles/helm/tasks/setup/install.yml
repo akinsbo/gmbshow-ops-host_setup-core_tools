@@ -1,0 +1,6 @@
+---
+#  Ensure Helm is installed
+- include_tasks: roles/common/tasks/download_pkg.yml
+  vars:
+    module_linux_url: "{{helm_download_path}}"
+    module_darwin_url: "{{helm_darwin_download_path}}"

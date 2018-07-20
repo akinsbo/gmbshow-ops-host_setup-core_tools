@@ -1,0 +1,30 @@
+---
+#  master
+- name: Wait for master nodes to finish building and be ready...
+  block:
+  - name: Ensure complete number of master nodes are ready
+    shell: kubectl get nodes | grep master
+    register: myreg_master_check
+    until: "myreg_master_check.stdout_lines| length == cluster.master_count and not myreg_master_check.stdout | regex_search('NotReady')"
+    retries: 100
+    delay: 10
+
+  - name: Warn if there are more nodes than should be in the group
+    pause:
+      prompt: "{{text.color.redbg}} This is a Unicorn of a message but MORE master were created than you specified(likely in vars.yml) when building the cluster"
+    when: "myreg_master_check.stdout_lines| length > cluster.master_count"
+
+# nodes
+- name: Wait for worker nodes to finish building and be ready...
+  block:
+  - name: Ensure complete number of worker nodes are ready
+    shell: kubectl get nodes | grep node
+    register: myreg_node_check
+    until: "myreg_node_check.stdout_lines| length == cluster.node_count and not myreg_node_check.stdout | regex_search('NotReady')"
+    retries: 100
+    delay: 10
+
+  - name: Warn if there are more nodes than should be in the group
+    pause:
+      prompt: "{{text.color.redbg}}[WARNING] This is a Unicorn of a message but MORE master were created than you specified(likely in vars.yml) when building the cluster"
+    when: "myreg_node_check.stdout_lines| length > cluster.node_count"

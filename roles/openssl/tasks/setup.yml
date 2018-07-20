@@ -1,0 +1,52 @@
+---
+- block:
+  - name: "Ensure openssl is installed"
+    package: 
+      name: openssl
+      state: latest
+
+  - name: "Delete ca-certs directory"
+    file:
+      path: "{{ item }}"
+      state: absent
+      owner: root
+      group: root
+    with_items:
+    - "{{ ca_certs_dir }}"
+
+  - name: "Make configuration directory"
+    file:
+      path: "{{ item }}"
+      state: directory
+      owner: root
+      group: root
+    with_items:
+    - "{{ ca_certs_dir }}"
+
+  - name: "Deploy configuration items"
+    template:
+      src: "{{playbook_dir}}/roles/openssl/templates/{{template_item}}.j2"
+      dest: "{{ ca_certs_dir }}/{{template_item}}"
+      owner: root
+      group: root
+    with_items:
+    - serial
+    - ca.conf
+    loop_control:
+      loop_var: template_item
+
+  - name: "set CA_SUBJECT var"
+    set_fact:
+      ca_subject: '/C={{ ca.country }}/ST={{ ca.state }}/L={{ ca.locality }}/O={{ ca.organization }}/OU={{ ca.organizational_unit }}/CN={{ ca.common_name }}/emailAddress={{ ca.email }}'
+    when: ca_subject is not defined
+
+  - name: "Generate private key && Create root CA files"
+    shell: "{{cmd_item}}"
+    args:
+      chdir: "{{ ca_certs_dir }}"
+    with_items:
+    - "openssl genrsa -out {{ ca.key }} 2048"
+    - "openssl req -config {{ ca_certs_dir }}/ca.conf -key {{ ca.key }} -new -x509 -days 7300 -sha256 -out {{ ca.cert }} -passin pass:{{ ca.rootca_password }} -subj \"{{ ca_subject }}\" -extensions {{ca.extensions}}"
+    loop_control:
+      loop_var: cmd_item
+  become: yes

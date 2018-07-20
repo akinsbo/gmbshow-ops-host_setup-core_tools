@@ -1,0 +1,16 @@
+---
+- hosts: "{{cluster_supplemental_group | default('cluster_servers')}}"  # bastion.k8s.maryboye.org # tag_Name_bastions_k8s_maryboye_org #bastion.k8s.maryboye.org # #"{{bastion.inventory_group}}"
+  connection: ssh
+  become: "{{cluster.image_root_user}}"
+  gather_facts: no
+
+  pre_tasks:
+
+    - name: Wait 300 seconds, but only start checking after 60 seconds
+      wait_for_connection:
+        timeout: 300
+        
+    - setup:
+
+  roles:
+    - glusterfs

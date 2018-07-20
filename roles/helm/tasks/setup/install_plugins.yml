@@ -1,0 +1,7 @@
+---
+- name: Install helm plugin
+  command: helm plugin install {{helm_module_plugin_path}}
+
+##########################################
+# vars: 
+#   helm_module_plugin_path:

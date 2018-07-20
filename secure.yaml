@@ -1,0 +1,10 @@
+---
+###########################
+## Setup HashiVault
+###########################
+- hosts: localhost
+  connection: local
+  gather_facts: true
+  
+  roles:
+    - vault

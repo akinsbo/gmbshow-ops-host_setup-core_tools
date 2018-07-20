@@ -1,0 +1,58 @@
+---
+- setup:
+  tags:
+    - cluster-checks
+    - gluster-create
+
+# Run and log output of command into file
+- name: Set the name of the file
+  set_fact:
+    mysetfact_module_cmdlogfile: "{{common_module_cmd_log_file}}.{{ansible_date_time.iso8601}}.log.html"
+  tags:
+    - cluster-checks
+    - gluster-create
+
+- include_tasks: roles/common/tasks/create_file.yml
+  vars: 
+    common_file_module_path: "{{mysetfact_module_cmdlogfile}}"
+  tags:
+    - cluster-checks
+    - gluster-create
+
+- include_tasks: roles/common/tasks/cmd_log/template.yml
+  vars:
+    common_cmd_log_tmp_module_become: "{{common_module_cmd_log_command_become}}"
+    common_cmd_log_tmp_module_command: "{{item.command}}"
+    common_cmd_log_tmp_module_command_aim: "{{item.aim}}"
+    common_cmd_log_tmp_module_cmdlogfile: "{{mysetfact_module_cmdlogfile}}"
+  with_items: "{{common_module_cmd_log_command_array}}"
+  tags:
+    - cluster-checks
+    - gluster-create
+# 
+#/....,..........example usage,,,,,,,,,,,,,,
+# - include_tasks: roles/common/tasks/cmd_log/main.yml
+#   vars:
+#     common_module_cmd_log_file: "{{role_path}}/files/logs/{{ansible_date_time.iso8601}}.log.html"
+#     common_module_cmd_log_command_array:
+#       - {command: "kubectl get nodes", aim: "fetching nodes"}
+#       - {command: "kubectl list cluster", aim: "listing clusters"}
+#       - {command: "kubectl get cs", aim: "checking cluster health (component status)"}
+#       - {command: "kubectl get pods", aim: "fetching pods"}
+#       - {command: "kubectl get deployments", aim: "fetching deployments"}
+#       - {command: "kubectl config view", aim: "check current config"}
+#       - {command: "kubectl cluster-info", aim: "cluster info"}
+#   tags:
+#     - cluster-checks
+
+# - name: Open the log in browser page {{mysetfact_module_cmdlogfile}}
+#   command: "firefox -new-tab -safe-mode {{mysetfact_module_cmdlogfile}}"
+#   tags:
+#     - cluster-checks
+#     - gluster-create
+
+# ##################################
+# vars:
+#   common_module_cmd_log_file:
+#   common_module_cmd_log_command_array:
+#   common_module_cmd_log_command_become:

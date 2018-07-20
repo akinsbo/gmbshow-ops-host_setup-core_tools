@@ -1,0 +1,54 @@
+---
+- block:
+  - name: Get the name of the vault service
+    command: kubectl get svc -l app=vault -o jsonpath="{.items[0].metadata.name}"
+    register: myregistered_vault_svc_name
+
+  - name: Get the name of the db service
+    command: kubectl get svc -l app={{vault.database.type}} -o jsonpath="{.items[0].metadata.name}"
+    register: myregistered_vault_db_name
+
+  - name: Install curl in {{vault_module_keys_pod}} pod
+    command: >
+    kubectl exec -it {{vault_module_keys_pod}} 
+    /bin/sh -c 'apk update && apk add curl postgresql-client jq && cat /var/run/secrets/kubernetes.io/serviceaccount/token' 
+    register: myregistered_kubectl_token
+
+  # view 
+  - name: Generate vault token for the pod
+    shell: >
+    curl 
+    --request POST 
+    --data {"jwt": "{{myregistered_kubectl_token.stdout }}", "role": "postgres"}
+    http://{{myregistered_vault_svc_name.stdout}}:8200/v1/auth/kubernetes/login
+    register: myregistered_vault_login
+
+  - name: Get the vault token to issue commands
+    command: >
+    echo {{myregistered_vault_login}} | jq -r '.auth.client_token'
+    register: myregistered_x_vault_token
+
+  - name: Get db credentials from vault
+    command: >
+    curl 
+    --header "X-Vault-Token: myregistered_x_vault_token.stdout" http://{{myregistered_vault_svc_name.stdout}}:8200/v1/database/creds/postgres-role)
+    register: myregistered_db_credentials
+
+  - name: Get db user
+    command: >
+      echo {{myregistered_db_credentials.stdout}} | jq -r '.data.username'
+    register: myregistered_db_user
+  
+  - name: Get db password
+    command: >
+      echo {{myregistered_db_credentials.stdout}} | jq -r '.data.password'
+    register: myregistered_db_password 
+
+  - name: Ensure Database properties are outputted
+    command: >
+    psql -h {{myregistered_vault_db_name}} -U {{myregistered_db_user}} rails_development -c 'SELECT * FROM pg_catalog.pg_tables;'
+  delegate_to: 127.0.0.1
+
+################################################################
+# vars:
+#   vault_module_keys_pod:

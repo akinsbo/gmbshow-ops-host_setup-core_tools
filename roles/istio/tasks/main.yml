@@ -1,0 +1,3 @@
+---
+# tasks file for istio
+- include_tasks: roles/istio/tasks/install.yml

@@ -1,0 +1,78 @@
+---
+
+- debug:
+    msg: "common_module_config_setting_section = {{common_module_config_setting_section}}"
+
+- name: Ensure option and value exist when section is specified
+  block:
+  - name: "Check if var exists in {{common_module_config_setting_file}} if section is defined"
+    command: "grep '^[{{common_module_config_setting_section}}]' {{common_module_config_setting_file}}"
+    ignore_errors: yes
+    register: myregistered_grep_output
+  - name: If option does not exist add it
+    become: "{{common_module_config_setting_become}}"
+    lineinfile:
+      path: "{{common_module_config_setting_file}}" 
+      state: present
+      line: "{{item.option}}={{item.value}}" 
+    with_items: "{{common_module_config_settings}}"   
+    when: myregistered_grep_output.rc == 1
+  - name: Get value when settings section is supplied
+    set_fact:
+      mysetfact_common_module_setting_value: "{{lookup('ini', '{{common_module_config_settings[0].option}} section={{common_module_config_setting_section}} file={{common_module_config_setting_file}}')}}"
+  # "If option exists in file but value is blank, add it"
+  - include_tasks: override.yml
+    vars: 
+      common_module_config_override_file: "{{common_module_config_setting_file}}" 
+      common_module_config_override_become: "{{common_module_config_setting_become}}"
+      common_module_config_override_state: present
+      common_module_config_override_section: "{{common_module_config_setting_section}}"
+      common_module_config_override_settings: "{{common_module_config_settings}}"
+    when:  mysetfact_common_module_setting_value == ''
+  when: not(
+        (common_module_config_setting_section is undefined)
+        or
+        (common_module_config_setting_section is none)
+        or
+        (common_module_config_setting_section | trim == '')
+      )
+
+- name:  Ensure option and value exist when settings section is NOT specified
+  block: 
+  - name: "Check if var exists in {{common_module_config_setting_file}} if NO section is defined"
+    command: "grep '^{{common_module_config_settings[0].option}}' {{common_module_config_setting_file}}"
+    ignore_errors: yes
+    register: myregistered_grep_output
+  - name: If option does not exist add it
+    become: "{{common_module_config_setting_become}}"
+    lineinfile:
+      path: "{{common_module_config_setting_file}}" 
+      state: present
+      line: "{{item.option}}={{item.value}}" 
+    with_items: "{{common_module_config_settings}}"   
+    when: myregistered_grep_output.rc == 1
+  - name: Get value when NO section is supplied
+    set_fact:
+      mysetfact_common_module_setting_value: "{{lookup('ini', '{{common_module_config_settings[0].option}} type=properties file={{common_module_config_setting_file}}')}}"
+  # "If option exists in file but value is blank, add it"
+  - include_tasks: override.yml
+    vars: 
+      common_module_config_override_file: "{{common_module_config_setting_file}}" 
+      common_module_config_override_become: "{{common_module_config_setting_become}}"
+      common_module_config_override_state: present
+      common_module_config_override_section: "{{common_module_config_setting_section}}"
+      common_module_config_override_settings: "{{common_module_config_settings}}"
+    when:  mysetfact_common_module_setting_value == ''
+  when: (common_module_config_setting_section is undefined)
+        or
+        (common_module_config_setting_section is none)
+        or
+        (common_module_config_setting_section | trim == '')
+ 
+# ====================================================================================
+# vars:
+#   common_module_config_setting_file:
+#   common_module_config_setting_become: 
+#   common_module_config_setting_section:
+#   common_module_config_settings:
+#     - {option: abc, value: xyz}

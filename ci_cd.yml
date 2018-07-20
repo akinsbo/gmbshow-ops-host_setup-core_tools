@@ -1,0 +1,10 @@
+---
+###########################
+## Setup Service Mesh
+###########################
+- hosts: localhost
+  connection: local
+  gather_facts: true
+  
+  roles:
+    - jenkins

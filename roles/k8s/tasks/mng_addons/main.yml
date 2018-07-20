@@ -1,0 +1,17 @@
+---
+# Ensure a temp directory is created to place temp files
+- include_tasks: roles/common/tasks/create_dir.yml
+  vars:
+    common_dir_module_path: "{{role_path}}/files/tmp"
+    common_dir_become: yes
+
+#  Deploy addons
+- include_tasks: roles/k8s/tasks/deploy_addons.yml
+  vars:
+    k8s_addons_deployment: "{{item}}"
+    k8s_addons_deployment_namespace: kube-system
+  with_items: 
+    - kubernetes-dashboard
+    # - grafana
+    # - heapster
+    # - influxdb-grafana

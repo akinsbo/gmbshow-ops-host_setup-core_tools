@@ -1,0 +1,9 @@
+---
+- name: Update Bastion count in tf file if group_var is updated
+  block:
+  - name: Make bastions HA. Multiply instances
+    replace:
+      path: "{{cluster.output_location}}/kubernetes.tf"
+      regexp: '\n{0}launch_configuration\s*=\s*\"\${aws_launch_configuration\.bastions-{{kops_sec_group_suffix}}\.id}\"\s*\n\s*max_size\s*=\s*\d+\n\s*min_size\s*=\s*\d+'
+      replace: 'launch_configuration = "${aws_launch_configuration.bastions-{{kops_sec_group_suffix}}.id}"\n  max_size = {{cluster.bastion_count}}\n  min_size = {{cluster.bastion_count}}'
+      backup: yes

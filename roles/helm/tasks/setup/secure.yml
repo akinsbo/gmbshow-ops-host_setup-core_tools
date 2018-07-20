@@ -1,0 +1,27 @@
+---
+- name: Ensure directory exists
+  file:
+    path: "{{helm_deployment_path}}"
+    state: directory
+    
+- name: Deploy tiller service account
+  block:
+  - name: "Ensure tiller service account is prepared"
+    become: false
+    template:
+      src: "{{role_path}}/templates/tiller_namespace_sa.yaml.j2"
+      dest: "{{helm_deployment_path}}/tiller_namespace_sa.yaml"
+      mode: 0644
+
+  - name: "Ensure tiller service account is deployed"
+    command: "kubectl apply -f {{helm_deployment_path}}/tiller_namespace_sa.yaml"
+
+# setup tls
+- include_tasks: roles/openssl/tasks/generate_cert.yml
+  vars:
+    openssl_module_cert_resource: "{{resource_item}}"
+  with_items:
+    - tiller
+    - helm
+  loop_control:
+    loop_var: resource_item

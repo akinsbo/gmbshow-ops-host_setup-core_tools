@@ -1,0 +1,8 @@
+---
+- include_tasks: roles/helm/tasks/mng_pkg/install.yml
+  vars:
+    helm_module_pkg_name: jenkins
+    helm_module_pkg_repo: stable 
+    helm_module_pkg_namespace: ci_cd
+    helm_module_pkg_values_file: "{{role_path}}/files/values.yml"
+    helm_module_pkg_version: 0.16.6

@@ -1,0 +1,6 @@
+---
+- include_tasks: roles/helm/tasks/setup/install.yml
+
+- include_tasks: roles/helm/tasks/setup/secure.yml
+
+- include_tasks: roles/helm/tasks/setup/initialize.yml

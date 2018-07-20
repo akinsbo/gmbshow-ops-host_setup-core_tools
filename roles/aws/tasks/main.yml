@@ -1,9 +1,9 @@
-- include: create_environment.yml
+- include_tasks: create_environment.yml
   tags:
     - create
     - aws-create
   
-- include: destroy_environment.yml
+- include_tasks: destroy_environment.yml
   tags:
     - destroy
     - aws-destroy

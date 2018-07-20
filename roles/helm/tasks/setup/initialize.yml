@@ -1,0 +1,32 @@
+---
+- name: Set Helm init command 
+  set_fact:
+    mysetfact_helm_init_cmd: "helm init \
+                              --tiller-tls \
+                              --tiller-tls-verify \
+                              --tiller-tls-cert={{ca_certs_dir}}/tiller/tiller.cert.pem \
+                              --tiller-tls-key={{ca_certs_dir}}/tiller/tiller.key.pem \
+                              --tls-ca-cert={{ca.cert}} \
+                              --service-account={{helm_tiller_team_sa}} \
+                              --tiller-namespace {{helm_tiller_namespace}}"
+- name: Run Helm init
+  command: "{{mysetfact_helm_init_cmd}}"
+
+- name: Run test helm command
+  command: >
+    helm ls 
+    --tls 
+    --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
+    --tls-key {{ca_certs_dir}}/helm/helm.key.pem
+    --tls-ca-cert {{ca.cert}}
+
+
+- name: Add incubator Helm repo
+  command: >
+    helm repo add incubator {{helm_incubator_repo}}
+    --tls 
+    --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
+    --tls-key {{ca_certs_dir}}/helm/helm.key.pem
+    --tls-ca-cert {{ca.cert}}
+
+
