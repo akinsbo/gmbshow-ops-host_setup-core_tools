@@ -17,22 +17,7 @@ aws:
       - "{{ lookup('env', 'HOME')}}/boto.cfg" # use profie name: Credentials (if using this as first choice)
   config:
     file: "{{ lookup('env', 'HOME')}}/.aws/config"
-
-ca_certs_dir: /etc/letsencrypt/live
-ca_privkey_dir: /etc/ssl/private
-ca:
-  country: NG
-  state: LA
-  locality: LA
-  organization: Maryboye.org
-  organizationalunit: Lifestyle
-  email: akinsbo@gmail.com
-  key: "{{ca_certs_dir}}/ca.key.pem"
-  cert: "{{ca_certs_dir}}/ca.cert.pem"
-  rootca_password: mary1000boye
-  extensions: v3_ca
-  csr_path: "{{ca_certs_dir}}/ca.key.pem"
-
+  
 # consul
 consul_version: 1.2.1
 consul_download_path: "https://releases.hashicorp.com/consul/{{consul_version}}/consul_{{consul_version}}_linux_amd64.zip"
@@ -63,10 +48,9 @@ helm_darwin_download_path: https://storage.googleapis.com/kubernetes-helm/helm-v
 helm_security_plugin_path: https://github.com/michelleN/helm-secure-tiller
 helm_incubator_repo: http://storage.googleapis.com/kubernetes-charts-incubator
 
-helm_tiller_namespace: dev
 helm_tiller_team: video_dev_team
-helm_tiller_team_sa: tiller-{{helm_tiller_team}}
-helm_tiller_namespace: tiller
+helm_tiller_team_sa: tiller-{{helm_tiller_team | regex_replace('_', '-')}}
+helm_tiller_namespace: tiller-{{helm_tiller_team | regex_replace('_', '-')}}
 helm_deployment_path: "{{playbook_dir}}/roles/helm/tasks/files/tmp"
 
 # vault
@@ -189,6 +173,22 @@ cluster_accessories:
     volume_size: 128
     volume_type: "gp2"
     delete_on_termination: true
+
+ca_certs_dir: /etc/letsencrypt/live
+ca_privkey_dir: /etc/ssl/private
+ca:
+  country: NG
+  state: LA
+  locality: LA
+  organization: Maryboye.org
+  organizational_unit: Lifestyle
+  email: akinsbo@gmail.com
+  key: "{{ca_certs_dir}}/ca.key.pem"
+  cert: "{{ca_certs_dir}}/ca.cert.pem"
+  rootca_password: mary1000boye
+  extensions: v3_ca
+  csr_path: "{{ca_certs_dir}}/ca.key.pem"
+  common_name: "{{cluster.name}}"
 
 # kubernetes kops generated-defaults
 kops_sec_group_suffix: "{{cluster.name | regex_replace ('\\.','-')}}"

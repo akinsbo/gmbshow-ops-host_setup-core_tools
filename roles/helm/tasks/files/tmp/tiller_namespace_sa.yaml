@@ -1,19 +1,19 @@
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: "{{helm_tiller_namespace}}"
+  name: "tiller-video-dev-team"
 ---
 kind: ServiceAccount
 apiVersion: v1
 metadata:
-  name: "{{helm_tiller_team_sa}}"
-  namespace: "{{helm_tiller_namespace}}"
+  name: "tiller-video-dev-team"
+  namespace: "tiller-video-dev-team"
 ---
 kind: Role
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: {{helm_tiller_team}}
-  namespace: {{helm_tiller_namespace}}
+  name: video_dev_team
+  namespace: tiller-video-dev-team
 rules:
 - apiGroups: ["", "extensions", "apps"]
   resources: ["deployments", "replicasets", "pods", "configmaps", "secrets"]
@@ -22,14 +22,14 @@ rules:
 kind: RoleBinding
 apiVersion: rbac.authorization.k8s.io/v1
 metadata:
-  name: "tiller-binding-{{helm_tiller_team}}"
-  namespace: "{{helm_tiller_namespace}}"
+  name: "tiller-binding-video_dev_team"
+  namespace: "tiller-video-dev-team"
 subjects:
 - kind: ServiceAccount
-  name: "{{helm_tiller_team_sa}}"
-  namespace: "{{helm_tiller_namespace}}"
+  name: "tiller-video-dev-team"
+  namespace: "tiller-video-dev-team"
 roleRef:
   kind: Role
-  name: {{helm_tiller_team}}
+  name: video_dev_team
   apiGroup: rbac.authorization.k8s.io
 ---
