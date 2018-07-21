@@ -9,7 +9,7 @@ This playbook:
 * Generates SSL certificates with Letsencrypt for your domain name and subdomain names
 * Creates Glusterfs distributed storage for true StatefulSets development for your database of choice.
 * Generates OpenSSL self-signed certificates to manage Helm
-* Provisions Helm secured with a service account and tls
+* Provisions Helm secured with a service account and tls (so each team has their own secure namespaced tiller, minimizing blast radius of tiller repo vulnerability)
 * Provisions Istio service mesh on the gluster storage
 * Provisions and enables Kubernetes Auth in HashiVault (with POSTGRESQL) to manage service accounts
 * Provides automation of HashiVault lease revoke and renew, write policy, read, write and get vault tokens
@@ -18,10 +18,11 @@ This playbook:
 * Also:
   * Bootstraps a secure Linux or Debian OS
   * Turns a localhost into a controller by install Ansible, Kops and their dependencies
+  * Autoselect AZ to use when very few nodes are defined for quick test scenarios
 
 ### Autosearch and use Availability Zones
 
-If you specify a 4-node cluster while working in a region with 5 AZ thenthe playbook automatically creates a node in AZs:
+If you specify a 4-node cluster while working in a region with 5 AZ then the playbook automatically creates a node in AZs:
 
     - regiona
     - regionb
