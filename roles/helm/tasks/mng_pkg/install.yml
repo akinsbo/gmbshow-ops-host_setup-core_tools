@@ -14,7 +14,7 @@
                               {% if helm_module_pkg_settings is not undefined and helm_module_pkg_settings != '' %}
                               --set {{helm_module_pkg_settings}} \
                               {% endif %}
-                              {% if helm_use_tls == 'true' or helm_use_tls == 'yes' %}                              
+                              {% if helm_use_tls == true or helm_use_tls == 'yes' %}                              
                               --tls \
                               --tls-cert helm.cert.pem \
                               --tls-key helm.key.pem \

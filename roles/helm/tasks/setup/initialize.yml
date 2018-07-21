@@ -2,7 +2,7 @@
 - name: Set Helm init command 
   set_fact:
     mysetfact_helm_init_cmd: "helm init \
-                              {% if helm_use_tls == 'true' %}                              
+                              {% if helm_use_tls == true or helm_use_tls == 'yes' %}                              
                               --tiller-tls \
                               --tiller-tls-verify \
                               --tiller-tls-cert={{ca_certs_dir}}/tiller/tiller.cert.pem \

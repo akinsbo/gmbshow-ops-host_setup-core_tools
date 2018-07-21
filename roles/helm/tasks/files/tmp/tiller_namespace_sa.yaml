@@ -16,7 +16,7 @@ metadata:
   namespace: istio-system
 rules:
 - apiGroups: ["", "extensions", "apps"]
-  resources: ["deployments", "replicasets", "pods", "configmaps", "secrets"]
+  resources: ["deployments", "replicasets", "pods", "configmaps", "secrets", "namespaces"]
   verbs: ["get", "list", "watch", "create", "update", "patch", "delete"] # You can also use ["*"]
 ---
 kind: RoleBinding
