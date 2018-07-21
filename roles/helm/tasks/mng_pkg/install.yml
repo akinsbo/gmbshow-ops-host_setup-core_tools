@@ -2,32 +2,32 @@
 - name: Set helm command
   set_fact:
     mysetfact_helm_init_cmd: "helm install \
+                              {{helm_module_pkg_repo | default('stable')}}/{{helm_module_pkg_name}} \
                               --name {{helm_module_pkg_name}} \
-                              {{helm_module_pkg_repo | default('stable')}}/{{helm_module_install_pkg}} \
-                              {% if helm_module_pkg_version is defined || helm_module_pkg_version != '' %}
-                              -- version {{helm_module_pkg_values_file}} \
+                              {% if helm_module_pkg_version is not undefined and helm_module_pkg_version != '' %}
+                              --version {{helm_module_pkg_version}} \
                               {% endif %}
-                              -- namespace {{helm_module_pkg_namespace | default('default')}} \
-                              {% if helm_module_pkg_values_file is defined || helm_module_pkg_values_file != '' %}
-                              -- file {{helm_module_pkg_values_file}} \
+                              --namespace {{helm_module_pkg_namespace | default('default')}} \
+                              {% if helm_module_pkg_values_file is not undefined and helm_module_pkg_values_file != '' %}
+                              -f {{helm_module_pkg_values_file}} \
                               {% endif %}
-                              {% if helm_module_pkg_settings is defined || helm_module_pkg_settings != '' %}
+                              {% if helm_module_pkg_settings is not undefined and helm_module_pkg_settings != '' %}
                               --set {{helm_module_pkg_settings}} \
                               {% endif %}
-                              {% if helm_use_tls == 'true' || helm_use_tls == 'yes' %}                              
+                              {% if helm_use_tls == 'true' or helm_use_tls == 'yes' %}                              
                               --tls \
                               --tls-cert helm.cert.pem \
                               --tls-key helm.key.pem \
                               --tls-ca-cert {{ca.cert}} \
                               {% endif %}                              
-                              {% if helm_module_tiller_namspace is defined || helm_module_tiller_namspace != '' %}
+                              {% if helm_module_tiller_namspace is not undefined and helm_module_tiller_namspace != '' %}
                               --tiller-namespace {{helm_module_tiller_namspace}}
                               {% else %}
                               {# use current tiller-namespace #}
                               --tiller-namespace {{helm_tiller_namespace}}
                               {% endif %}"
 - name: |   
-      Install package {{helm_module_install_pkg}}
+      Install package {{helm_module_pkg_name}}
       from {{helm_module_pkg_repo | default('stable')}} repo
       with settings {{helm_module_pkg_settings | default('')}}
   command: "{{mysetfact_helm_init_cmd}}"
