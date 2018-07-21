@@ -28,3 +28,4 @@
       - helm
     loop_control:
       loop_var: helm_item
+  when: helm_use_tls == 'true'

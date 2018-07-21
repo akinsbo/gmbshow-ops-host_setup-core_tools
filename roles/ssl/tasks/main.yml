@@ -13,7 +13,7 @@
     bash certbot-route53.sh
     --agree-tos
     --manual-public-ip-logging-ok
-    --domains api.{{route53.zone.DNS}} --domains www.{{route53.zone.DNS}}
+    --domains api.{{cluster.name}} --domains www.{{route53.zone.DNS}} --domains {{cluster.name}}
     --email akinsbo@gmail.com
   args:
     chdir: "{{role_path}}/files"

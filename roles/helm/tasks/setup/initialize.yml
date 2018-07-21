@@ -2,13 +2,26 @@
 - name: Set Helm init command 
   set_fact:
     mysetfact_helm_init_cmd: "helm init \
+                              {% if helm_use_tls == 'true' %}                              
                               --tiller-tls \
                               --tiller-tls-verify \
                               --tiller-tls-cert={{ca_certs_dir}}/tiller/tiller.cert.pem \
                               --tiller-tls-key={{ca_certs_dir}}/tiller/tiller.key.pem \
                               --tls-ca-cert={{ca.cert}} \
+                              {% endif %}
                               --service-account={{helm_tiller_team_sa}} \
                               --tiller-namespace={{helm_tiller_namespace}}"
+    
+- name: Set Helm arguments
+  set_fact:
+    mysetfact_helm_args: "--tiller-namespace {{helm_tiller_namespace}} \
+                        {% if helm_use_tls == 'true'  %}
+                        --tls \
+                        --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem \
+                        --tls-key {{ca_certs_dir}}/helm/helm.key.pem \
+                        --tls-ca-cert {{ca.cert}} \
+                        {% endif %}"
+
 - name: Initialize Helm
   become: yes
   block:
@@ -16,24 +29,11 @@
     command: "{{mysetfact_helm_init_cmd}}"
 
   - name: Run test helm command
-    command: >
-      helm ls 
-      --tls 
-      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
-      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
-      --tls-ca-cert {{ca.cert}}
-      --namespace {{helm_tiller_namespace}}
-      --tiller-namespace {{helm_tiller_namespace}}
+    command: "helm ls --namespace {{helm_tiller_namespace}}  {{mysetfact_helm_args}}"
 
   - name: Add incubator Helm repo
-    command: >
-      helm repo add incubator {{helm_incubator_repo}}
-      --tls 
-      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
-      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
-      --tls-ca-cert {{ca.cert}}
-      --namespace {{helm_tiller_namespace}}
-      --tiller-namespace {{helm_tiller_namespace}}
+    command: "helm repo add incubator {{helm_incubator_repo}} {{mysetfact_helm_args}}"
+
   rescue: 
   - pause:
       prompt: "{{text.color.bluebg}}Please login to your cluster first so your cluster can connect tiller"
@@ -41,25 +41,11 @@
   - name: Try to run Helm init again
     command: "{{mysetfact_helm_init_cmd}}"
 
-  - name: Try to run helm test command again
-    command: >
-      helm ls 
-      --tls 
-      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
-      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
-      --tls-ca-cert {{ca.cert}}
-      --namespace {{helm_tiller_namespace}}
-      --tiller-namespace {{helm_tiller_namespace}}
+  - name: Run test helm command
+    command: "helm ls --namespace {{helm_tiller_namespace}} {{mysetfact_helm_args}}"
 
-  - name: Try to add incubator Helm repo again
-    command: >
-      helm repo add incubator {{helm_incubator_repo}}
-      --tls 
-      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
-      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
-      --tls-ca-cert {{ca.cert}}
-      --namespace {{helm_tiller_namespace}}
-      --tiller-namespace {{helm_tiller_namespace}}    
+  - name: Add incubator Helm repo
+    command: "helm repo add incubator {{helm_incubator_repo}} {{mysetfact_helm_args}}"
 
 
 

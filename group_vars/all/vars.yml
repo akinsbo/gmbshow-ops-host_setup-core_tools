@@ -52,6 +52,7 @@ helm_tiller_team: video_dev_team
 helm_tiller_team_sa: tiller-{{helm_tiller_team | regex_replace('_', '-')}}
 helm_tiller_namespace: tiller-{{helm_tiller_team | regex_replace('_', '-')}}
 helm_deployment_path: "{{playbook_dir}}/roles/helm/tasks/files/tmp"
+helm_use_tls: false
 
 # vault
 vault_version: 0.10.3

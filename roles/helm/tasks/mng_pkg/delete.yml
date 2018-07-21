@@ -3,6 +3,7 @@
   command: >
   "helm delete 
   --purge {{helm_module_pkg_name}}
+  {% if helm_use_tls==true  %}                              
   --tls 
   --tls-cert helm.cert.pem 
   --tls-key helm.key.pem
@@ -12,7 +13,7 @@
   {% else %}
   {# use current tiller-namespace #}
   --tiller-namespace {{helm_tiller_namespace}}
-  {% end_if %}"
+  {% endif %}"
 ####################################################
 # vars:
 #   helm_module_pkg_delete_name:
