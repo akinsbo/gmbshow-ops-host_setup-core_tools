@@ -22,6 +22,8 @@
       --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
       --tls-key {{ca_certs_dir}}/helm/helm.key.pem
       --tls-ca-cert {{ca.cert}}
+      --namespace {{helm_tiller_namespace}}
+      --tiller-namespace {{helm_tiller_namespace}}
 
   - name: Add incubator Helm repo
     command: >
@@ -30,5 +32,34 @@
       --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
       --tls-key {{ca_certs_dir}}/helm/helm.key.pem
       --tls-ca-cert {{ca.cert}}
+      --namespace {{helm_tiller_namespace}}
+      --tiller-namespace {{helm_tiller_namespace}}
+  rescue: 
+  - pause:
+      prompt: "{{text.color.bluebg}}Please login to your cluster first so your cluster can connect tiller"
+  
+  - name: Try to run Helm init again
+    command: "{{mysetfact_helm_init_cmd}}"
+
+  - name: Try to run helm test command again
+    command: >
+      helm ls 
+      --tls 
+      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
+      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
+      --tls-ca-cert {{ca.cert}}
+      --namespace {{helm_tiller_namespace}}
+      --tiller-namespace {{helm_tiller_namespace}}
+
+  - name: Try to add incubator Helm repo again
+    command: >
+      helm repo add incubator {{helm_incubator_repo}}
+      --tls 
+      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
+      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
+      --tls-ca-cert {{ca.cert}}
+      --namespace {{helm_tiller_namespace}}
+      --tiller-namespace {{helm_tiller_namespace}}    
+
 
 
