@@ -6,7 +6,14 @@
   --tls 
   --tls-cert helm.cert.pem 
   --tls-key helm.key.pem
-  --tls-ca-cert {{ca.cert}}"
+  --tls-ca-cert {{ca.cert}}
+  {% if helm_module_tiller_namspace is defined || helm_module_tiller_namspace != '' %}
+  --tiller-namespace {{helm_module_tiller_namspace}}
+  {% else %}
+  {# use current tiller-namespace #}
+  --tiller-namespace {{helm_tiller_namespace}}
+  {% end_if %}"
 ####################################################
 # vars:
 #   helm_module_pkg_delete_name:
+#   helm_module_tiller_namspace: #optional
