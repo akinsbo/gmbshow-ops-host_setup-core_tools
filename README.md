@@ -171,7 +171,7 @@ Perform ```grep -r <module>``` to find them.sign
 
 ## Security Group Rules of Cluster
 
-| master-in                                         |
+| master-ingress                                    |
 |---------------------------------------------------|
 | all-master-to-master(00)                          |
 | bastion-to-master-ssh(22,22)                      |
@@ -182,34 +182,34 @@ Perform ```grep -r <module>``` to find them.sign
 | node-to-master-tcp-4003-65535                     |
 | node-to-master-udp-1-65535                        |
 
-| master-out        |
+| master-egress     |
 |-------------------|
 | master-egress(00) |
 
-| node-in                    |
+| node-ingress               |
 |----------------------------|
 | all-master-to-node(00)     |
 | all-node-to-node(00)       |
 | bastion-to-node-ssh(22,22) |
 
-| node-out        |
+| node-egress     |
 |-----------------|
 | node-egress(00) |
 
-| cluster-in                        |
+| cluster-ingress                   |
 |-----------------------------------|
 | https-api-elb-0-0-0-0--0(443,443) |
 
-| cluster-out                        |
+| cluster-egress                     |
 |------------------------------------|
 | api-elb-egress(00): Cluster to elb |
 
-| bastion-in                                                                             |
+| bastion-ingress                                                                        |
 |----------------------------------------------------------------------------------------|
 | ssh-external-to-bastion-elb-0-0-0-0--0(22,22)(i.e from my engine to bastion's own elb) |
 | ssh-bastion-elb-to-bastion(22,22)                                                      |
 
-| bastion-out            |
+| bastion-egress         |
 |------------------------|
 | bastion-egress(00)     |
 | bastion-elb-egress(00) |

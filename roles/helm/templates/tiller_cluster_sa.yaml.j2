@@ -1,7 +1,3 @@
----
-# Create a service account for Helm and grant the cluster admin role.
-# It is assumed that helm should be installed with this service account
-# (tiller).
 apiVersion: v1
 kind: ServiceAccount
 metadata:
@@ -17,6 +13,6 @@ roleRef:
   kind: ClusterRole
   name: cluster-admin
 subjects:
-- kind: ServiceAccount
-  name: tiller
-  namespace: kube-system
+  - kind: ServiceAccount
+    name: tiller
+    namespace: kube-system
