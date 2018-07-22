@@ -13,7 +13,7 @@
 # install vault into avi_cluster
 - include_tasks: roles/helm/tasks/mng_pkg/install.yml
   vars:
-    helm_module_install_pkg: vault
+    helm_module_pkg_name: vault
     helm_module_pkg_repo: incubator
     helm_module_pkg_settings: vault.dev=true --set vault.config.storage.consul.address="consul-consul:8500",vault.config.storage.consul.path="vault"
 
