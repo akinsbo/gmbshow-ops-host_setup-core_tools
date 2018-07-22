@@ -1,4 +1,2 @@
 ---
-- include_tasks: roles/istio/tasks/delete.yml
-
 - include_tasks: roles/istio/tasks/install.yml

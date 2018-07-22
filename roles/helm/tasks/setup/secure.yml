@@ -15,6 +15,11 @@
 
   - name: "Ensure tiller service account is deployed"
     command: "kubectl apply -f {{helm_deployment_path}}/tiller_namespace_sa.yaml"
+    when: helm_tiller_cluster_wide != true
+
+  - name: "Ensure tiller service account is deployed"
+    command: "kubectl apply -f {{helm_deployment_path}}/tiller_cluster_sa.yaml"
+    when: helm_tiller_cluster_wide == true
 
 - name: Ensure tls certs and keys are created
   block:

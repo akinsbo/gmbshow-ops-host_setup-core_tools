@@ -17,3 +17,9 @@
     helm_module_pkg_namespace: istio-system
     helm_module_pkg_version: 0.2.13-chart4
     helm_module_pkg_values_file: "{{role_path}}/files/values.yml"
+
+- include_tasks: roles/k8s/tasks/cluster_admin_rb_sa.yml
+  vars:
+    k8s_module_sa:  istio
+    k8s_module_namespace: istio-system
+  when:  helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes'

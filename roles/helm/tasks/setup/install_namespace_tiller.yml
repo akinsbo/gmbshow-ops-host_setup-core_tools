@@ -1,9 +1,0 @@
-- name: Install tiller in a namespace
-  command: helm init --tiller-namespace {{helm_tiller_namespace}}
-
-- name: Use the secure-tiller plugin to apply the example dev-team RBAC profile to it
-  command: helm secure-tiller --namespace {{helm_tiller_namespace}} example-profiles/dev-team/
-# install tiller in a namespace like this:
-
-Then, use the  in this repo.
-
