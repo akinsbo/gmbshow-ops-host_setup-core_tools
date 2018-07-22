@@ -61,6 +61,5 @@
 
 - name: Wait for tiller to initialize (to prevent 'could not find a ready tiller pod')
   pause:
-    echo: "{{text.color.bluebg}}Wait for tiller to initialize (to prevent 'could not find a ready tiller pod')"
+    echo: yes
     seconds: 60
-

@@ -17,6 +17,16 @@
     helm_module_pkg_namespace: istio-system
     helm_module_pkg_version: 0.2.13-chart4
     helm_module_pkg_values_file: "{{role_path}}/files/values.yml"
+    helm_module_pkg_settings: istio.install=true
+
+# # helm upgrade istio incubator/istio --reuse-values --set istio.install=true
+# - include_tasks: roles/helm/tasks/mng_pkg/upgrade.yml
+#   vars:
+#     helm_module_upgrade_pkg_name: istio
+#     helm_module_upgrade_pkg_repo: incubator
+#     helm_module_upgrade_pkg_namespace: istio-system
+#     helm_module_upgrade_pkg_settings: istio.install=true
+#     helm_module_upgrade_pkg_values_file: "{{role_path}}/files/values.yml"
 
 - include_tasks: roles/k8s/tasks/cluster_admin_rb_sa.yml
   vars:

@@ -1,5 +1,5 @@
 ---
-- name: Set helm command
+- name: Set helm init command
   set_fact:
     mysetfact_helm_init_cmd: "helm install \
                               {{helm_module_pkg_repo | default('stable')}}/{{helm_module_pkg_name}} \
@@ -29,13 +29,21 @@
                               --tiller-namespace {{helm_tiller_namespace}}
                               {% endif %}
                               "
-- name: |   
-      Install package {{helm_module_pkg_name}}
-      from {{helm_module_pkg_repo | default('stable')}} repo
-      with settings {{helm_module_pkg_settings | default('')}}
-  command: "{{mysetfact_helm_init_cmd}}"
-
-
+- name: Install package
+  block:
+  - name: |   
+        Ensure installation of package {{helm_module_pkg_name}}
+        from {{helm_module_pkg_repo | default('stable')}} repo
+        with settings {{helm_module_pkg_settings | default('')}}
+    command: "{{mysetfact_helm_init_cmd}}"
+  rescue:
+  - name: Delete {{helm_module_pkg_name}} release
+    command:  helm del --purge {{helm_module_pkg_name}}  
+  - name: |   
+        Try again to install package {{helm_module_pkg_name}}
+        from {{helm_module_pkg_repo | default('stable')}} repo
+        with settings {{helm_module_pkg_settings | default('')}}
+    command: "{{mysetfact_helm_init_cmd}}"
 ####################################################
 # vars:
 #     helm_module_pkg_name:
