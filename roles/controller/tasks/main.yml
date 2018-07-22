@@ -80,11 +80,11 @@
     pip:
       name: "{{item.package}}"
       virtualenv: "{{controller_python_virtenv}}"
-      virtualenv_python: "/usr/bin/{{ item.python_bin_and_virtenv_to_Use }}"
+      virtualenv_python: "/usr/bin/{{ item.python_bin_and_virtenv_to_use }}"
     with_items:
-      - { python_bin_and_virtenv_to_Use: python, package: ansible}
-      - { python_bin_and_virtenv_to_Use: python, package: boto}
-      - { python_bin_and_virtenv_to_Use: python, package: awscli}
+      - { python_bin_and_virtenv_to_use: python, package: ansible}
+      - { python_bin_and_virtenv_to_use: python, package: boto}
+      - { python_bin_and_virtenv_to_use: python, package: awscli}
     tags:
       - virtualenv
       - ansible
@@ -97,11 +97,11 @@
     pip:
       name: "{{item.package}}"
       virtualenv: "{{controller_python3_virtenv}}"
-      virtualenv_python: "/usr/bin/{{ item.python_bin_and_virtenv_to_Use }}"
+      virtualenv_python: "/usr/bin/{{ item.python_bin_and_virtenv_to_use }}"
     with_items:
-      - { python_bin_and_virtenv_to_Use: python3, package: boto3}    
-      - { python_bin_and_virtenv_to_Use: python3, package: awscli}
-      - { python_bin_and_virtenv_to_Use: python3, package: ansible}
+      - { python_bin_and_virtenv_to_use: python3, package: boto3}    
+      - { python_bin_and_virtenv_to_use: python3, package: awscli}
+      - { python_bin_and_virtenv_to_use: python3, package: ansible}
     when: 
       - "{{pyversion.results[0].stdout | regex_replace('Python\\s(\\d+)\\.(\\d+)\\.(\\d+)', '\\1.\\2') | float >= 3.5}}"
     tags:

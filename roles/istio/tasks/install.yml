@@ -1,7 +1,35 @@
 ---
+- name: Ensure directory exists
+  file:
+    path: "{{role_path}}/files"
+    state: directory
+
+- name: Ensure Istio values file is generated
+  template:
+      dest: "{{role_path}}/files/values.yml" 
+      src: "{{role_path}}/templates/values.yml.j2" 
+
 # helm install install/kubernetes/helm/istio --name istio --namespace istio-system
-- include_tasks: roles/tasks/helm/mng_pkg/install.yml
+- include_tasks: roles/helm/tasks/mng_pkg/install.yml
   vars:
-    helm_module_install_pkg: istio
-    helm_module_pkg_repo: install/kubernetes/helm/
+    helm_module_pkg_name: istio
+    helm_module_pkg_repo: incubator
     helm_module_pkg_namespace: istio-system
+    helm_module_pkg_version: 0.2.13-chart4
+    helm_module_pkg_values_file: "{{role_path}}/files/values.yml"
+    helm_module_pkg_settings: istio.install=true
+
+# # helm upgrade istio incubator/istio --reuse-values --set istio.install=true
+# - include_tasks: roles/helm/tasks/mng_pkg/upgrade.yml
+#   vars:
+#     helm_module_upgrade_pkg_name: istio
+#     helm_module_upgrade_pkg_repo: incubator
+#     helm_module_upgrade_pkg_namespace: istio-system
+#     helm_module_upgrade_pkg_settings: istio.install=true
+#     helm_module_upgrade_pkg_values_file: "{{role_path}}/files/values.yml"
+
+- include_tasks: roles/k8s/tasks/cluster_admin_rb_sa.yml
+  vars:
+    k8s_module_sa:  istio
+    k8s_module_namespace: istio-system
+  when:  helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes'

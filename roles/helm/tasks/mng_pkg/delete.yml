@@ -1,18 +1,22 @@
 ---
-- name: Delete package {{helm_module_install_pkg}}
-  command: >
-  "helm delete 
-  --purge {{helm_module_pkg_name}}
-  --tls 
-  --tls-cert helm.cert.pem 
-  --tls-key helm.key.pem
-  --tls-ca-cert {{ca.cert}}
-  {% if helm_module_tiller_namspace is defined || helm_module_tiller_namspace != '' %}
-  --tiller-namespace {{helm_module_tiller_namspace}}
-  {% else %}
-  {# use current tiller-namespace #}
-  --tiller-namespace {{helm_tiller_namespace}}
-  {% end_if %}"
+- name: Set Helm arguments
+  set_fact:
+    mysetfact_helm_del_args: "{% if helm_use_tls==true or helm_use_tls=='yes' %}                              
+                                --tls \
+                                --tls-cert helm.cert.pem \
+                                --tls-key helm.key.pem \
+                                --tls-ca-cert {{ca.cert}} \
+                                {% endif %}
+                                {% if helm_module_tiller_namspace is not undefined and helm_module_tiller_namspace != '' %}
+                                --tiller-namespace {{helm_module_tiller_namspace}}
+                                {% else %}
+                                {# use current tiller-namespace #}
+                                --tiller-namespace {{helm_tiller_namespace}}
+                                {% endif %}"
+                        
+- name: Delete package {{helm_module_pkg_delete_name}}
+  command: "helm delete --purge {{helm_module_pkg_delete_name}} {{mysetfact_helm_del_args}}"
+
 ####################################################
 # vars:
 #   helm_module_pkg_delete_name:

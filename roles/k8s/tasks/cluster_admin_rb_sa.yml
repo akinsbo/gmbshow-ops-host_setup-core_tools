@@ -1,0 +1,25 @@
+---
+- name: Ensure directory {{role_path}}/files/tmp/{{k8s_module_sa}} exists
+  file:
+    path: "{{playbook_dir}}/roles/k8s/files/tmp/{{k8s_module_sa}}"
+    state: directory
+
+- name: Ensure the cluster-admin role-binding definition is prepared
+  template:
+    src: "{{playbook_dir}}/roles/k8s/templates/cluster-admin-rb-sa.yaml.j2"
+    dest: "{{playbook_dir}}/roles/k8s/files/tmp/{{k8s_module_sa}}/cluster-admin-rb-sa-{{k8s_module_sa}}.yaml"
+  vars: 
+    k8s_module_template_cluster_sa: "{{k8s_module_sa}}"
+    k8s_module_template_cluster_namespace: "{{k8s_module_namespace | default('kube-system')}}"
+    
+- name: |
+          Ensure the service account is created
+          in kube-system namespace 
+          and cluster-bound to the cluster-admin role
+  command: "kubectl apply -f {{playbook_dir}}/roles/k8s/files/tmp/{{k8s_module_sa}}/cluster-admin-rb-sa-{{k8s_module_sa}}.yaml"
+################################################
+# vars:
+#   k8s_module_sa:  # e.g. kubernetes-dashboard
+#   k8s_module_namespace: #optional
+
+    

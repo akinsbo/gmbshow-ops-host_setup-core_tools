@@ -1,39 +1,54 @@
 ---
+# Ensure cluster-role is created for tiller if requested
+# This likely means one tiller and one helm for the whole cluster
+- include_tasks: roles/k8s/tasks/cluster_admin_rb_sa.yml
+  vars:
+    k8s_module_sa: tiller
+  when:  helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes'
+
 - name: Set Helm init command 
   set_fact:
     mysetfact_helm_init_cmd: "helm init \
+                              {% if helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes' %}                              
+                              --service-account=tiller \
+                              --tiller-namespace=kube-system \
+                              {% else %}
+                              --service-account={{helm_tiller_team_sa}} \
+                              --tiller-namespace={{helm_tiller_namespace}} \
+                              {% endif %}
+                              {% if helm_use_tls == true or helm_use_tls == 'yes' %}                              
                               --tiller-tls \
                               --tiller-tls-verify \
                               --tiller-tls-cert={{ca_certs_dir}}/tiller/tiller.cert.pem \
                               --tiller-tls-key={{ca_certs_dir}}/tiller/tiller.key.pem \
                               --tls-ca-cert={{ca.cert}} \
-                              --service-account={{helm_tiller_team_sa}} \
-                              --tiller-namespace={{helm_tiller_namespace}}"
+                              {% endif %}
+                              "
+    
+- name: Set Helm arguments
+  set_fact:
+    mysetfact_helm_args: "{% if helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes' %}                              
+                        --tiller-namespace=kube-system \
+                        {% else %}
+                        --tiller-namespace={{helm_tiller_namespace}} \
+                        {% endif %}
+                        {% if helm_use_tls == 'true' or helm_use_tls == 'yes'  %}
+                        --tls \
+                        --tls-cert={{ca_certs_dir}}/helm/helm.cert.pem \
+                        --tls-key={{ca_certs_dir}}/helm/helm.key.pem \
+                        --tls-ca-cert={{ca.cert}} \
+                        {% endif %}
+                        "
+
 - name: Initialize Helm
   become: yes
   block:
   - name: Run Helm init
     command: "{{mysetfact_helm_init_cmd}}"
 
-  - name: Run test helm command
-    command: >
-      helm ls 
-      --tls 
-      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
-      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
-      --tls-ca-cert {{ca.cert}}
-      --namespace {{helm_tiller_namespace}}
-      --tiller-namespace {{helm_tiller_namespace}}
-
   - name: Add incubator Helm repo
-    command: >
-      helm repo add incubator {{helm_incubator_repo}}
-      --tls 
-      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
-      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
-      --tls-ca-cert {{ca.cert}}
-      --namespace {{helm_tiller_namespace}}
-      --tiller-namespace {{helm_tiller_namespace}}
+    command: "helm repo add incubator {{helm_incubator_repo}} {{mysetfact_helm_args}}"
+
   rescue: 
   - pause:
       prompt: "{{text.color.bluebg}}Please login to your cluster first so your cluster can connect tiller"
@@ -41,25 +56,10 @@
   - name: Try to run Helm init again
     command: "{{mysetfact_helm_init_cmd}}"
 
-  - name: Try to run helm test command again
-    command: >
-      helm ls 
-      --tls 
-      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
-      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
-      --tls-ca-cert {{ca.cert}}
-      --namespace {{helm_tiller_namespace}}
-      --tiller-namespace {{helm_tiller_namespace}}
+  - name: Add incubator Helm repo
+    command: "helm repo add incubator {{helm_incubator_repo}} {{mysetfact_helm_args}}"
 
-  - name: Try to add incubator Helm repo again
-    command: >
-      helm repo add incubator {{helm_incubator_repo}}
-      --tls 
-      --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem 
-      --tls-key {{ca_certs_dir}}/helm/helm.key.pem
-      --tls-ca-cert {{ca.cert}}
-      --namespace {{helm_tiller_namespace}}
-      --tiller-namespace {{helm_tiller_namespace}}    
-
-
-
+- name: Wait for tiller to initialize (to prevent 'could not find a ready tiller pod')
+  pause:
+    echo: yes
+    seconds: 60
