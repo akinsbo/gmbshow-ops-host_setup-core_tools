@@ -17,16 +17,16 @@ ansible_user=ubuntu
 # BEGIN ANSIBLE MANAGED BLOCK master
 
 [master]
-ip-172-20-102-181.eu-west-1.compute.internal  ansible_host=172.20.102.181
-ip-172-20-34-199.eu-west-1.compute.internal  ansible_host=172.20.34.199
-ip-172-20-81-94.eu-west-1.compute.internal  ansible_host=172.20.81.94
+ip-172-20-111-218.eu-west-1.compute.internal  ansible_host=172.20.111.218
+ip-172-20-37-111.eu-west-1.compute.internal  ansible_host=172.20.37.111
+ip-172-20-70-158.eu-west-1.compute.internal  ansible_host=172.20.70.158
 # END ANSIBLE MANAGED BLOCK master
 # BEGIN ANSIBLE MANAGED BLOCK node
 
 [node]
-ip-172-20-124-202.eu-west-1.compute.internal  ansible_host=172.20.124.202
-ip-172-20-45-156.eu-west-1.compute.internal  ansible_host=172.20.45.156
-ip-172-20-72-86.eu-west-1.compute.internal  ansible_host=172.20.72.86
+ip-172-20-51-62.eu-west-1.compute.internal  ansible_host=172.20.51.62
+ip-172-20-85-164.eu-west-1.compute.internal  ansible_host=172.20.85.164
+ip-172-20-99-245.eu-west-1.compute.internal  ansible_host=172.20.99.245
 # END ANSIBLE MANAGED BLOCK node
 # BEGIN ANSIBLE MANAGED BLOCK dynamic_inventory.yml
 

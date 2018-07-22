@@ -3,12 +3,19 @@
 # This likely means one tiller and one helm for the whole cluster
 - include_tasks: roles/k8s/tasks/cluster_admin_rb_sa.yml
   vars:
-    k8s_module_sa:  tiller
+    k8s_module_sa: tiller
   when:  helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes'
 
 - name: Set Helm init command 
   set_fact:
     mysetfact_helm_init_cmd: "helm init \
+                              {% if helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes' %}                              
+                              --service-account=tiller \
+                              --tiller-namespace=kube-system \
+                              {% else %}
+                              --service-account={{helm_tiller_team_sa}} \
+                              --tiller-namespace={{helm_tiller_namespace}} \
+                              {% endif %}
                               {% if helm_use_tls == true or helm_use_tls == 'yes' %}                              
                               --tiller-tls \
                               --tiller-tls-verify \
@@ -16,29 +23,20 @@
                               --tiller-tls-key={{ca_certs_dir}}/tiller/tiller.key.pem \
                               --tls-ca-cert={{ca.cert}} \
                               {% endif %}
-                              {% if helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes' %}                              
-                              --service-account={{helm_tiller_team_sa}} \
-                              --tiller-namespace=kube-system \
-                              {% else %}
-                              --service-account={{helm_tiller_team_sa}} \
-                              --tiller-namespace={{helm_tiller_namespace}} \
-                              {% endif %}
                               "
     
 - name: Set Helm arguments
   set_fact:
-    mysetfact_helm_args: "{% if helm_use_tls == 'true' or helm_use_tls == 'yes'  %}
-                        --tls \
-                        --tls-cert {{ca_certs_dir}}/helm/helm.cert.pem \
-                        --tls-key {{ca_certs_dir}}/helm/helm.key.pem \
-                        --tls-ca-cert {{ca.cert}} \
-                        {% endif %}
-                        {% if helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes' %}                              
-                        --service-account={{helm_tiller_team_sa}} \
+    mysetfact_helm_args: "{% if helm_tiller_cluster_wide == true or helm_tiller_cluster_wide == 'yes' %}                              
                         --tiller-namespace=kube-system \
                         {% else %}
-                        --service-account={{helm_tiller_team_sa}} \
                         --tiller-namespace={{helm_tiller_namespace}} \
+                        {% endif %}
+                        {% if helm_use_tls == 'true' or helm_use_tls == 'yes'  %}
+                        --tls \
+                        --tls-cert={{ca_certs_dir}}/helm/helm.cert.pem \
+                        --tls-key={{ca_certs_dir}}/helm/helm.key.pem \
+                        --tls-ca-cert={{ca.cert}} \
                         {% endif %}
                         "
 
@@ -61,5 +59,8 @@
   - name: Add incubator Helm repo
     command: "helm repo add incubator {{helm_incubator_repo}} {{mysetfact_helm_args}}"
 
-
+- name: Wait for tiller to initialize (to prevent 'could not find a ready tiller pod')
+  pause:
+    echo: "{{text.color.bluebg}} Wait for tiller to initialize (to prevent 'could not find a ready tiller pod')
+    seconds: 60
 

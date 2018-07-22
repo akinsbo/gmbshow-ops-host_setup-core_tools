@@ -20,6 +20,6 @@
     - k8s
     - cluster-checks
 
-- include_tasks: roles/k8s/tasks/mng_addons/cluster_admin_rb_sa.yml
+- include_tasks: roles/k8s/tasks/cluster_admin_rb_sa.yml
   vars:
     k8s_module_sa: kubernetes-dashboard

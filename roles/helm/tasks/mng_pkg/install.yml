@@ -19,13 +19,16 @@
                               --tls-cert helm.cert.pem \
                               --tls-key helm.key.pem \
                               --tls-ca-cert {{ca.cert}} \
-                              {% endif %}                              
-                              {% if helm_module_tiller_namspace is not undefined and helm_module_tiller_namspace != '' %}
+                              {% endif %}
+                              {% if helm_tiller_cluster_wide==true or helm_tiller_cluster_wide == 'yes' %}                              
+                              --tiller-namespace kube-system \
+                              {% elif helm_module_tiller_namspace is not undefined and helm_module_tiller_namspace != '' %}
                               --tiller-namespace {{helm_module_tiller_namspace}}
                               {% else %}
                               {# use current tiller-namespace #}
                               --tiller-namespace {{helm_tiller_namespace}}
-                              {% endif %}"
+                              {% endif %}
+                              "
 - name: |   
       Install package {{helm_module_pkg_name}}
       from {{helm_module_pkg_repo | default('stable')}} repo
